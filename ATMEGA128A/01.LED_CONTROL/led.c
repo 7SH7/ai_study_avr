@@ -78,7 +78,10 @@ void led_shift_right_on(void)
 	static int i = 0;
 
 	*(unsigned char *) 0x3b = 0x80 >> i;
-	_delay_ms(30);	// 240ms
+	// for로 하면, 240ms동안은 다른 작업 못해. 
+	// 이를 막고자 함수 하나를 계속 호출해서, 다른 작업 들어올 때, 바뀌도록 수정 한 것.
+	// 하지만 이거도 30ms라는 병목 시간 존재. > 차후 수정 작업 (과제)
+	_delay_ms(30);	
 	
 	i = (i + 1) % 8;
 

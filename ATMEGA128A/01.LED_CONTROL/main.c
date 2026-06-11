@@ -11,11 +11,18 @@
 
 #include "button.h"
 
+extern int led_main(void);
 extern void init_led(void);  // init_led함수는 다른 화일에 들어 있다고 compiler 신고 
 extern void init_button(void);
 extern int get_button(int button_num, int button_pin);
 extern void led_all_on(void);
 extern void led_all_off(void);
+extern void led_shift_left_on(void);
+extern void led_shift_right_on(void);
+extern void led_shift_left_keep_on(void);
+extern void led_shift_right_keep_on(void);
+extern void led_flower_on(void);
+extern void led_flower_off(void);
 
 #if 1
 int main(void)
@@ -24,6 +31,8 @@ int main(void)
 	
 	init_button();
 	init_led();
+
+	led_main();
 	
 	while (1)
 	{

@@ -32,10 +32,22 @@ int main(void)
 	init_button();
 	init_led();
 
-	led_main();
+//	led_main();
 	
 	while (1)
 	{
+#if 1
+		// button0_state = 0  --> led_shift_left_on
+		// button0_state = 1  --> led_shift_right_on
+		if (get_button(BUTTON0, BUTTON0PIN))
+		{
+			button0_state = !button0_state;   // 반전  0 <--> 1
+		}
+		
+		if(button0_state== 0)	led_shift_left_on();
+		else if(button0_state == 1)  led_shift_right_on();
+		
+#else
 		// toggle  off <--> on
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
@@ -44,6 +56,7 @@ int main(void)
 				led_all_on();
 			else led_all_off();
 		}
+#endif
 	}
 }
 #endif

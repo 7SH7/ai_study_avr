@@ -52,8 +52,9 @@ void led_shift_left_on(void)
 {
 	for(int i = 0 ; i < 8 ; i++)
 	{
-		PORTA = (1 << i);	// PORTA: 0x1B(주소) 
-		_delay_ms(300);
+		//PORTA = (1 << i);
+		*(unsigned char *) 0x3b = 0x01 << i;
+		_delay_ms(30);	// 240ms
 	}	
 }
 
@@ -61,9 +62,12 @@ void led_shift_right_on(void)
 {
 	for(int i = 0 ; i < 8; i++)
 	{
-		PORTA = 1 << 7; // 10000000
-		PORTA = (PORTA >> i);
-		_delay_ms(300);
+		//PORTA 의 주소 0x3b
+		//PORTA = 1 << 7; // 10000000
+		//PORTA = (PORTA >> i);
+		
+		*(unsigned char *)0x3b = 0x80 >> i;
+		_delay_ms(30);
 	}
 }
 

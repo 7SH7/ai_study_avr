@@ -50,16 +50,41 @@ void led_all_off(void)
 
 void led_shift_left_on(void)
 {
+#if 1
+	
+	static int i = 0;
+
+	*(unsigned char *) 0x3b = 0x01 << i;
+	_delay_ms(30);	// 240ms
+	
+	i = (i + 1) % 8;
+		
+#else 
+
 	for(int i = 0 ; i < 8 ; i++)
 	{
 		//PORTA = (1 << i);
 		*(unsigned char *) 0x3b = 0x01 << i;
 		_delay_ms(30);	// 240ms
 	}	
+
+#endif
 }
 
 void led_shift_right_on(void)
 {
+#if 1
+
+	static int i = 0;
+
+	*(unsigned char *) 0x3b = 0x80 >> i;
+	_delay_ms(30);	// 240ms
+	
+	i = (i + 1) % 8;
+
+
+#else
+
 	for(int i = 0 ; i < 8; i++)
 	{
 		//PORTA 의 주소 0x3b
@@ -69,6 +94,8 @@ void led_shift_right_on(void)
 		*(unsigned char *)0x3b = 0x80 >> i;
 		_delay_ms(30);
 	}
+
+#endif
 }
 
 void led_shift_left_keep_on(void)

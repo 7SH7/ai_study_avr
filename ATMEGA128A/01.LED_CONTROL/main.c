@@ -45,7 +45,7 @@ int main(void)
 		}
 		
 		if(button0_state== 0)	led_shift_left_on();
-		else if(button0_state == 1)  led_shift_right_on();
+		else led_shift_right_on();
 		
 #else
 		// toggle  off <--> on

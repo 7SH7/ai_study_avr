@@ -1,0 +1,526 @@
+
+02.FND_CONTROL.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         0000000c  00800100  00000336  000003ca  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000336  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000000e  0080010c  0080010c  000003d6  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000003d6  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000408  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000050  00000000  00000000  00000448  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000009d8  00000000  00000000  00000498  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000008af  00000000  00000000  00000e70  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   0000036f  00000000  00000000  0000171f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000078  00000000  00000000  00001a90  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    0000045f  00000000  00000000  00001b08  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    0000008d  00000000  00000000  00001f67  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000030  00000000  00000000  00001ff4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	45 c0       	rjmp	.+138    	; 0x8c <__ctors_end>
+   2:	00 00       	nop
+   4:	60 c0       	rjmp	.+192    	; 0xc6 <__bad_interrupt>
+   6:	00 00       	nop
+   8:	5e c0       	rjmp	.+188    	; 0xc6 <__bad_interrupt>
+   a:	00 00       	nop
+   c:	5c c0       	rjmp	.+184    	; 0xc6 <__bad_interrupt>
+   e:	00 00       	nop
+  10:	5a c0       	rjmp	.+180    	; 0xc6 <__bad_interrupt>
+  12:	00 00       	nop
+  14:	58 c0       	rjmp	.+176    	; 0xc6 <__bad_interrupt>
+  16:	00 00       	nop
+  18:	56 c0       	rjmp	.+172    	; 0xc6 <__bad_interrupt>
+  1a:	00 00       	nop
+  1c:	54 c0       	rjmp	.+168    	; 0xc6 <__bad_interrupt>
+  1e:	00 00       	nop
+  20:	52 c0       	rjmp	.+164    	; 0xc6 <__bad_interrupt>
+  22:	00 00       	nop
+  24:	50 c0       	rjmp	.+160    	; 0xc6 <__bad_interrupt>
+  26:	00 00       	nop
+  28:	4e c0       	rjmp	.+156    	; 0xc6 <__bad_interrupt>
+  2a:	00 00       	nop
+  2c:	4c c0       	rjmp	.+152    	; 0xc6 <__bad_interrupt>
+  2e:	00 00       	nop
+  30:	4a c0       	rjmp	.+148    	; 0xc6 <__bad_interrupt>
+  32:	00 00       	nop
+  34:	48 c0       	rjmp	.+144    	; 0xc6 <__bad_interrupt>
+  36:	00 00       	nop
+  38:	46 c0       	rjmp	.+140    	; 0xc6 <__bad_interrupt>
+  3a:	00 00       	nop
+  3c:	44 c0       	rjmp	.+136    	; 0xc6 <__bad_interrupt>
+  3e:	00 00       	nop
+  40:	42 c0       	rjmp	.+132    	; 0xc6 <__bad_interrupt>
+  42:	00 00       	nop
+  44:	40 c0       	rjmp	.+128    	; 0xc6 <__bad_interrupt>
+  46:	00 00       	nop
+  48:	3e c0       	rjmp	.+124    	; 0xc6 <__bad_interrupt>
+  4a:	00 00       	nop
+  4c:	3c c0       	rjmp	.+120    	; 0xc6 <__bad_interrupt>
+  4e:	00 00       	nop
+  50:	3a c0       	rjmp	.+116    	; 0xc6 <__bad_interrupt>
+  52:	00 00       	nop
+  54:	38 c0       	rjmp	.+112    	; 0xc6 <__bad_interrupt>
+  56:	00 00       	nop
+  58:	36 c0       	rjmp	.+108    	; 0xc6 <__bad_interrupt>
+  5a:	00 00       	nop
+  5c:	34 c0       	rjmp	.+104    	; 0xc6 <__bad_interrupt>
+  5e:	00 00       	nop
+  60:	32 c0       	rjmp	.+100    	; 0xc6 <__bad_interrupt>
+  62:	00 00       	nop
+  64:	30 c0       	rjmp	.+96     	; 0xc6 <__bad_interrupt>
+  66:	00 00       	nop
+  68:	2e c0       	rjmp	.+92     	; 0xc6 <__bad_interrupt>
+  6a:	00 00       	nop
+  6c:	2c c0       	rjmp	.+88     	; 0xc6 <__bad_interrupt>
+  6e:	00 00       	nop
+  70:	2a c0       	rjmp	.+84     	; 0xc6 <__bad_interrupt>
+  72:	00 00       	nop
+  74:	28 c0       	rjmp	.+80     	; 0xc6 <__bad_interrupt>
+  76:	00 00       	nop
+  78:	26 c0       	rjmp	.+76     	; 0xc6 <__bad_interrupt>
+  7a:	00 00       	nop
+  7c:	24 c0       	rjmp	.+72     	; 0xc6 <__bad_interrupt>
+  7e:	00 00       	nop
+  80:	22 c0       	rjmp	.+68     	; 0xc6 <__bad_interrupt>
+  82:	00 00       	nop
+  84:	20 c0       	rjmp	.+64     	; 0xc6 <__bad_interrupt>
+  86:	00 00       	nop
+  88:	1e c0       	rjmp	.+60     	; 0xc6 <__bad_interrupt>
+	...
+
+0000008c <__ctors_end>:
+  8c:	11 24       	eor	r1, r1
+  8e:	1f be       	out	0x3f, r1	; 63
+  90:	cf ef       	ldi	r28, 0xFF	; 255
+  92:	d0 e1       	ldi	r29, 0x10	; 16
+  94:	de bf       	out	0x3e, r29	; 62
+  96:	cd bf       	out	0x3d, r28	; 61
+
+00000098 <__do_copy_data>:
+  98:	11 e0       	ldi	r17, 0x01	; 1
+  9a:	a0 e0       	ldi	r26, 0x00	; 0
+  9c:	b1 e0       	ldi	r27, 0x01	; 1
+  9e:	e6 e3       	ldi	r30, 0x36	; 54
+  a0:	f3 e0       	ldi	r31, 0x03	; 3
+  a2:	00 e0       	ldi	r16, 0x00	; 0
+  a4:	0b bf       	out	0x3b, r16	; 59
+  a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
+  a8:	07 90       	elpm	r0, Z+
+  aa:	0d 92       	st	X+, r0
+  ac:	ac 30       	cpi	r26, 0x0C	; 12
+  ae:	b1 07       	cpc	r27, r17
+  b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
+
+000000b2 <__do_clear_bss>:
+  b2:	21 e0       	ldi	r18, 0x01	; 1
+  b4:	ac e0       	ldi	r26, 0x0C	; 12
+  b6:	b1 e0       	ldi	r27, 0x01	; 1
+  b8:	01 c0       	rjmp	.+2      	; 0xbc <.do_clear_bss_start>
+
+000000ba <.do_clear_bss_loop>:
+  ba:	1d 92       	st	X+, r1
+
+000000bc <.do_clear_bss_start>:
+  bc:	aa 31       	cpi	r26, 0x1A	; 26
+  be:	b2 07       	cpc	r27, r18
+  c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
+  c2:	13 d1       	rcall	.+550    	; 0x2ea <main>
+  c4:	36 c1       	rjmp	.+620    	; 0x332 <_exit>
+
+000000c6 <__bad_interrupt>:
+  c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
+
+000000c8 <init_fnd>:
+	return 0;
+}
+
+void init_fnd(void)
+{
+	FND_DATA_DDR = 0xff;	// 출력 모드로 설정
+  c8:	8f ef       	ldi	r24, 0xFF	; 255
+  ca:	84 bb       	out	0x14, r24	; 20
+	FND_DIGIT_DDR |= 1 << FND_DIGIT_D1 | 1 << FND_DIGIT_D2 | 1 << FND_DIGIT_D3 | 1 << FND_DIGIT_D4;
+  cc:	87 b3       	in	r24, 0x17	; 23
+  ce:	80 6f       	ori	r24, 0xF0	; 240
+  d0:	87 bb       	out	0x17, r24	; 23
+	// FND 전체 off 하는 작업
+#if 0	// Common Anode (양극)
+	FND_DATA_PORT = 0xff;
+
+#else	// Common Cathode (음극)
+	FND_DATA_PORT = ~0xff;
+  d2:	15 ba       	out	0x15, r1	; 21
+  d4:	08 95       	ret
+
+000000d6 <find_display>:
+#endif
+
+}
+
+void find_display(void)
+{	
+  d6:	cf 93       	push	r28
+  d8:	df 93       	push	r29
+  da:	cd b7       	in	r28, 0x3d	; 61
+  dc:	de b7       	in	r29, 0x3e	; 62
+  de:	2b 97       	sbiw	r28, 0x0b	; 11
+  e0:	0f b6       	in	r0, 0x3f	; 63
+  e2:	f8 94       	cli
+  e4:	de bf       	out	0x3e, r29	; 62
+  e6:	0f be       	out	0x3f, r0	; 63
+  e8:	cd bf       	out	0x3d, r28	; 61
+							//  0     1 	 2	   3	 4	   5 	 6 	   7	8	  9
+	uint8_t find_font[] = {0xc0, 0xf9, 0xa4, 0xb0, 0x99, 0x92, 0x82, 0xd8, 0x80, 0x98, 0x7f};	// common anode
+		
+#else	
+   						    //  0      1 	 2	   3	 4	   5 	 6 	      7      8	    9
+	uint8_t find_font[] = {~0xc0, ~0xf9, ~0xa4, ~0xb0, ~0x99, ~0x92, ~0x82, ~0xd8, ~0x80, ~0x98, ~0x7f};	// common anode
+  ea:	8b e0       	ldi	r24, 0x0B	; 11
+  ec:	e0 e0       	ldi	r30, 0x00	; 0
+  ee:	f1 e0       	ldi	r31, 0x01	; 1
+  f0:	de 01       	movw	r26, r28
+  f2:	11 96       	adiw	r26, 0x01	; 1
+  f4:	01 90       	ld	r0, Z+
+  f6:	0d 92       	st	X+, r0
+  f8:	8a 95       	dec	r24
+  fa:	e1 f7       	brne	.-8      	; 0xf4 <find_display+0x1e>
+
+#endif
+	
+	static int digit_select = 0;	// 자리수 선택
+	
+	switch (digit_select)
+  fc:	80 91 0c 01 	lds	r24, 0x010C	; 0x80010c <__data_end>
+ 100:	90 91 0d 01 	lds	r25, 0x010D	; 0x80010d <__data_end+0x1>
+ 104:	81 30       	cpi	r24, 0x01	; 1
+ 106:	91 05       	cpc	r25, r1
+ 108:	19 f1       	breq	.+70     	; 0x150 <find_display+0x7a>
+ 10a:	1c f4       	brge	.+6      	; 0x112 <find_display+0x3c>
+ 10c:	89 2b       	or	r24, r25
+ 10e:	41 f0       	breq	.+16     	; 0x120 <find_display+0x4a>
+ 110:	7b c0       	rjmp	.+246    	; 0x208 <find_display+0x132>
+ 112:	82 30       	cpi	r24, 0x02	; 2
+ 114:	91 05       	cpc	r25, r1
+ 116:	d9 f1       	breq	.+118    	; 0x18e <find_display+0xb8>
+ 118:	03 97       	sbiw	r24, 0x03	; 3
+ 11a:	09 f4       	brne	.+2      	; 0x11e <find_display+0x48>
+ 11c:	57 c0       	rjmp	.+174    	; 0x1cc <find_display+0xf6>
+ 11e:	74 c0       	rjmp	.+232    	; 0x208 <find_display+0x132>
+	{
+		case 0:  // FND쪽 1단위 (제일 첫번째 숫자)
+			#if 0 // common anode
+			FND_DIGIT_PORT= 0X80;	// 0100 0000		
+			# else // common cathode
+			FND_DIGIT_PORT = ~0X80;	// 1011 1111
+ 120:	8f e7       	ldi	r24, 0x7F	; 127
+ 122:	88 bb       	out	0x18, r24	; 24
+			#endif
+			FND_DATA_PORT =  find_font[sec_count % 10];	// 0 ~ 9
+ 124:	60 91 12 01 	lds	r22, 0x0112	; 0x800112 <sec_count>
+ 128:	70 91 13 01 	lds	r23, 0x0113	; 0x800113 <sec_count+0x1>
+ 12c:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <sec_count+0x2>
+ 130:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <sec_count+0x3>
+ 134:	2a e0       	ldi	r18, 0x0A	; 10
+ 136:	30 e0       	ldi	r19, 0x00	; 0
+ 138:	40 e0       	ldi	r20, 0x00	; 0
+ 13a:	50 e0       	ldi	r21, 0x00	; 0
+ 13c:	d8 d0       	rcall	.+432    	; 0x2ee <__udivmodsi4>
+ 13e:	e1 e0       	ldi	r30, 0x01	; 1
+ 140:	f0 e0       	ldi	r31, 0x00	; 0
+ 142:	ec 0f       	add	r30, r28
+ 144:	fd 1f       	adc	r31, r29
+ 146:	e6 0f       	add	r30, r22
+ 148:	f7 1f       	adc	r31, r23
+ 14a:	80 81       	ld	r24, Z
+ 14c:	85 bb       	out	0x15, r24	; 21
+			break;
+ 14e:	5c c0       	rjmp	.+184    	; 0x208 <find_display+0x132>
+
+		case 1:	// FND쪽 10단위
+			#if 0 // common anode
+			FND_DIGIT_PORT= 0X40;	
+			# else // common cathode
+			FND_DIGIT_PORT = ~0X40;	
+ 150:	8f eb       	ldi	r24, 0xBF	; 191
+ 152:	88 bb       	out	0x18, r24	; 24
+			#endif
+			FND_DATA_PORT =  find_font[sec_count / 10 % 6];	// 0 ~ 59
+ 154:	60 91 12 01 	lds	r22, 0x0112	; 0x800112 <sec_count>
+ 158:	70 91 13 01 	lds	r23, 0x0113	; 0x800113 <sec_count+0x1>
+ 15c:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <sec_count+0x2>
+ 160:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <sec_count+0x3>
+ 164:	2a e0       	ldi	r18, 0x0A	; 10
+ 166:	30 e0       	ldi	r19, 0x00	; 0
+ 168:	40 e0       	ldi	r20, 0x00	; 0
+ 16a:	50 e0       	ldi	r21, 0x00	; 0
+ 16c:	c0 d0       	rcall	.+384    	; 0x2ee <__udivmodsi4>
+ 16e:	ca 01       	movw	r24, r20
+ 170:	b9 01       	movw	r22, r18
+ 172:	26 e0       	ldi	r18, 0x06	; 6
+ 174:	30 e0       	ldi	r19, 0x00	; 0
+ 176:	40 e0       	ldi	r20, 0x00	; 0
+ 178:	50 e0       	ldi	r21, 0x00	; 0
+ 17a:	b9 d0       	rcall	.+370    	; 0x2ee <__udivmodsi4>
+ 17c:	e1 e0       	ldi	r30, 0x01	; 1
+ 17e:	f0 e0       	ldi	r31, 0x00	; 0
+ 180:	ec 0f       	add	r30, r28
+ 182:	fd 1f       	adc	r31, r29
+ 184:	e6 0f       	add	r30, r22
+ 186:	f7 1f       	adc	r31, r23
+ 188:	80 81       	ld	r24, Z
+ 18a:	85 bb       	out	0x15, r24	; 21
+			break;
+ 18c:	3d c0       	rjmp	.+122    	; 0x208 <find_display+0x132>
+
+		case 2: // FND쪽 100단위
+			#if 0 // common anode
+			FND_DIGIT_PORT= 0X20;
+			# else // common cathode
+			FND_DIGIT_PORT = ~0X20;
+ 18e:	8f ed       	ldi	r24, 0xDF	; 223
+ 190:	88 bb       	out	0x18, r24	; 24
+			#endif
+			FND_DATA_PORT =  find_font[sec_count / 60 % 10];	
+ 192:	60 91 12 01 	lds	r22, 0x0112	; 0x800112 <sec_count>
+ 196:	70 91 13 01 	lds	r23, 0x0113	; 0x800113 <sec_count+0x1>
+ 19a:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <sec_count+0x2>
+ 19e:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <sec_count+0x3>
+ 1a2:	2c e3       	ldi	r18, 0x3C	; 60
+ 1a4:	30 e0       	ldi	r19, 0x00	; 0
+ 1a6:	40 e0       	ldi	r20, 0x00	; 0
+ 1a8:	50 e0       	ldi	r21, 0x00	; 0
+ 1aa:	a1 d0       	rcall	.+322    	; 0x2ee <__udivmodsi4>
+ 1ac:	ca 01       	movw	r24, r20
+ 1ae:	b9 01       	movw	r22, r18
+ 1b0:	2a e0       	ldi	r18, 0x0A	; 10
+ 1b2:	30 e0       	ldi	r19, 0x00	; 0
+ 1b4:	40 e0       	ldi	r20, 0x00	; 0
+ 1b6:	50 e0       	ldi	r21, 0x00	; 0
+ 1b8:	9a d0       	rcall	.+308    	; 0x2ee <__udivmodsi4>
+ 1ba:	e1 e0       	ldi	r30, 0x01	; 1
+ 1bc:	f0 e0       	ldi	r31, 0x00	; 0
+ 1be:	ec 0f       	add	r30, r28
+ 1c0:	fd 1f       	adc	r31, r29
+ 1c2:	e6 0f       	add	r30, r22
+ 1c4:	f7 1f       	adc	r31, r23
+ 1c6:	80 81       	ld	r24, Z
+ 1c8:	85 bb       	out	0x15, r24	; 21
+			break;
+ 1ca:	1e c0       	rjmp	.+60     	; 0x208 <find_display+0x132>
+
+		case 3:  // FND쪽 1000단위
+			#if 0 // common anode
+			FND_DIGIT_PORT= 0X10;
+			# else // common cathode
+			FND_DIGIT_PORT = ~0X10;
+ 1cc:	8f ee       	ldi	r24, 0xEF	; 239
+ 1ce:	88 bb       	out	0x18, r24	; 24
+			#endif
+			FND_DATA_PORT =  find_font[sec_count / 600 % 6];
+ 1d0:	60 91 12 01 	lds	r22, 0x0112	; 0x800112 <sec_count>
+ 1d4:	70 91 13 01 	lds	r23, 0x0113	; 0x800113 <sec_count+0x1>
+ 1d8:	80 91 14 01 	lds	r24, 0x0114	; 0x800114 <sec_count+0x2>
+ 1dc:	90 91 15 01 	lds	r25, 0x0115	; 0x800115 <sec_count+0x3>
+ 1e0:	28 e5       	ldi	r18, 0x58	; 88
+ 1e2:	32 e0       	ldi	r19, 0x02	; 2
+ 1e4:	40 e0       	ldi	r20, 0x00	; 0
+ 1e6:	50 e0       	ldi	r21, 0x00	; 0
+ 1e8:	82 d0       	rcall	.+260    	; 0x2ee <__udivmodsi4>
+ 1ea:	ca 01       	movw	r24, r20
+ 1ec:	b9 01       	movw	r22, r18
+ 1ee:	26 e0       	ldi	r18, 0x06	; 6
+ 1f0:	30 e0       	ldi	r19, 0x00	; 0
+ 1f2:	40 e0       	ldi	r20, 0x00	; 0
+ 1f4:	50 e0       	ldi	r21, 0x00	; 0
+ 1f6:	7b d0       	rcall	.+246    	; 0x2ee <__udivmodsi4>
+ 1f8:	e1 e0       	ldi	r30, 0x01	; 1
+ 1fa:	f0 e0       	ldi	r31, 0x00	; 0
+ 1fc:	ec 0f       	add	r30, r28
+ 1fe:	fd 1f       	adc	r31, r29
+ 200:	e6 0f       	add	r30, r22
+ 202:	f7 1f       	adc	r31, r23
+ 204:	80 81       	ld	r24, Z
+ 206:	85 bb       	out	0x15, r24	; 21
+			break;
+	}
+	digit_select = (digit_select + 1 ) % 4;
+ 208:	80 91 0c 01 	lds	r24, 0x010C	; 0x80010c <__data_end>
+ 20c:	90 91 0d 01 	lds	r25, 0x010D	; 0x80010d <__data_end+0x1>
+ 210:	01 96       	adiw	r24, 0x01	; 1
+ 212:	83 70       	andi	r24, 0x03	; 3
+ 214:	90 78       	andi	r25, 0x80	; 128
+ 216:	99 23       	and	r25, r25
+ 218:	24 f4       	brge	.+8      	; 0x222 <find_display+0x14c>
+ 21a:	01 97       	sbiw	r24, 0x01	; 1
+ 21c:	8c 6f       	ori	r24, 0xFC	; 252
+ 21e:	9f 6f       	ori	r25, 0xFF	; 255
+ 220:	01 96       	adiw	r24, 0x01	; 1
+ 222:	90 93 0d 01 	sts	0x010D, r25	; 0x80010d <__data_end+0x1>
+ 226:	80 93 0c 01 	sts	0x010C, r24	; 0x80010c <__data_end>
+}
+ 22a:	2b 96       	adiw	r28, 0x0b	; 11
+ 22c:	0f b6       	in	r0, 0x3f	; 63
+ 22e:	f8 94       	cli
+ 230:	de bf       	out	0x3e, r29	; 62
+ 232:	0f be       	out	0x3f, r0	; 63
+ 234:	cd bf       	out	0x3d, r28	; 61
+ 236:	df 91       	pop	r29
+ 238:	cf 91       	pop	r28
+ 23a:	08 95       	ret
+
+0000023c <fnd_main>:
+uint32_t dot_display = 0;	
+
+int fnd_main(void)
+{
+	
+	init_fnd();
+ 23c:	45 df       	rcall	.-374    	; 0xc8 <init_fnd>
+	
+	while(1)
+	{
+		find_display();
+ 23e:	4b df       	rcall	.-362    	; 0xd6 <find_display>
+ 240:	8f e9       	ldi	r24, 0x9F	; 159
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 242:	9f e0       	ldi	r25, 0x0F	; 15
+ 244:	01 97       	sbiw	r24, 0x01	; 1
+ 246:	f1 f7       	brne	.-4      	; 0x244 <fnd_main+0x8>
+ 248:	00 c0       	rjmp	.+0      	; 0x24a <fnd_main+0xe>
+ 24a:	00 00       	nop
+ 24c:	80 91 16 01 	lds	r24, 0x0116	; 0x800116 <ms_count>
+		_delay_ms(1);
+
+		ms_count++;
+ 250:	90 91 17 01 	lds	r25, 0x0117	; 0x800117 <ms_count+0x1>
+ 254:	a0 91 18 01 	lds	r26, 0x0118	; 0x800118 <ms_count+0x2>
+ 258:	b0 91 19 01 	lds	r27, 0x0119	; 0x800119 <ms_count+0x3>
+ 25c:	01 96       	adiw	r24, 0x01	; 1
+ 25e:	a1 1d       	adc	r26, r1
+ 260:	b1 1d       	adc	r27, r1
+ 262:	80 93 16 01 	sts	0x0116, r24	; 0x800116 <ms_count>
+ 266:	90 93 17 01 	sts	0x0117, r25	; 0x800117 <ms_count+0x1>
+ 26a:	a0 93 18 01 	sts	0x0118, r26	; 0x800118 <ms_count+0x2>
+ 26e:	b0 93 19 01 	sts	0x0119, r27	; 0x800119 <ms_count+0x3>
+ 272:	88 3e       	cpi	r24, 0xE8	; 232
+		if(ms_count >= 1000)
+ 274:	93 40       	sbci	r25, 0x03	; 3
+ 276:	a1 05       	cpc	r26, r1
+ 278:	b1 05       	cpc	r27, r1
+ 27a:	08 f3       	brcs	.-62     	; 0x23e <fnd_main+0x2>
+ 27c:	10 92 16 01 	sts	0x0116, r1	; 0x800116 <ms_count>
+		{
+			ms_count=0;
+ 280:	10 92 17 01 	sts	0x0117, r1	; 0x800117 <ms_count+0x1>
+ 284:	10 92 18 01 	sts	0x0118, r1	; 0x800118 <ms_count+0x2>
+ 288:	10 92 19 01 	sts	0x0119, r1	; 0x800119 <ms_count+0x3>
+ 28c:	80 91 12 01 	lds	r24, 0x0112	; 0x800112 <sec_count>
+			sec_count++;
+ 290:	90 91 13 01 	lds	r25, 0x0113	; 0x800113 <sec_count+0x1>
+ 294:	a0 91 14 01 	lds	r26, 0x0114	; 0x800114 <sec_count+0x2>
+ 298:	b0 91 15 01 	lds	r27, 0x0115	; 0x800115 <sec_count+0x3>
+ 29c:	01 96       	adiw	r24, 0x01	; 1
+ 29e:	a1 1d       	adc	r26, r1
+ 2a0:	b1 1d       	adc	r27, r1
+ 2a2:	80 93 12 01 	sts	0x0112, r24	; 0x800112 <sec_count>
+ 2a6:	90 93 13 01 	sts	0x0113, r25	; 0x800113 <sec_count+0x1>
+ 2aa:	a0 93 14 01 	sts	0x0114, r26	; 0x800114 <sec_count+0x2>
+ 2ae:	b0 93 15 01 	sts	0x0115, r27	; 0x800115 <sec_count+0x3>
+ 2b2:	81 e0       	ldi	r24, 0x01	; 1
+			dot_display = !dot_display;		// 깜박 거리게 하려고
+ 2b4:	90 e0       	ldi	r25, 0x00	; 0
+ 2b6:	a0 e0       	ldi	r26, 0x00	; 0
+ 2b8:	b0 e0       	ldi	r27, 0x00	; 0
+ 2ba:	40 91 0e 01 	lds	r20, 0x010E	; 0x80010e <dot_display>
+ 2be:	50 91 0f 01 	lds	r21, 0x010F	; 0x80010f <dot_display+0x1>
+ 2c2:	60 91 10 01 	lds	r22, 0x0110	; 0x800110 <dot_display+0x2>
+ 2c6:	70 91 11 01 	lds	r23, 0x0111	; 0x800111 <dot_display+0x3>
+ 2ca:	45 2b       	or	r20, r21
+ 2cc:	46 2b       	or	r20, r22
+ 2ce:	47 2b       	or	r20, r23
+ 2d0:	19 f0       	breq	.+6      	; 0x2d8 <fnd_main+0x9c>
+ 2d2:	80 e0       	ldi	r24, 0x00	; 0
+ 2d4:	90 e0       	ldi	r25, 0x00	; 0
+ 2d6:	dc 01       	movw	r26, r24
+ 2d8:	80 93 0e 01 	sts	0x010E, r24	; 0x80010e <dot_display>
+ 2dc:	90 93 0f 01 	sts	0x010F, r25	; 0x80010f <dot_display+0x1>
+ 2e0:	a0 93 10 01 	sts	0x0110, r26	; 0x800110 <dot_display+0x2>
+ 2e4:	b0 93 11 01 	sts	0x0111, r27	; 0x800111 <dot_display+0x3>
+ 2e8:	aa cf       	rjmp	.-172    	; 0x23e <fnd_main+0x2>
+
+000002ea <main>:
+int main(void)
+{
+    /* Replace with your application code */
+    while (1) 
+    {
+		fnd_main();
+ 2ea:	a8 df       	rcall	.-176    	; 0x23c <fnd_main>
+ 2ec:	fe cf       	rjmp	.-4      	; 0x2ea <main>
+
+000002ee <__udivmodsi4>:
+ 2ee:	a1 e2       	ldi	r26, 0x21	; 33
+ 2f0:	1a 2e       	mov	r1, r26
+ 2f2:	aa 1b       	sub	r26, r26
+ 2f4:	bb 1b       	sub	r27, r27
+ 2f6:	fd 01       	movw	r30, r26
+ 2f8:	0d c0       	rjmp	.+26     	; 0x314 <__udivmodsi4_ep>
+
+000002fa <__udivmodsi4_loop>:
+ 2fa:	aa 1f       	adc	r26, r26
+ 2fc:	bb 1f       	adc	r27, r27
+ 2fe:	ee 1f       	adc	r30, r30
+ 300:	ff 1f       	adc	r31, r31
+ 302:	a2 17       	cp	r26, r18
+ 304:	b3 07       	cpc	r27, r19
+ 306:	e4 07       	cpc	r30, r20
+ 308:	f5 07       	cpc	r31, r21
+ 30a:	20 f0       	brcs	.+8      	; 0x314 <__udivmodsi4_ep>
+ 30c:	a2 1b       	sub	r26, r18
+ 30e:	b3 0b       	sbc	r27, r19
+ 310:	e4 0b       	sbc	r30, r20
+ 312:	f5 0b       	sbc	r31, r21
+
+00000314 <__udivmodsi4_ep>:
+ 314:	66 1f       	adc	r22, r22
+ 316:	77 1f       	adc	r23, r23
+ 318:	88 1f       	adc	r24, r24
+ 31a:	99 1f       	adc	r25, r25
+ 31c:	1a 94       	dec	r1
+ 31e:	69 f7       	brne	.-38     	; 0x2fa <__udivmodsi4_loop>
+ 320:	60 95       	com	r22
+ 322:	70 95       	com	r23
+ 324:	80 95       	com	r24
+ 326:	90 95       	com	r25
+ 328:	9b 01       	movw	r18, r22
+ 32a:	ac 01       	movw	r20, r24
+ 32c:	bd 01       	movw	r22, r26
+ 32e:	cf 01       	movw	r24, r30
+ 330:	08 95       	ret
+
+00000332 <_exit>:
+ 332:	f8 94       	cli
+
+00000334 <__stop_program>:
+ 334:	ff cf       	rjmp	.-2      	; 0x334 <__stop_program>

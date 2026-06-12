@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 00000a43  00000000  00000000  00001465  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000660  00000000  00000000  00001ea8  2**0
+  8 .debug_line   0000065a  00000000  00000000  00001ea8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000010c  00000000  00000000  00002508  2**2
+  9 .debug_frame  0000010c  00000000  00000000  00002504  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000544  00000000  00000000  00002614  2**0
+ 10 .debug_str    00000511  00000000  00000000  00002610  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000034d  00000000  00000000  00002b58  2**0
+ 11 .debug_loc    00000320  00000000  00000000  00002b21  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000080  00000000  00000000  00002ea5  2**0
+ 12 .debug_ranges 00000080  00000000  00000000  00002e41  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -602,9 +602,8 @@ int main(void)
 		{
 			*(unsigned char*) 0x3b = 0x00;
  382:	ce 01       	movw	r24, r28
-			button0_state++;
+			 button0_state = (button0_state + 1) % 9;  // 이렇게 바꾸는게 좋을 듯.
  384:	01 96       	adiw	r24, 0x01	; 1
-			button0_state %= 9;
  386:	69 e0       	ldi	r22, 0x09	; 9
  388:	70 e0       	ldi	r23, 0x00	; 0
  38a:	72 d0       	rcall	.+228    	; 0x470 <__divmodhi4>

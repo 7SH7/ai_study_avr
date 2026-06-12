@@ -54,8 +54,7 @@ int main(void)
 		if (get_button(BUTTON0, BUTTON0PIN))
 		{
 			*(unsigned char*) 0x3b = 0x00;
-			button0_state++;
-			button0_state %= 9;
+			 button0_state = (button0_state + 1) % 9;  // 이렇게 바꾸는게 좋을 듯.
 		}
 		
 		if(button0_state== 1)	fp[button0_state-1]();

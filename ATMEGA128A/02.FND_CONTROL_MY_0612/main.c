@@ -99,7 +99,7 @@ typedef enum {SW_STOP, SW_RUN} sw_state_t;
 int main(void)
 {
 	int button0_state=0;
-
+	int button2_cnt=0;
 	// ===== [수정 전]
 	// int button1_state=0;
 	// int button2_state=0;
@@ -126,21 +126,6 @@ int main(void)
 		else if(button0_state == 1)		sec_clock();
 		else if(button0_state == 2)
 		{
-			// ===== [수정 전]
-			// if (get_button(BUTTON1, BUTTON1PIN))
-			//     button1_state++;
-			// else if (get_button(BUTTON2, BUTTON2PIN))
-			//     button2_state++;
-			//
-			// if((button1_state % 2) == 1)	stopwatch_clock();
-			// else if((button1_state % 2) == 0) pause_stop_watch();
-			// if(button2_state % 2)
-			// {
-			//     ms_count = 0;
-			//     sec_count = 0;
-			//     dot_display = 0;
-			// }
-			// else if(!(button2_state % 2) && 1 < button2_state) stopwatch_clock();
 
 			// ===== [수정 후] : 상태도 (stop --BTN1--> run --BTN1--> stop, stop --BTN2--> reset --> run) 반영 =====
 			if (get_button(BUTTON1, BUTTON1PIN))
@@ -151,13 +136,22 @@ int main(void)
 
 			if (get_button(BUTTON2, BUTTON2PIN))
 			{
-				// reset: count 초기화 후 run 상태로 전환 (상태도의 reset -> run)
-				ms_count = 0;
-				sec_count = 0;
-				dot_display = 0;
-				sw_state = SW_RUN;
+				if(button2_cnt==0)
+				{
+					ms_count = 0;
+					sec_count = 0;
+					dot_display = 0;
+					sw_state = SW_STOP;
+					button2_cnt=1;
+				}
+			
+				else if(!(button2_cnt==0))
+				{
+					sw_state = SW_RUN;
+					button2_cnt = 0;
+				}
 			}
-
+			
 			if (sw_state == SW_RUN)
 				stopwatch_clock();
 			else

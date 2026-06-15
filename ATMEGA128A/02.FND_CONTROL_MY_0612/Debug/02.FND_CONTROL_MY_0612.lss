@@ -3,31 +3,31 @@
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000018  00800100  00000940  000009d4  2**0
+  0 .data         00000018  00800100  0000090a  0000099e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000940  00000000  00000000  00000094  2**1
+  1 .text         0000090a  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000016  00800118  00800118  000009ec  2**0
+  2 .bss          00000016  00800118  00800118  000009b6  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000009ec  2**0
+  3 .comment      00000030  00000000  00000000  000009b6  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000a1c  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000009e8  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000a0  00000000  00000000  00000a5c  2**0
+  5 .debug_aranges 000000a0  00000000  00000000  00000a28  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000ed4  00000000  00000000  00000afc  2**0
+  6 .debug_info   00000ee0  00000000  00000000  00000ac8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000a49  00000000  00000000  000019d0  2**0
+  7 .debug_abbrev 00000a61  00000000  00000000  000019a8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000007a1  00000000  00000000  00002419  2**0
+  8 .debug_line   0000076f  00000000  00000000  00002409  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000140  00000000  00000000  00002bbc  2**2
+  9 .debug_frame  00000140  00000000  00000000  00002b78  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000546  00000000  00000000  00002cfc  2**0
+ 10 .debug_str    0000054d  00000000  00000000  00002cb8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000006d7  00000000  00000000  00003242  2**0
+ 11 .debug_loc    000006fc  00000000  00000000  00003205  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000070  00000000  00000000  00003919  2**0
+ 12 .debug_ranges 00000070  00000000  00000000  00003901  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -116,7 +116,7 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e0 e4       	ldi	r30, 0x40	; 64
+  9e:	ea e0       	ldi	r30, 0x0A	; 10
   a0:	f9 e0       	ldi	r31, 0x09	; 9
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
@@ -141,7 +141,7 @@ Disassembly of section .text:
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
   c2:	6f d3       	rcall	.+1758   	; 0x7a2 <main>
-  c4:	3b c4       	rjmp	.+2166   	; 0x93c <_exit>
+  c4:	20 c4       	rjmp	.+2112   	; 0x906 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
@@ -343,7 +343,7 @@ void find_display(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 �
  1b0:	30 e0       	ldi	r19, 0x00	; 0
  1b2:	40 e0       	ldi	r20, 0x00	; 0
  1b4:	50 e0       	ldi	r21, 0x00	; 0
- 1b6:	8c d3       	rcall	.+1816   	; 0x8d0 <__udivmodsi4>
+ 1b6:	71 d3       	rcall	.+1762   	; 0x89a <__udivmodsi4>
  1b8:	e1 e0       	ldi	r30, 0x01	; 1
  1ba:	f0 e0       	ldi	r31, 0x00	; 0
  1bc:	ec 0f       	add	r30, r28
@@ -372,14 +372,14 @@ void find_display(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 �
  1d8:	30 e0       	ldi	r19, 0x00	; 0
  1da:	40 e0       	ldi	r20, 0x00	; 0
  1dc:	50 e0       	ldi	r21, 0x00	; 0
- 1de:	78 d3       	rcall	.+1776   	; 0x8d0 <__udivmodsi4>
+ 1de:	5d d3       	rcall	.+1722   	; 0x89a <__udivmodsi4>
  1e0:	ca 01       	movw	r24, r20
  1e2:	b9 01       	movw	r22, r18
  1e4:	26 e0       	ldi	r18, 0x06	; 6
  1e6:	30 e0       	ldi	r19, 0x00	; 0
  1e8:	40 e0       	ldi	r20, 0x00	; 0
  1ea:	50 e0       	ldi	r21, 0x00	; 0
- 1ec:	71 d3       	rcall	.+1762   	; 0x8d0 <__udivmodsi4>
+ 1ec:	56 d3       	rcall	.+1708   	; 0x89a <__udivmodsi4>
  1ee:	e1 e0       	ldi	r30, 0x01	; 1
  1f0:	f0 e0       	ldi	r31, 0x00	; 0
  1f2:	ec 0f       	add	r30, r28
@@ -408,14 +408,14 @@ void find_display(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 �
  20e:	30 e0       	ldi	r19, 0x00	; 0
  210:	40 e0       	ldi	r20, 0x00	; 0
  212:	50 e0       	ldi	r21, 0x00	; 0
- 214:	5d d3       	rcall	.+1722   	; 0x8d0 <__udivmodsi4>
+ 214:	42 d3       	rcall	.+1668   	; 0x89a <__udivmodsi4>
  216:	ca 01       	movw	r24, r20
  218:	b9 01       	movw	r22, r18
  21a:	2a e0       	ldi	r18, 0x0A	; 10
  21c:	30 e0       	ldi	r19, 0x00	; 0
  21e:	40 e0       	ldi	r20, 0x00	; 0
  220:	50 e0       	ldi	r21, 0x00	; 0
- 222:	56 d3       	rcall	.+1708   	; 0x8d0 <__udivmodsi4>
+ 222:	3b d3       	rcall	.+1654   	; 0x89a <__udivmodsi4>
  224:	e1 e0       	ldi	r30, 0x01	; 1
  226:	f0 e0       	ldi	r31, 0x00	; 0
  228:	ec 0f       	add	r30, r28
@@ -441,14 +441,14 @@ void find_display(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 �
  23c:	32 e0       	ldi	r19, 0x02	; 2
  23e:	40 e0       	ldi	r20, 0x00	; 0
  240:	50 e0       	ldi	r21, 0x00	; 0
- 242:	46 d3       	rcall	.+1676   	; 0x8d0 <__udivmodsi4>
+ 242:	2b d3       	rcall	.+1622   	; 0x89a <__udivmodsi4>
  244:	ca 01       	movw	r24, r20
  246:	b9 01       	movw	r22, r18
  248:	26 e0       	ldi	r18, 0x06	; 6
  24a:	30 e0       	ldi	r19, 0x00	; 0
  24c:	40 e0       	ldi	r20, 0x00	; 0
  24e:	50 e0       	ldi	r21, 0x00	; 0
- 250:	3f d3       	rcall	.+1662   	; 0x8d0 <__udivmodsi4>
+ 250:	24 d3       	rcall	.+1608   	; 0x89a <__udivmodsi4>
  252:	e1 e0       	ldi	r30, 0x01	; 1
  254:	f0 e0       	ldi	r31, 0x00	; 0
  256:	ec 0f       	add	r30, r28
@@ -657,7 +657,7 @@ void find_sec_clock(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 
  3d8:	30 e0       	ldi	r19, 0x00	; 0
  3da:	40 e0       	ldi	r20, 0x00	; 0
  3dc:	50 e0       	ldi	r21, 0x00	; 0
- 3de:	78 d2       	rcall	.+1264   	; 0x8d0 <__udivmodsi4>
+ 3de:	5d d2       	rcall	.+1210   	; 0x89a <__udivmodsi4>
  3e0:	e1 e0       	ldi	r30, 0x01	; 1
  3e2:	f0 e0       	ldi	r31, 0x00	; 0
  3e4:	ec 0f       	add	r30, r28
@@ -682,14 +682,14 @@ void find_sec_clock(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 
  3f8:	30 e0       	ldi	r19, 0x00	; 0
  3fa:	40 e0       	ldi	r20, 0x00	; 0
  3fc:	50 e0       	ldi	r21, 0x00	; 0
- 3fe:	68 d2       	rcall	.+1232   	; 0x8d0 <__udivmodsi4>
+ 3fe:	4d d2       	rcall	.+1178   	; 0x89a <__udivmodsi4>
  400:	ca 01       	movw	r24, r20
  402:	b9 01       	movw	r22, r18
  404:	26 e0       	ldi	r18, 0x06	; 6
  406:	30 e0       	ldi	r19, 0x00	; 0
  408:	40 e0       	ldi	r20, 0x00	; 0
  40a:	50 e0       	ldi	r21, 0x00	; 0
- 40c:	61 d2       	rcall	.+1218   	; 0x8d0 <__udivmodsi4>
+ 40c:	46 d2       	rcall	.+1164   	; 0x89a <__udivmodsi4>
  40e:	e1 e0       	ldi	r30, 0x01	; 1
  410:	f0 e0       	ldi	r31, 0x00	; 0
  412:	ec 0f       	add	r30, r28
@@ -714,7 +714,7 @@ void find_sec_clock(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 
  426:	30 e0       	ldi	r19, 0x00	; 0
  428:	40 e0       	ldi	r20, 0x00	; 0
  42a:	50 e0       	ldi	r21, 0x00	; 0
- 42c:	51 d2       	rcall	.+1186   	; 0x8d0 <__udivmodsi4>
+ 42c:	36 d2       	rcall	.+1132   	; 0x89a <__udivmodsi4>
  42e:	ec e0       	ldi	r30, 0x0C	; 12
  430:	f0 e0       	ldi	r31, 0x00	; 0
  432:	ec 0f       	add	r30, r28
@@ -739,7 +739,7 @@ void find_sec_clock(uint32_t sec_count, uint32_t dot_display)	// PC7번이 1초 
  446:	30 e0       	ldi	r19, 0x00	; 0
  448:	40 e0       	ldi	r20, 0x00	; 0
  44a:	50 e0       	ldi	r21, 0x00	; 0
- 44c:	41 d2       	rcall	.+1154   	; 0x8d0 <__udivmodsi4>
+ 44c:	26 d2       	rcall	.+1100   	; 0x89a <__udivmodsi4>
  44e:	e2 e1       	ldi	r30, 0x12	; 18
  450:	f0 e0       	ldi	r31, 0x00	; 0
  452:	ec 0f       	add	r30, r28
@@ -937,12 +937,12 @@ void run_stop_watch(uint32_t sec_count, uint32_t ms_count)	// PC7번이 1초 단
  5c6:	b9 01       	movw	r22, r18
  5c8:	a7 01       	movw	r20, r14
  5ca:	96 01       	movw	r18, r12
- 5cc:	81 d1       	rcall	.+770    	; 0x8d0 <__udivmodsi4>
+ 5cc:	66 d1       	rcall	.+716    	; 0x89a <__udivmodsi4>
  5ce:	ca 01       	movw	r24, r20
  5d0:	b9 01       	movw	r22, r18
  5d2:	a7 01       	movw	r20, r14
  5d4:	96 01       	movw	r18, r12
- 5d6:	7c d1       	rcall	.+760    	; 0x8d0 <__udivmodsi4>
+ 5d6:	61 d1       	rcall	.+706    	; 0x89a <__udivmodsi4>
  5d8:	e1 e0       	ldi	r30, 0x01	; 1
  5da:	f0 e0       	ldi	r31, 0x00	; 0
  5dc:	ec 0f       	add	r30, r28
@@ -969,14 +969,14 @@ void run_stop_watch(uint32_t sec_count, uint32_t ms_count)	// PC7번이 1초 단
  5f4:	30 e0       	ldi	r19, 0x00	; 0
  5f6:	40 e0       	ldi	r20, 0x00	; 0
  5f8:	50 e0       	ldi	r21, 0x00	; 0
- 5fa:	6a d1       	rcall	.+724    	; 0x8d0 <__udivmodsi4>
+ 5fa:	4f d1       	rcall	.+670    	; 0x89a <__udivmodsi4>
  5fc:	ca 01       	movw	r24, r20
  5fe:	b9 01       	movw	r22, r18
  600:	2a e0       	ldi	r18, 0x0A	; 10
  602:	30 e0       	ldi	r19, 0x00	; 0
  604:	40 e0       	ldi	r20, 0x00	; 0
  606:	50 e0       	ldi	r21, 0x00	; 0
- 608:	63 d1       	rcall	.+710    	; 0x8d0 <__udivmodsi4>
+ 608:	48 d1       	rcall	.+656    	; 0x89a <__udivmodsi4>
  60a:	e1 e0       	ldi	r30, 0x01	; 1
  60c:	f0 e0       	ldi	r31, 0x00	; 0
  60e:	ec 0f       	add	r30, r28
@@ -1001,7 +1001,7 @@ void run_stop_watch(uint32_t sec_count, uint32_t ms_count)	// PC7번이 1초 단
  622:	30 e0       	ldi	r19, 0x00	; 0
  624:	40 e0       	ldi	r20, 0x00	; 0
  626:	50 e0       	ldi	r21, 0x00	; 0
- 628:	53 d1       	rcall	.+678    	; 0x8d0 <__udivmodsi4>
+ 628:	38 d1       	rcall	.+624    	; 0x89a <__udivmodsi4>
  62a:	e1 e0       	ldi	r30, 0x01	; 1
  62c:	f0 e0       	ldi	r31, 0x00	; 0
  62e:	ec 0f       	add	r30, r28
@@ -1027,14 +1027,14 @@ void run_stop_watch(uint32_t sec_count, uint32_t ms_count)	// PC7번이 1초 단
  642:	30 e0       	ldi	r19, 0x00	; 0
  644:	40 e0       	ldi	r20, 0x00	; 0
  646:	50 e0       	ldi	r21, 0x00	; 0
- 648:	43 d1       	rcall	.+646    	; 0x8d0 <__udivmodsi4>
+ 648:	28 d1       	rcall	.+592    	; 0x89a <__udivmodsi4>
  64a:	ca 01       	movw	r24, r20
  64c:	b9 01       	movw	r22, r18
  64e:	26 e0       	ldi	r18, 0x06	; 6
  650:	30 e0       	ldi	r19, 0x00	; 0
  652:	40 e0       	ldi	r20, 0x00	; 0
  654:	50 e0       	ldi	r21, 0x00	; 0
- 656:	3c d1       	rcall	.+632    	; 0x8d0 <__udivmodsi4>
+ 656:	21 d1       	rcall	.+578    	; 0x89a <__udivmodsi4>
  658:	e1 e0       	ldi	r30, 0x01	; 1
  65a:	f0 e0       	ldi	r31, 0x00	; 0
  65c:	ec 0f       	add	r30, r28
@@ -1182,270 +1182,245 @@ void stopwatch_clock(){
  7a0:	08 95       	ret
 
 000007a2 <main>:
-{
+	// int button1_state=0;
+	// int button2_state=0;
+	// ===== [수정 후] : 누적 카운트 변수 대신 stopwatch 상태 변수 1개로 대체 =====
+	sw_state_t sw_state = SW_STOP;	// 상태도상 초기 상태는 stop
 
-	int button0_state=0;
-	int button1_state=0;
-	int button2_state=0;
 	init_button();
  7a2:	92 dc       	rcall	.-1756   	; 0xc8 <init_button>
 	init_fnd();
  7a4:	d3 dc       	rcall	.-1626   	; 0x14c <init_fnd>
- 7a6:	e1 2c       	mov	r14, r1
-int main(void)
-{
+ 7a6:	10 e0       	ldi	r17, 0x00	; 0
 
-	int button0_state=0;
-	int button1_state=0;
-	int button2_state=0;
- 7a8:	f1 2c       	mov	r15, r1
- 7aa:	00 e0       	ldi	r16, 0x00	; 0
-
-int main(void)
-{
-
-	int button0_state=0;
-	int button1_state=0;
- 7ac:	10 e0       	ldi	r17, 0x00	; 0
- 7ae:	c0 e0       	ldi	r28, 0x00	; 0
-
+	// ===== [수정 전]
+	// int button1_state=0;
+	// int button2_state=0;
+	// ===== [수정 후] : 누적 카운트 변수 대신 stopwatch 상태 변수 1개로 대체 =====
+	sw_state_t sw_state = SW_STOP;	// 상태도상 초기 상태는 stop
+ 7a8:	c0 e0       	ldi	r28, 0x00	; 0
+// ===== [수정] 스톱워치 내부 상태를 별도 enum으로 명확히 분리 (상태도: stop / run) =====
+typedef enum {SW_STOP, SW_RUN} sw_state_t;
 
 int main(void)
 {
-
 	int button0_state=0;
- 7b0:	d0 e0       	ldi	r29, 0x00	; 0
- 7b2:	63 e0       	ldi	r22, 0x03	; 3
+ 7aa:	d0 e0       	ldi	r29, 0x00	; 0
+ 7ac:	63 e0       	ldi	r22, 0x03	; 3
 	init_button();
 	init_fnd();
 	
     while (1) 
     {
 		if (get_button(BUTTON0, BUTTON0PIN))
- 7b4:	70 e0       	ldi	r23, 0x00	; 0
- 7b6:	80 e0       	ldi	r24, 0x00	; 0
- 7b8:	90 e0       	ldi	r25, 0x00	; 0
- 7ba:	8a dc       	rcall	.-1772   	; 0xd0 <get_button>
- 7bc:	89 2b       	or	r24, r25
- 7be:	f1 f0       	breq	.+60     	; 0x7fc <main+0x5a>
- 7c0:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <ms_count>
+ 7ae:	70 e0       	ldi	r23, 0x00	; 0
+ 7b0:	80 e0       	ldi	r24, 0x00	; 0
+ 7b2:	90 e0       	ldi	r25, 0x00	; 0
+ 7b4:	8d dc       	rcall	.-1766   	; 0xd0 <get_button>
+ 7b6:	89 2b       	or	r24, r25
+ 7b8:	f9 f0       	breq	.+62     	; 0x7f8 <main+0x56>
+ 7ba:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <ms_count>
 		{
 			ms_count = 0;
- 7c4:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <ms_count+0x1>
- 7c8:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <ms_count+0x2>
- 7cc:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <ms_count+0x3>
- 7d0:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <sec_count>
+ 7be:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <ms_count+0x1>
+ 7c2:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <ms_count+0x2>
+ 7c6:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <ms_count+0x3>
+ 7ca:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <sec_count>
 			sec_count = 0;
- 7d4:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <sec_count+0x1>
- 7d8:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <sec_count+0x2>
- 7dc:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <sec_count+0x3>
- 7e0:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <dot_display>
+ 7ce:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <sec_count+0x1>
+ 7d2:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <sec_count+0x2>
+ 7d6:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <sec_count+0x3>
+ 7da:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <dot_display>
 			dot_display = 0;
- 7e4:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <dot_display+0x1>
- 7e8:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <dot_display+0x2>
- 7ec:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <dot_display+0x3>
- 7f0:	ce 01       	movw	r24, r28
+ 7de:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <dot_display+0x1>
+ 7e2:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <dot_display+0x2>
+ 7e6:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <dot_display+0x3>
+ 7ea:	ce 01       	movw	r24, r28
 			button0_state = (button0_state + 1) % 3;
- 7f2:	01 96       	adiw	r24, 0x01	; 1
- 7f4:	63 e0       	ldi	r22, 0x03	; 3
- 7f6:	70 e0       	ldi	r23, 0x00	; 0
- 7f8:	58 d0       	rcall	.+176    	; 0x8aa <__divmodhi4>
- 7fa:	ec 01       	movw	r28, r24
+ 7ec:	01 96       	adiw	r24, 0x01	; 1
+ 7ee:	63 e0       	ldi	r22, 0x03	; 3
+ 7f0:	70 e0       	ldi	r23, 0x00	; 0
+ 7f2:	40 d0       	rcall	.+128    	; 0x874 <__divmodhi4>
+ 7f4:	ec 01       	movw	r28, r24
+ 7f6:	10 e0       	ldi	r17, 0x00	; 0
+
+			// ===== [추가] 모드 전환 시 stopwatch 상태도 stop으로 초기화 =====
+			sw_state = SW_STOP;
+ 7f8:	20 97       	sbiw	r28, 0x00	; 0
 		}
 
 		if(button0_state == 0)		min_sec_clock();
- 7fc:	20 97       	sbiw	r28, 0x00	; 0
- 7fe:	11 f4       	brne	.+4      	; 0x804 <main+0x62>
- 800:	4b dd       	rcall	.-1386   	; 0x298 <min_sec_clock>
- 802:	d7 cf       	rjmp	.-82     	; 0x7b2 <main+0x10>
+ 7fa:	11 f4       	brne	.+4      	; 0x800 <main+0x5e>
+ 7fc:	4d dd       	rcall	.-1382   	; 0x298 <min_sec_clock>
+ 7fe:	d6 cf       	rjmp	.-84     	; 0x7ac <main+0xa>
+ 800:	c1 30       	cpi	r28, 0x01	; 1
 		else if(button0_state == 1)		sec_clock();
- 804:	c1 30       	cpi	r28, 0x01	; 1
- 806:	d1 05       	cpc	r29, r1
- 808:	11 f4       	brne	.+4      	; 0x80e <main+0x6c>
- 80a:	43 de       	rcall	.-890    	; 0x492 <sec_clock>
- 80c:	d2 cf       	rjmp	.-92     	; 0x7b2 <main+0x10>
- 80e:	c2 30       	cpi	r28, 0x02	; 2
+ 802:	d1 05       	cpc	r29, r1
+ 804:	11 f4       	brne	.+4      	; 0x80a <main+0x68>
+ 806:	45 de       	rcall	.-886    	; 0x492 <sec_clock>
+ 808:	d1 cf       	rjmp	.-94     	; 0x7ac <main+0xa>
+ 80a:	c2 30       	cpi	r28, 0x02	; 2
+ 80c:	d1 05       	cpc	r29, r1
 		else if(button0_state == 2)
- 810:	d1 05       	cpc	r29, r1
- 812:	79 f6       	brne	.-98     	; 0x7b2 <main+0x10>
-		{
+ 80e:	71 f6       	brne	.-100    	; 0x7ac <main+0xa>
+ 810:	64 e0       	ldi	r22, 0x04	; 4
+			//     dot_display = 0;
+			// }
+			// else if(!(button2_state % 2) && 1 < button2_state) stopwatch_clock();
+
+			// ===== [수정 후] : 상태도 (stop --BTN1--> run --BTN1--> stop, stop --BTN2--> reset --> run) 반영 =====
 			if (get_button(BUTTON1, BUTTON1PIN))
- 814:	64 e0       	ldi	r22, 0x04	; 4
- 816:	70 e0       	ldi	r23, 0x00	; 0
- 818:	81 e0       	ldi	r24, 0x01	; 1
- 81a:	90 e0       	ldi	r25, 0x00	; 0
- 81c:	59 dc       	rcall	.-1870   	; 0xd0 <get_button>
- 81e:	89 2b       	or	r24, r25
- 820:	19 f0       	breq	.+6      	; 0x828 <main+0x86>
- 822:	0f 5f       	subi	r16, 0xFF	; 255
-				button1_state++;
- 824:	1f 4f       	sbci	r17, 0xFF	; 255
- 826:	0a c0       	rjmp	.+20     	; 0x83c <main+0x9a>
-
-
-			else if (get_button(BUTTON2, BUTTON2PIN)) 
+ 812:	70 e0       	ldi	r23, 0x00	; 0
+ 814:	81 e0       	ldi	r24, 0x01	; 1
+ 816:	90 e0       	ldi	r25, 0x00	; 0
+ 818:	5b dc       	rcall	.-1866   	; 0xd0 <get_button>
+ 81a:	89 2b       	or	r24, r25
+ 81c:	29 f0       	breq	.+10     	; 0x828 <main+0x86>
+ 81e:	81 e0       	ldi	r24, 0x01	; 1
+ 820:	11 30       	cpi	r17, 0x01	; 1
+			{
+				// run <-> stop 토글
+				sw_state = (sw_state == SW_RUN) ? SW_STOP : SW_RUN;
+ 822:	09 f4       	brne	.+2      	; 0x826 <main+0x84>
+ 824:	80 e0       	ldi	r24, 0x00	; 0
+ 826:	18 2f       	mov	r17, r24
  828:	65 e0       	ldi	r22, 0x05	; 5
+			}
+
+			if (get_button(BUTTON2, BUTTON2PIN))
  82a:	70 e0       	ldi	r23, 0x00	; 0
  82c:	82 e0       	ldi	r24, 0x02	; 2
  82e:	90 e0       	ldi	r25, 0x00	; 0
  830:	4f dc       	rcall	.-1890   	; 0xd0 <get_button>
  832:	89 2b       	or	r24, r25
- 834:	19 f0       	breq	.+6      	; 0x83c <main+0x9a>
- 836:	8f ef       	ldi	r24, 0xFF	; 255
-				button2_state++;
- 838:	e8 1a       	sub	r14, r24
- 83a:	f8 0a       	sbc	r15, r24
- 83c:	c8 01       	movw	r24, r16
-
-					
-			if((button1_state % 2) == 1)	stopwatch_clock();
- 83e:	81 70       	andi	r24, 0x01	; 1
- 840:	90 78       	andi	r25, 0x80	; 128
- 842:	99 23       	and	r25, r25
- 844:	24 f4       	brge	.+8      	; 0x84e <main+0xac>
- 846:	01 97       	sbiw	r24, 0x01	; 1
- 848:	8e 6f       	ori	r24, 0xFE	; 254
- 84a:	9f 6f       	ori	r25, 0xFF	; 255
- 84c:	01 96       	adiw	r24, 0x01	; 1
- 84e:	01 97       	sbiw	r24, 0x01	; 1
- 850:	11 f4       	brne	.+4      	; 0x856 <main+0xb4>
- 852:	41 df       	rcall	.-382    	; 0x6d6 <stopwatch_clock>
- 854:	02 c0       	rjmp	.+4      	; 0x85a <main+0xb8>
-			else if((button1_state % 2) == 0) pause_stop_watch();
- 856:	00 ff       	sbrs	r16, 0
- 858:	26 df       	rcall	.-436    	; 0x6a6 <pause_stop_watch>
- 85a:	c7 01       	movw	r24, r14
-
-			if(button2_state % 2)
- 85c:	81 70       	andi	r24, 0x01	; 1
- 85e:	99 27       	eor	r25, r25
- 860:	e0 fe       	sbrs	r14, 0
- 862:	19 c0       	rjmp	.+50     	; 0x896 <main+0xf4>
- 864:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <ms_count>
+ 834:	c9 f0       	breq	.+50     	; 0x868 <main+0xc6>
+ 836:	10 92 2a 01 	sts	0x012A, r1	; 0x80012a <ms_count>
 			{
+				// reset: count 초기화 후 run 상태로 전환 (상태도의 reset -> run)
 				ms_count = 0;
- 868:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <ms_count+0x1>
- 86c:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <ms_count+0x2>
- 870:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <ms_count+0x3>
- 874:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <sec_count>
+ 83a:	10 92 2b 01 	sts	0x012B, r1	; 0x80012b <ms_count+0x1>
+ 83e:	10 92 2c 01 	sts	0x012C, r1	; 0x80012c <ms_count+0x2>
+ 842:	10 92 2d 01 	sts	0x012D, r1	; 0x80012d <ms_count+0x3>
+ 846:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <sec_count>
 				sec_count = 0;
- 878:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <sec_count+0x1>
- 87c:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <sec_count+0x2>
- 880:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <sec_count+0x3>
- 884:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <dot_display>
+ 84a:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <sec_count+0x1>
+ 84e:	10 92 28 01 	sts	0x0128, r1	; 0x800128 <sec_count+0x2>
+ 852:	10 92 29 01 	sts	0x0129, r1	; 0x800129 <sec_count+0x3>
+ 856:	10 92 22 01 	sts	0x0122, r1	; 0x800122 <dot_display>
 				dot_display = 0;
- 888:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <dot_display+0x1>
- 88c:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <dot_display+0x2>
- 890:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <dot_display+0x3>
- 894:	8e cf       	rjmp	.-228    	; 0x7b2 <main+0x10>
-			} 
-			else if(!(button2_state % 2) && 1 < button2_state) stopwatch_clock();
- 896:	89 2b       	or	r24, r25
- 898:	09 f0       	breq	.+2      	; 0x89c <main+0xfa>
- 89a:	8b cf       	rjmp	.-234    	; 0x7b2 <main+0x10>
- 89c:	82 e0       	ldi	r24, 0x02	; 2
- 89e:	e8 16       	cp	r14, r24
- 8a0:	f1 04       	cpc	r15, r1
- 8a2:	0c f4       	brge	.+2      	; 0x8a6 <main+0x104>
- 8a4:	86 cf       	rjmp	.-244    	; 0x7b2 <main+0x10>
- 8a6:	17 df       	rcall	.-466    	; 0x6d6 <stopwatch_clock>
- 8a8:	84 cf       	rjmp	.-248    	; 0x7b2 <main+0x10>
+ 85a:	10 92 23 01 	sts	0x0123, r1	; 0x800123 <dot_display+0x1>
+ 85e:	10 92 24 01 	sts	0x0124, r1	; 0x800124 <dot_display+0x2>
+ 862:	10 92 25 01 	sts	0x0125, r1	; 0x800125 <dot_display+0x3>
+				sw_state = SW_RUN;
+ 866:	11 e0       	ldi	r17, 0x01	; 1
+			}
 
-000008aa <__divmodhi4>:
- 8aa:	97 fb       	bst	r25, 7
- 8ac:	07 2e       	mov	r0, r23
- 8ae:	16 f4       	brtc	.+4      	; 0x8b4 <__divmodhi4+0xa>
- 8b0:	00 94       	com	r0
- 8b2:	06 d0       	rcall	.+12     	; 0x8c0 <__divmodhi4_neg1>
- 8b4:	77 fd       	sbrc	r23, 7
- 8b6:	08 d0       	rcall	.+16     	; 0x8c8 <__divmodhi4_neg2>
- 8b8:	2d d0       	rcall	.+90     	; 0x914 <__udivmodhi4>
- 8ba:	07 fc       	sbrc	r0, 7
- 8bc:	05 d0       	rcall	.+10     	; 0x8c8 <__divmodhi4_neg2>
- 8be:	3e f4       	brtc	.+14     	; 0x8ce <__divmodhi4_exit>
+			if (sw_state == SW_RUN)
+ 868:	11 30       	cpi	r17, 0x01	; 1
+ 86a:	11 f4       	brne	.+4      	; 0x870 <main+0xce>
+				stopwatch_clock();
+ 86c:	34 df       	rcall	.-408    	; 0x6d6 <stopwatch_clock>
+ 86e:	9e cf       	rjmp	.-196    	; 0x7ac <main+0xa>
+ 870:	1a df       	rcall	.-460    	; 0x6a6 <pause_stop_watch>
+			else
+				pause_stop_watch();
+ 872:	9c cf       	rjmp	.-200    	; 0x7ac <main+0xa>
 
-000008c0 <__divmodhi4_neg1>:
- 8c0:	90 95       	com	r25
- 8c2:	81 95       	neg	r24
- 8c4:	9f 4f       	sbci	r25, 0xFF	; 255
- 8c6:	08 95       	ret
+00000874 <__divmodhi4>:
+ 874:	97 fb       	bst	r25, 7
+ 876:	07 2e       	mov	r0, r23
+ 878:	16 f4       	brtc	.+4      	; 0x87e <__divmodhi4+0xa>
+ 87a:	00 94       	com	r0
+ 87c:	06 d0       	rcall	.+12     	; 0x88a <__divmodhi4_neg1>
+ 87e:	77 fd       	sbrc	r23, 7
+ 880:	08 d0       	rcall	.+16     	; 0x892 <__divmodhi4_neg2>
+ 882:	2d d0       	rcall	.+90     	; 0x8de <__udivmodhi4>
+ 884:	07 fc       	sbrc	r0, 7
+ 886:	05 d0       	rcall	.+10     	; 0x892 <__divmodhi4_neg2>
+ 888:	3e f4       	brtc	.+14     	; 0x898 <__divmodhi4_exit>
 
-000008c8 <__divmodhi4_neg2>:
- 8c8:	70 95       	com	r23
- 8ca:	61 95       	neg	r22
- 8cc:	7f 4f       	sbci	r23, 0xFF	; 255
+0000088a <__divmodhi4_neg1>:
+ 88a:	90 95       	com	r25
+ 88c:	81 95       	neg	r24
+ 88e:	9f 4f       	sbci	r25, 0xFF	; 255
+ 890:	08 95       	ret
 
-000008ce <__divmodhi4_exit>:
- 8ce:	08 95       	ret
+00000892 <__divmodhi4_neg2>:
+ 892:	70 95       	com	r23
+ 894:	61 95       	neg	r22
+ 896:	7f 4f       	sbci	r23, 0xFF	; 255
 
-000008d0 <__udivmodsi4>:
- 8d0:	a1 e2       	ldi	r26, 0x21	; 33
- 8d2:	1a 2e       	mov	r1, r26
- 8d4:	aa 1b       	sub	r26, r26
- 8d6:	bb 1b       	sub	r27, r27
- 8d8:	fd 01       	movw	r30, r26
- 8da:	0d c0       	rjmp	.+26     	; 0x8f6 <__udivmodsi4_ep>
+00000898 <__divmodhi4_exit>:
+ 898:	08 95       	ret
 
-000008dc <__udivmodsi4_loop>:
- 8dc:	aa 1f       	adc	r26, r26
- 8de:	bb 1f       	adc	r27, r27
- 8e0:	ee 1f       	adc	r30, r30
- 8e2:	ff 1f       	adc	r31, r31
- 8e4:	a2 17       	cp	r26, r18
- 8e6:	b3 07       	cpc	r27, r19
- 8e8:	e4 07       	cpc	r30, r20
- 8ea:	f5 07       	cpc	r31, r21
- 8ec:	20 f0       	brcs	.+8      	; 0x8f6 <__udivmodsi4_ep>
- 8ee:	a2 1b       	sub	r26, r18
- 8f0:	b3 0b       	sbc	r27, r19
- 8f2:	e4 0b       	sbc	r30, r20
- 8f4:	f5 0b       	sbc	r31, r21
+0000089a <__udivmodsi4>:
+ 89a:	a1 e2       	ldi	r26, 0x21	; 33
+ 89c:	1a 2e       	mov	r1, r26
+ 89e:	aa 1b       	sub	r26, r26
+ 8a0:	bb 1b       	sub	r27, r27
+ 8a2:	fd 01       	movw	r30, r26
+ 8a4:	0d c0       	rjmp	.+26     	; 0x8c0 <__udivmodsi4_ep>
 
-000008f6 <__udivmodsi4_ep>:
- 8f6:	66 1f       	adc	r22, r22
- 8f8:	77 1f       	adc	r23, r23
- 8fa:	88 1f       	adc	r24, r24
- 8fc:	99 1f       	adc	r25, r25
- 8fe:	1a 94       	dec	r1
- 900:	69 f7       	brne	.-38     	; 0x8dc <__udivmodsi4_loop>
- 902:	60 95       	com	r22
- 904:	70 95       	com	r23
- 906:	80 95       	com	r24
- 908:	90 95       	com	r25
- 90a:	9b 01       	movw	r18, r22
- 90c:	ac 01       	movw	r20, r24
- 90e:	bd 01       	movw	r22, r26
- 910:	cf 01       	movw	r24, r30
- 912:	08 95       	ret
+000008a6 <__udivmodsi4_loop>:
+ 8a6:	aa 1f       	adc	r26, r26
+ 8a8:	bb 1f       	adc	r27, r27
+ 8aa:	ee 1f       	adc	r30, r30
+ 8ac:	ff 1f       	adc	r31, r31
+ 8ae:	a2 17       	cp	r26, r18
+ 8b0:	b3 07       	cpc	r27, r19
+ 8b2:	e4 07       	cpc	r30, r20
+ 8b4:	f5 07       	cpc	r31, r21
+ 8b6:	20 f0       	brcs	.+8      	; 0x8c0 <__udivmodsi4_ep>
+ 8b8:	a2 1b       	sub	r26, r18
+ 8ba:	b3 0b       	sbc	r27, r19
+ 8bc:	e4 0b       	sbc	r30, r20
+ 8be:	f5 0b       	sbc	r31, r21
 
-00000914 <__udivmodhi4>:
- 914:	aa 1b       	sub	r26, r26
- 916:	bb 1b       	sub	r27, r27
- 918:	51 e1       	ldi	r21, 0x11	; 17
- 91a:	07 c0       	rjmp	.+14     	; 0x92a <__udivmodhi4_ep>
+000008c0 <__udivmodsi4_ep>:
+ 8c0:	66 1f       	adc	r22, r22
+ 8c2:	77 1f       	adc	r23, r23
+ 8c4:	88 1f       	adc	r24, r24
+ 8c6:	99 1f       	adc	r25, r25
+ 8c8:	1a 94       	dec	r1
+ 8ca:	69 f7       	brne	.-38     	; 0x8a6 <__udivmodsi4_loop>
+ 8cc:	60 95       	com	r22
+ 8ce:	70 95       	com	r23
+ 8d0:	80 95       	com	r24
+ 8d2:	90 95       	com	r25
+ 8d4:	9b 01       	movw	r18, r22
+ 8d6:	ac 01       	movw	r20, r24
+ 8d8:	bd 01       	movw	r22, r26
+ 8da:	cf 01       	movw	r24, r30
+ 8dc:	08 95       	ret
 
-0000091c <__udivmodhi4_loop>:
- 91c:	aa 1f       	adc	r26, r26
- 91e:	bb 1f       	adc	r27, r27
- 920:	a6 17       	cp	r26, r22
- 922:	b7 07       	cpc	r27, r23
- 924:	10 f0       	brcs	.+4      	; 0x92a <__udivmodhi4_ep>
- 926:	a6 1b       	sub	r26, r22
- 928:	b7 0b       	sbc	r27, r23
+000008de <__udivmodhi4>:
+ 8de:	aa 1b       	sub	r26, r26
+ 8e0:	bb 1b       	sub	r27, r27
+ 8e2:	51 e1       	ldi	r21, 0x11	; 17
+ 8e4:	07 c0       	rjmp	.+14     	; 0x8f4 <__udivmodhi4_ep>
 
-0000092a <__udivmodhi4_ep>:
- 92a:	88 1f       	adc	r24, r24
- 92c:	99 1f       	adc	r25, r25
- 92e:	5a 95       	dec	r21
- 930:	a9 f7       	brne	.-22     	; 0x91c <__udivmodhi4_loop>
- 932:	80 95       	com	r24
- 934:	90 95       	com	r25
- 936:	bc 01       	movw	r22, r24
- 938:	cd 01       	movw	r24, r26
- 93a:	08 95       	ret
+000008e6 <__udivmodhi4_loop>:
+ 8e6:	aa 1f       	adc	r26, r26
+ 8e8:	bb 1f       	adc	r27, r27
+ 8ea:	a6 17       	cp	r26, r22
+ 8ec:	b7 07       	cpc	r27, r23
+ 8ee:	10 f0       	brcs	.+4      	; 0x8f4 <__udivmodhi4_ep>
+ 8f0:	a6 1b       	sub	r26, r22
+ 8f2:	b7 0b       	sbc	r27, r23
 
-0000093c <_exit>:
- 93c:	f8 94       	cli
+000008f4 <__udivmodhi4_ep>:
+ 8f4:	88 1f       	adc	r24, r24
+ 8f6:	99 1f       	adc	r25, r25
+ 8f8:	5a 95       	dec	r21
+ 8fa:	a9 f7       	brne	.-22     	; 0x8e6 <__udivmodhi4_loop>
+ 8fc:	80 95       	com	r24
+ 8fe:	90 95       	com	r25
+ 900:	bc 01       	movw	r22, r24
+ 902:	cd 01       	movw	r24, r26
+ 904:	08 95       	ret
 
-0000093e <__stop_program>:
- 93e:	ff cf       	rjmp	.-2      	; 0x93e <__stop_program>
+00000906 <_exit>:
+ 906:	f8 94       	cli
+
+00000908 <__stop_program>:
+ 908:	ff cf       	rjmp	.-2      	; 0x908 <__stop_program>

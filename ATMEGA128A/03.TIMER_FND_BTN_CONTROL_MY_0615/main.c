@@ -19,16 +19,21 @@ volatile uint32_t ms_count = 0;
 
 ISR(TIMER2_OVF_vect)
 {
-	TCNT2 = 6;
+	TCNT2 = 194;
+	//TCNT2 = 6;
 	ms_count++;
 }
 
 void init_timer2(void)
 {
-	TCNT2 = 6;
+	TCNT2 = 194;
+	//TCNT2 = 6;
 	TCCR2 = 0x00;
-	TCCR2 |= 0 << CS22 | 1 << CS21 | 1 << CS20;	// 64분주
+	//TCCR2 |= 0 << CS22 | 1 << CS21 | 1 << CS20;	// 64분주
+	TCCR2 |= 1 << CS22 | 0 << CS21 | 0 << CS20;	// 256분주
 	TIMSK |= 1 << TOIE2;	// TIMER2 Overflow INT
+	
+	sei();
 }
 
 int main(void)
@@ -40,7 +45,6 @@ int main(void)
 	init_button();
 	init_fnd();
 	init_timer2();
-	sei();		
 
 	while (1)
 	{

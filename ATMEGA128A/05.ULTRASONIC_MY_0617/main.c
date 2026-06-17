@@ -21,7 +21,7 @@ extern void ultrasonic_processing(void);
 FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);	// printf 사용..
 
 volatile uint32_t msec_count = 0;	// volatile 최적화 방지
-volatile int ultrasonic_check_time = 0; 
+//volatile int ultrasonic_check_time = 0; 
 
 // interrupt는 main 함수 위에 배치하는 것
 /*
@@ -34,7 +34,7 @@ ISR(TIMER0_OVF_vect)
 {
 	TCNT0 = 6;	// TCNT0 6~256: 250개 pulse count 하기 위해
 	msec_count++;	// 1ms count
-	ultrasonic_check_time++;
+//	ultrasonic_check_time++;
 }
 
 int main(void)
@@ -54,6 +54,7 @@ int main(void)
     {
 //		pc_command_processing();	//	 circular queue 끄집어내서 처리하는 거
 		ultrasonic_processing();
+		chg_ultrasonic_led();
     }
 }
 
@@ -83,6 +84,6 @@ init_timer0(void)
 	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;	// 64분주
 	
 	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT
-	sei();	// 전역(대문)
+//	sei();	// 전역(대문)
 }
 

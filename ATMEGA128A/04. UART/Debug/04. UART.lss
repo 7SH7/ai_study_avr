@@ -965,8 +965,7 @@ void pc_command_processing(void)
  690:	90 93 9b 01 	sts	0x019B, r25	; 0x80019b <func_state+0x1>
  694:	80 93 9a 01 	sts	0x019A, r24	; 0x80019a <func_state>
 		}
-	}	
-	
+	}
 	fp[func_state]();
  698:	e0 91 9a 01 	lds	r30, 0x019A	; 0x80019a <func_state>
  69c:	f0 91 9b 01 	lds	r31, 0x019B	; 0x80019b <func_state+0x1>
@@ -978,11 +977,6 @@ void pc_command_processing(void)
  6aa:	f0 81       	ld	r31, Z
  6ac:	e0 2d       	mov	r30, r0
  6ae:	09 95       	icall
-//	if(strncmp(rx_buff[front], led_shift_right_keep_on))
-//	if(strncmp(rx_buff[front], led_flower_on))
-//	if(strncmp(rx_buff[front], led_flower_off))
-
-
 }		
  6b0:	cf 91       	pop	r28
  6b2:	08 95       	ret

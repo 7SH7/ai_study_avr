@@ -68,13 +68,11 @@ int main()
 		{
 			if(machine_state == standby_state && wash_time != 0 && rinse_time != 0 && spin_time != 0)
 			{
-				
 				is_use_timer_running_washmach = 1;
 				machine_state = wash_state;
 			}
 			else if((machine_state == wash_state) || (machine_state == rinse_state) || (machine_state == spin_state))
 			{
-				is_use_timer_running_washmach = 0;
 				machine_state = standby_state;
 			}
 		} else if(get_button(BUTTON1, BUTTON1PIN))
@@ -146,6 +144,7 @@ int main()
 		if(machine_state == standby_state){
 			is_use_timer_set_status = 0;
 			is_use_timer_running_washmach = 0;
+			led_all_off();
 		}
 	}
 }

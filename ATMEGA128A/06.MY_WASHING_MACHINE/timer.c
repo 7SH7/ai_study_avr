@@ -17,20 +17,20 @@ extern void time_set_fnd(int min_time);
 ISR(TIMER0_OVF_vect)
 {
 	TCNT0 = 6;
-	static int tick_4ms = 0;
+	static int ms = 0;
 
 	if(is_use_timer_set_status)
 		time_set_fnd(current_fnd_setting_value);
 	else if(is_use_timer_running_washmach)
 	{	
-		tick_4ms++;
+		ms++;
 		wash_running_express_fnd(current_fnd_washing_value);
-		if(tick_4ms >= 250)
+		if(ms >= 1000)
 		{
 			if(current_fnd_washing_value > 0)
 				current_fnd_washing_value--;
 
-			tick_4ms = 0;
+			ms = 0;
 		}
 	}
 	else fnd_all_off();

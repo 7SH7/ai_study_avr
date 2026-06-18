@@ -525,17 +525,17 @@ END GROUP
                 0x00000310        0x8 uart0.o
                 0x00000310                UART0_transmit
  .text.__vector_5
-                0x00000318       0xc0 ultrasonic.o
+                0x00000318       0xc4 ultrasonic.o
                 0x00000318                __vector_5
  .text.init_ultrasonic
-                0x000003d8       0x24 ultrasonic.o
-                0x000003d8                init_ultrasonic
+                0x000003dc       0x24 ultrasonic.o
+                0x000003dc                init_ultrasonic
  .text.make_trigger
-                0x000003fc       0x26 ultrasonic.o
-                0x000003fc                make_trigger
+                0x00000400       0x26 ultrasonic.o
+                0x00000400                make_trigger
  .text.ultrasonic_processing
-                0x00000422       0x36 ultrasonic.o
-                0x00000422                ultrasonic_processing
+                0x00000426       0x32 ultrasonic.o
+                0x00000426                ultrasonic_processing
  .text.avr-libc.fplib
                 0x00000458        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3.o)
                 0x00000458                __divsf3

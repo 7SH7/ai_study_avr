@@ -318,7 +318,7 @@ int main(void)
  1a6:	f2 df       	rcall	.-28     	; 0x18c <init_timer0>
 	init_uart0();
  1a8:	a8 d0       	rcall	.+336    	; 0x2fa <init_uart0>
- 1aa:	16 d1       	rcall	.+556    	; 0x3d8 <init_ultrasonic>
+ 1aa:	18 d1       	rcall	.+560    	; 0x3dc <init_ultrasonic>
 	init_ultrasonic();
  1ac:	80 e0       	ldi	r24, 0x00	; 0
  1ae:	91 e0       	ldi	r25, 0x01	; 1
@@ -334,7 +334,7 @@ int main(void)
     {
 //		pc_command_processing();	//	 circular queue 끄집어내서 처리하는 거
 		ultrasonic_processing();
- 1ba:	33 d1       	rcall	.+614    	; 0x422 <ultrasonic_processing>
+ 1ba:	35 d1       	rcall	.+618    	; 0x426 <ultrasonic_processing>
  1bc:	89 df       	rcall	.-238    	; 0xd0 <chg_ultrasonic_led>
 		chg_ultrasonic_led();
  1be:	fd cf       	rjmp	.-6      	; 0x1ba <main+0x16>
@@ -575,190 +575,192 @@ ISR (INT4_vect)
 		TCNT1 = 0;
  342:	1d bc       	out	0x2d, r1	; 45
  344:	1c bc       	out	0x2c, r1	; 44
- 346:	35 c0       	rjmp	.+106    	; 0x3b2 <__vector_5+0x9a>
+ 346:	37 c0       	rjmp	.+110    	; 0x3b6 <__vector_5+0x9e>
 		// 예) TNCT1이 10이 들어있다고 가정해보자.
 		// 15.625KHz의 1주기 : 64us
 		// 0.000064sec * 10개 => 0.00064us (640us)
 		// 640us / 58(1cm 이동하는데 소요시간) : 11cm
 		// 1sec : 1000000us 
-		flag = 0;
- 348:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <flag+0x1>
- 34c:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <flag>
 		ultrasonic_distance = TCNT1 * 1000000.0 * 1024 / F_CPU;
- 350:	6c b5       	in	r22, 0x2c	; 44
- 352:	7d b5       	in	r23, 0x2d	; 45
- 354:	80 e0       	ldi	r24, 0x00	; 0
- 356:	90 e0       	ldi	r25, 0x00	; 0
- 358:	18 d1       	rcall	.+560    	; 0x58a <__floatunsisf>
- 35a:	20 e0       	ldi	r18, 0x00	; 0
- 35c:	34 e2       	ldi	r19, 0x24	; 36
- 35e:	44 e7       	ldi	r20, 0x74	; 116
- 360:	59 e4       	ldi	r21, 0x49	; 73
- 362:	a1 d1       	rcall	.+834    	; 0x6a6 <__mulsf3>
- 364:	20 e0       	ldi	r18, 0x00	; 0
- 366:	30 e0       	ldi	r19, 0x00	; 0
- 368:	40 e8       	ldi	r20, 0x80	; 128
- 36a:	54 e4       	ldi	r21, 0x44	; 68
- 36c:	9c d1       	rcall	.+824    	; 0x6a6 <__mulsf3>
- 36e:	20 e0       	ldi	r18, 0x00	; 0
- 370:	34 e2       	ldi	r19, 0x24	; 36
- 372:	44 e7       	ldi	r20, 0x74	; 116
- 374:	5b e4       	ldi	r21, 0x4B	; 75
- 376:	70 d0       	rcall	.+224    	; 0x458 <__divsf3>
- 378:	d7 d0       	rcall	.+430    	; 0x528 <__fixsfsi>
- 37a:	70 93 29 01 	sts	0x0129, r23	; 0x800129 <ultrasonic_distance+0x1>
- 37e:	60 93 28 01 	sts	0x0128, r22	; 0x800128 <ultrasonic_distance>
+ 348:	6c b5       	in	r22, 0x2c	; 44
+ 34a:	7d b5       	in	r23, 0x2d	; 45
+ 34c:	80 e0       	ldi	r24, 0x00	; 0
+ 34e:	90 e0       	ldi	r25, 0x00	; 0
+ 350:	1c d1       	rcall	.+568    	; 0x58a <__floatunsisf>
+ 352:	20 e0       	ldi	r18, 0x00	; 0
+ 354:	34 e2       	ldi	r19, 0x24	; 36
+ 356:	44 e7       	ldi	r20, 0x74	; 116
+ 358:	59 e4       	ldi	r21, 0x49	; 73
+ 35a:	a5 d1       	rcall	.+842    	; 0x6a6 <__mulsf3>
+ 35c:	20 e0       	ldi	r18, 0x00	; 0
+ 35e:	30 e0       	ldi	r19, 0x00	; 0
+ 360:	40 e8       	ldi	r20, 0x80	; 128
+ 362:	54 e4       	ldi	r21, 0x44	; 68
+ 364:	a0 d1       	rcall	.+832    	; 0x6a6 <__mulsf3>
+ 366:	20 e0       	ldi	r18, 0x00	; 0
+ 368:	34 e2       	ldi	r19, 0x24	; 36
+ 36a:	44 e7       	ldi	r20, 0x74	; 116
+ 36c:	5b e4       	ldi	r21, 0x4B	; 75
+ 36e:	74 d0       	rcall	.+232    	; 0x458 <__divsf3>
+ 370:	db d0       	rcall	.+438    	; 0x528 <__fixsfsi>
+ 372:	70 93 29 01 	sts	0x0129, r23	; 0x800129 <ultrasonic_distance+0x1>
+ 376:	60 93 28 01 	sts	0x0128, r22	; 0x800128 <ultrasonic_distance>
 		// --- 소요시간을 cm으로 환산
 		sprintf(scm, "dis: %dcm\n", ultrasonic_distance / 58);	// cm으로 환산
- 382:	80 91 28 01 	lds	r24, 0x0128	; 0x800128 <ultrasonic_distance>
- 386:	90 91 29 01 	lds	r25, 0x0129	; 0x800129 <ultrasonic_distance+0x1>
- 38a:	6a e3       	ldi	r22, 0x3A	; 58
- 38c:	70 e0       	ldi	r23, 0x00	; 0
- 38e:	ee d1       	rcall	.+988    	; 0x76c <__divmodhi4>
- 390:	7f 93       	push	r23
- 392:	6f 93       	push	r22
- 394:	8e e0       	ldi	r24, 0x0E	; 14
- 396:	91 e0       	ldi	r25, 0x01	; 1
+ 37a:	80 91 28 01 	lds	r24, 0x0128	; 0x800128 <ultrasonic_distance>
+ 37e:	90 91 29 01 	lds	r25, 0x0129	; 0x800129 <ultrasonic_distance+0x1>
+ 382:	6a e3       	ldi	r22, 0x3A	; 58
+ 384:	70 e0       	ldi	r23, 0x00	; 0
+ 386:	f2 d1       	rcall	.+996    	; 0x76c <__divmodhi4>
+ 388:	7f 93       	push	r23
+ 38a:	6f 93       	push	r22
+ 38c:	8e e0       	ldi	r24, 0x0E	; 14
+ 38e:	91 e0       	ldi	r25, 0x01	; 1
+ 390:	9f 93       	push	r25
+ 392:	8f 93       	push	r24
+ 394:	8a e4       	ldi	r24, 0x4A	; 74
+ 396:	94 e0       	ldi	r25, 0x04	; 4
  398:	9f 93       	push	r25
  39a:	8f 93       	push	r24
- 39c:	8a e4       	ldi	r24, 0x4A	; 74
- 39e:	94 e0       	ldi	r25, 0x04	; 4
- 3a0:	9f 93       	push	r25
- 3a2:	8f 93       	push	r24
- 3a4:	1d d2       	rcall	.+1082   	; 0x7e0 <sprintf>
- 3a6:	0f 90       	pop	r0
- 3a8:	0f 90       	pop	r0
+ 39c:	21 d2       	rcall	.+1090   	; 0x7e0 <sprintf>
+		
+		flag=1;	// 이게 있어야, 하강에지 작업동안, 트리거 작동 X..
+ 39e:	81 e0       	ldi	r24, 0x01	; 1
+ 3a0:	90 e0       	ldi	r25, 0x00	; 0
+ 3a2:	90 93 27 01 	sts	0x0127, r25	; 0x800127 <flag+0x1>
+ 3a6:	80 93 26 01 	sts	0x0126, r24	; 0x800126 <flag>
  3aa:	0f 90       	pop	r0
  3ac:	0f 90       	pop	r0
  3ae:	0f 90       	pop	r0
  3b0:	0f 90       	pop	r0
+ 3b2:	0f 90       	pop	r0
+ 3b4:	0f 90       	pop	r0
+
 	}
 }
- 3b2:	ff 91       	pop	r31
- 3b4:	ef 91       	pop	r30
- 3b6:	bf 91       	pop	r27
- 3b8:	af 91       	pop	r26
- 3ba:	9f 91       	pop	r25
- 3bc:	8f 91       	pop	r24
- 3be:	7f 91       	pop	r23
- 3c0:	6f 91       	pop	r22
- 3c2:	5f 91       	pop	r21
- 3c4:	4f 91       	pop	r20
- 3c6:	3f 91       	pop	r19
- 3c8:	2f 91       	pop	r18
- 3ca:	0f 90       	pop	r0
- 3cc:	0b be       	out	0x3b, r0	; 59
+ 3b6:	ff 91       	pop	r31
+ 3b8:	ef 91       	pop	r30
+ 3ba:	bf 91       	pop	r27
+ 3bc:	af 91       	pop	r26
+ 3be:	9f 91       	pop	r25
+ 3c0:	8f 91       	pop	r24
+ 3c2:	7f 91       	pop	r23
+ 3c4:	6f 91       	pop	r22
+ 3c6:	5f 91       	pop	r21
+ 3c8:	4f 91       	pop	r20
+ 3ca:	3f 91       	pop	r19
+ 3cc:	2f 91       	pop	r18
  3ce:	0f 90       	pop	r0
- 3d0:	0f be       	out	0x3f, r0	; 63
+ 3d0:	0b be       	out	0x3b, r0	; 59
  3d2:	0f 90       	pop	r0
- 3d4:	1f 90       	pop	r1
- 3d6:	18 95       	reti
+ 3d4:	0f be       	out	0x3f, r0	; 63
+ 3d6:	0f 90       	pop	r0
+ 3d8:	1f 90       	pop	r1
+ 3da:	18 95       	reti
 
-000003d8 <init_ultrasonic>:
+000003dc <init_ultrasonic>:
 
 void init_ultrasonic(void)
 {
 	TRIG_DDR |= 1 << TRIG_PIN;	// output mode
- 3d8:	e4 e6       	ldi	r30, 0x64	; 100
- 3da:	f0 e0       	ldi	r31, 0x00	; 0
- 3dc:	80 81       	ld	r24, Z
- 3de:	80 61       	ori	r24, 0x10	; 16
- 3e0:	80 83       	st	Z, r24
+ 3dc:	e4 e6       	ldi	r30, 0x64	; 100
+ 3de:	f0 e0       	ldi	r31, 0x00	; 0
+ 3e0:	80 81       	ld	r24, Z
+ 3e2:	80 61       	ori	r24, 0x10	; 16
+ 3e4:	80 83       	st	Z, r24
 	ECHO_DDR &= ~(1 << ECHO_PIN);	// input mode
- 3e2:	82 b1       	in	r24, 0x02	; 2
- 3e4:	8f 7e       	andi	r24, 0xEF	; 239
- 3e6:	82 b9       	out	0x02, r24	; 2
+ 3e6:	82 b1       	in	r24, 0x02	; 2
+ 3e8:	8f 7e       	andi	r24, 0xEF	; 239
+ 3ea:	82 b9       	out	0x02, r24	; 2
 	
 	// p289 표 12-6, p288 그림 12-8 참조
 	// 0 1 : 상승에지 하강에지 둘 다 int를 띄우도록 요청한다. (int = 외부 인터럽트)
 	EICRB |= 0 << ISC41 | 1 << ISC40;
- 3e8:	8a b7       	in	r24, 0x3a	; 58
- 3ea:	81 60       	ori	r24, 0x01	; 1
- 3ec:	8a bf       	out	0x3a, r24	; 58
+ 3ec:	8a b7       	in	r24, 0x3a	; 58
+ 3ee:	81 60       	ori	r24, 0x01	; 1
+ 3f0:	8a bf       	out	0x3a, r24	; 58
 	// timer int를 사용하지 않는다
 	// 16bit timer1 16bit로 표시할 수 있는 최대값은 65535(max) : 0xffff
 	// 16MHz / 1024 분주 : 16000000Hz / 1024 --> 15625Hz --> 15.626KHz
 	// 1주기(1개의 필수 소요시간): T=1/f = 1/15625 = 64us	
 	// 분주비 1024 설정 p318 표14-1
 	TCCR1B |= 1 << CS12 | 1 << CS10;	// 1024 분주
- 3ee:	8e b5       	in	r24, 0x2e	; 46
- 3f0:	85 60       	ori	r24, 0x05	; 5
- 3f2:	8e bd       	out	0x2e, r24	; 46
+ 3f2:	8e b5       	in	r24, 0x2e	; 46
+ 3f4:	85 60       	ori	r24, 0x05	; 5
+ 3f6:	8e bd       	out	0x2e, r24	; 46
 	
 	// ----- EINT4 설정 -----
 	// page 247 그림 12-6
 	EIMSK |= 1 << INT4;	// 외부 INT4(ECHO핀 설정)
- 3f4:	89 b7       	in	r24, 0x39	; 57
- 3f6:	80 61       	ori	r24, 0x10	; 16
- 3f8:	89 bf       	out	0x39, r24	; 57
- 3fa:	08 95       	ret
+ 3f8:	89 b7       	in	r24, 0x39	; 57
+ 3fa:	80 61       	ori	r24, 0x10	; 16
+ 3fc:	89 bf       	out	0x39, r24	; 57
+ 3fe:	08 95       	ret
 
-000003fc <make_trigger>:
+00000400 <make_trigger>:
 	
 }
 
 void make_trigger(void) 
 {
 	TRIG_PORT &= ~(1 << TRIG_PIN); // low로 만든다.
- 3fc:	e5 e6       	ldi	r30, 0x65	; 101
- 3fe:	f0 e0       	ldi	r31, 0x00	; 0
- 400:	80 81       	ld	r24, Z
- 402:	8f 7e       	andi	r24, 0xEF	; 239
- 404:	80 83       	st	Z, r24
+ 400:	e5 e6       	ldi	r30, 0x65	; 101
+ 402:	f0 e0       	ldi	r31, 0x00	; 0
+ 404:	80 81       	ld	r24, Z
+ 406:	8f 7e       	andi	r24, 0xEF	; 239
+ 408:	80 83       	st	Z, r24
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 406:	85 e0       	ldi	r24, 0x05	; 5
- 408:	8a 95       	dec	r24
- 40a:	f1 f7       	brne	.-4      	; 0x408 <__LOCK_REGION_LENGTH__+0x8>
- 40c:	00 00       	nop
+ 40a:	85 e0       	ldi	r24, 0x05	; 5
+ 40c:	8a 95       	dec	r24
+ 40e:	f1 f7       	brne	.-4      	; 0x40c <make_trigger+0xc>
+ 410:	00 00       	nop
 	_delay_us(1);
 	TRIG_PORT |= 1 << TRIG_PIN; // high로 만든다.
- 40e:	80 81       	ld	r24, Z
- 410:	80 61       	ori	r24, 0x10	; 16
- 412:	80 83       	st	Z, r24
- 414:	80 e5       	ldi	r24, 0x50	; 80
- 416:	8a 95       	dec	r24
- 418:	f1 f7       	brne	.-4      	; 0x416 <__LOCK_REGION_LENGTH__+0x16>
+ 412:	80 81       	ld	r24, Z
+ 414:	80 61       	ori	r24, 0x10	; 16
+ 416:	80 83       	st	Z, r24
+ 418:	80 e5       	ldi	r24, 0x50	; 80
+ 41a:	8a 95       	dec	r24
+ 41c:	f1 f7       	brne	.-4      	; 0x41a <make_trigger+0x1a>
 	_delay_us(15);    //규격에는 10us인데 redunacy로 15us
 	TRIG_PORT &= ~(1 << TRIG_PIN);
- 41a:	80 81       	ld	r24, Z
- 41c:	8f 7e       	andi	r24, 0xEF	; 239
- 41e:	80 83       	st	Z, r24
- 420:	08 95       	ret
+ 41e:	80 81       	ld	r24, Z
+ 420:	8f 7e       	andi	r24, 0xEF	; 239
+ 422:	80 83       	st	Z, r24
+ 424:	08 95       	ret
 
-00000422 <ultrasonic_processing>:
+00000426 <ultrasonic_processing>:
 //	{
 //		ultrasonic_check_time = 0;
 //		printf("%s", scm);
 //		make_trigger();
 //	}	
-	if(flag)
- 422:	80 91 26 01 	lds	r24, 0x0126	; 0x800126 <flag>
- 426:	90 91 27 01 	lds	r25, 0x0127	; 0x800127 <flag+0x1>
- 42a:	89 2b       	or	r24, r25
- 42c:	a1 f0       	breq	.+40     	; 0x456 <ultrasonic_processing+0x34>
+	if(!flag)
+ 426:	80 91 26 01 	lds	r24, 0x0126	; 0x800126 <flag>
+ 42a:	90 91 27 01 	lds	r25, 0x0127	; 0x800127 <flag+0x1>
+ 42e:	89 2b       	or	r24, r25
+ 430:	91 f4       	brne	.+36     	; 0x456 <ultrasonic_processing+0x30>
 	{
 		printf("%s",scm);
- 42e:	8a e4       	ldi	r24, 0x4A	; 74
- 430:	94 e0       	ldi	r25, 0x04	; 4
- 432:	9f 93       	push	r25
- 434:	8f 93       	push	r24
- 436:	89 e1       	ldi	r24, 0x19	; 25
- 438:	91 e0       	ldi	r25, 0x01	; 1
- 43a:	9f 93       	push	r25
- 43c:	8f 93       	push	r24
- 43e:	bd d1       	rcall	.+890    	; 0x7ba <printf>
+ 432:	8a e4       	ldi	r24, 0x4A	; 74
+ 434:	94 e0       	ldi	r25, 0x04	; 4
+ 436:	9f 93       	push	r25
+ 438:	8f 93       	push	r24
+ 43a:	89 e1       	ldi	r24, 0x19	; 25
+ 43c:	91 e0       	ldi	r25, 0x01	; 1
+ 43e:	9f 93       	push	r25
+ 440:	8f 93       	push	r24
+ 442:	bb d1       	rcall	.+886    	; 0x7ba <printf>
 		make_trigger();
- 440:	dd df       	rcall	.-70     	; 0x3fc <make_trigger>
- 442:	81 e0       	ldi	r24, 0x01	; 1
-		flag=1;
- 444:	90 e0       	ldi	r25, 0x00	; 0
- 446:	90 93 27 01 	sts	0x0127, r25	; 0x800127 <flag+0x1>
- 44a:	80 93 26 01 	sts	0x0126, r24	; 0x800126 <flag>
+ 444:	dd df       	rcall	.-70     	; 0x400 <make_trigger>
+ 446:	10 92 27 01 	sts	0x0127, r1	; 0x800127 <flag+0x1>
+		flag=0;
+ 44a:	10 92 26 01 	sts	0x0126, r1	; 0x800126 <flag>
  44e:	0f 90       	pop	r0
  450:	0f 90       	pop	r0
  452:	0f 90       	pop	r0

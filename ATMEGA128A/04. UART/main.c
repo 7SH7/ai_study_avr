@@ -72,12 +72,12 @@ int main(void)
 */
 init_timer0(void)
 {
-	TCNT0 = 6;	// TCNT0 0~256 : 250개 pulse count 위해
+	TCNT0 = 6;	// TCNT0 0~256 : 250개 pulse count 위해		=> 타이머 시작 숫자를 6으로 하겠다.
 
-	TCCR0 &= ~(1 << CS02 | 1 << CS01 | 1 << CS00);	// 0분주
+	TCCR0 &= ~(1 << CS02 | 1 << CS01 | 1 << CS00);	// 0분주 => 타이머 모드 설정을 하는 중이다. (분주수 설정)
 	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;	// 64분주
 	
-	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT
+	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT  => TIMSK : 타이머 오버플로우가 생기면 이렇게 대응하겠다.
 	sei();	// 전역(대문)
 }
 

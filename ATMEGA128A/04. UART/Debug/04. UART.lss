@@ -522,11 +522,11 @@ ISR(TIMER0_OVF_vect)
 */
 init_timer0(void)
 {
-	TCNT0 = 6;	// TCNT0 0~256 : 250개 pulse count 위해
+	TCNT0 = 6;	// TCNT0 0~256 : 250개 pulse count 위해		=> 타이머 시작 숫자를 6으로 하겠다.
  396:	86 e0       	ldi	r24, 0x06	; 6
  398:	82 bf       	out	0x32, r24	; 50
 
-	TCCR0 &= ~(1 << CS02 | 1 << CS01 | 1 << CS00);	// 0분주
+	TCCR0 &= ~(1 << CS02 | 1 << CS01 | 1 << CS00);	// 0분주 => 타이머 모드 설정을 하는 중이다. (분주수 설정)
  39a:	83 b7       	in	r24, 0x33	; 51
  39c:	88 7f       	andi	r24, 0xF8	; 248
  39e:	83 bf       	out	0x33, r24	; 51
@@ -535,7 +535,7 @@ init_timer0(void)
  3a2:	84 60       	ori	r24, 0x04	; 4
  3a4:	83 bf       	out	0x33, r24	; 51
 	
-	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT
+	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT  => TIMSK : 타이머 오버플로우가 생기면 이렇게 대응하겠다.
  3a6:	87 b7       	in	r24, 0x37	; 55
  3a8:	81 60       	ori	r24, 0x01	; 1
  3aa:	87 bf       	out	0x37, r24	; 55

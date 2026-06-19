@@ -21,6 +21,8 @@ extern int wash_running();
 extern int rinse_running(void);
 extern int spin_running(void);
 
+extern int stop_running(void);
+
 extern void init_button(void);
 extern void init_fnd(void);
 extern void init_led(void);
@@ -59,7 +61,8 @@ int main()
 	init_fnd();
 	init_led();
 	init_timer0();
-
+	init_timer3_pwm();
+	init_motor_driver();
 	
 	while(1)
 	{
@@ -145,6 +148,7 @@ int main()
 			is_use_timer_set_status = 0;
 			is_use_timer_running_washmach = 0;
 			led_all_off();
+			stop_running();
 		}
 	}
 }

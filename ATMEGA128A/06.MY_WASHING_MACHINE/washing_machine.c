@@ -18,9 +18,10 @@ int wash_running();
 int rinse_running(void);
 int spin_running(void);
 
-void wash_running_dc_motor(void);
-void rinse_running_dc_motor(void);
-void spin_running_dc_motor(void);
+extern void wash_running_dc_motor(void);
+extern void rinse_running_dc_motor(void);
+extern void spin_running_dc_motor(void);
+extern void stop_dc_motor(void);
 
 volatile int wash_time = 0;
 volatile int rinse_time = 0;
@@ -68,4 +69,9 @@ int spin_running(void)
 
 	return 1;
 
+}
+
+int stop_running(void)
+{
+	stop_dc_motor();
 }

@@ -14,6 +14,7 @@ void dcmotor_pwm_control_main(void);
 void wash_running_dc_motor(void);
 void rinse_running_dc_motor(void);
 void spin_running_dc_motor(void);
+void stop_dc_motor(void);
 
 extern int get_button(int button_num, int button_pin);
 
@@ -95,10 +96,12 @@ void dcmotor_pwm_control_main(void) {
 // OCR3C의 정도를 높일수록, 속도가 빨라진다!
 void wash_running_dc_motor(void)
 {
-	static int speed = 0;
+	static int speed = 200;
 	static int direction = 1;	// 방향
 
-	speed = speed + 10 * direction;
+	if(speed > 200) speed = 200;
+	else speed = speed + (10 * direction);
+	
 	OCR3C = speed;
 
 	if(speed > 200) direction = -1;
@@ -110,7 +113,7 @@ void rinse_running_dc_motor(void)
 	static int forward = 1;
 	static int time = 0;
 
-	if(time > 1000)
+	if(time > 15000)
 	{
 		time = 0;
 		forward = !forward;
@@ -133,7 +136,7 @@ void spin_running_dc_motor(void)
 	static int time = 0;
 	static int forward = 1;
 
-	if(time > 500)
+	if(time > 50000)
 	{
 		forward = !forward;
 		time = 0;
@@ -145,4 +148,10 @@ void spin_running_dc_motor(void)
 	if (forward) {
 		PORTF |= 1 << 6; // 정회전
 	}else PORTF |= 1 << 7; // 역회전
+}
+
+void stop_dc_motor(void)
+{
+	static int speed = 0;
+	OCR3C = speed;
 }

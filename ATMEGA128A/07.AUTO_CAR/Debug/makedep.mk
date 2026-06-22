@@ -18,5 +18,3 @@ uart1.c
 
 ultrasonic.c
 
-washing_machine.c
-

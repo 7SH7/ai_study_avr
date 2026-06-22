@@ -26,7 +26,7 @@ void spin_running_express_led(void);
 extern volatile uint32_t msec_count;	// 외부에서 가져온다.
 
 #define FUNC_NUM 6
-int func_state=0;
+extern int func_state;
 void (*fp[])(void) ={
 	led_shift_left_on,	// func_state=0
 	led_shift_right_on,

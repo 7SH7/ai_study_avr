@@ -4,153 +4,123 @@
  * Created: 2026-06-22 오전 10:32:22
  * Author : kccistc
  */ 
-
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>	// sei, cli 등등 함수 내장.
 #include <stdio.h>
 
-#include "button.h"
-#include "led.h"
-#include "washing_machine.h"
+extern int led_main(void);
+extern void init_uart0(void);
+extern void UART0_transmit(uint8_t data);
+extern void pc_command_processing(void);
+extern void init_ultrasonic(void);
+extern void make_trigger(void);
+extern void ultrasonic_processing(void);
 
-extern int get_button(int button_num, int button_pin);
+extern void init_timer3_pwm(void);
+extern void init_motor_driver(void);
+extern void dcmotor_pwm_control_main(void);
 
-extern int wash_running();
-extern int rinse_running(void);
-extern int spin_running(void);
+extern init_uart1();
 
-extern int stop_running(void);
+FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);	// printf 사용..
 
-extern void init_button(void);
-extern void init_fnd(void);
-extern void init_led(void);
-extern void init_timer0(void);
+volatile uint32_t msec_count = 0;	// volatile 최적화 방지
+volatile int ultrasonic_check_time = 0; 
 
-extern int wash_time;
-extern int rinse_time;
-extern int spin_time;
-
-volatile int is_use_timer_set_status = 0;
-volatile int is_use_timer_running_washmach = 0;
-
-int current_fnd_setting_value = 0;
-int current_fnd_washing_value = 0;
-
-extern void time_set_fnd(int min_time);
-
-enum WashingMachineStatus{
-	standby_state = 0,	// 대기 모드
-	wash_state,			// 세탁 모드
-	rinse_state,		// 헹굼 모드
-	spin_state,			// 탈수 모드
-	wash_time_set,		// 세탁 시간 설정
-	rinse_time_set,		// 헹굼 시간 설정
-	spin_time_set		// 탈수 시간 설정
-};
-
-int main()
+// interrupt는 main 함수 위에 배치하는 것
+/*
+ISR (interrupt service routine) : 인터럽트 처리 함수 ISR로 시작
+TIMER0_OVF_vect : Timer 0 overflow INT 가 발생이 되면, 이곳으로 진입함.
+250개의 PULSE를 COUNT(1MS)하면 이곳으로 자동 진입한다.
+ISR은 가능한 짧게 작성한다.
+*/
+ISR(TIMER0_OVF_vect)
 {
-	enum WashingMachineStatus machine_state;    // 열거형 변수 선언
-	machine_state = standby_state;	// 처음 기본은 대기 모드.
-
-	sei();	
-	
-	init_button();
-	init_fnd();
-	init_led();
-	init_timer0();
-	init_timer3_pwm();
-	init_motor_driver();
-	
-	while(1)
-	{
-		// FSM대로 상태 바꿔주기.	>> 세탁 시간 설정 안 하면, button1 눌러도 못 들어가게 하는 제약 조건 필요.
-		if(get_button(BUTTON0, BUTTON0PIN))
-		{
-			if(machine_state == standby_state && wash_time != 0 && rinse_time != 0 && spin_time != 0)
-			{
-				is_use_timer_running_washmach = 1;
-				machine_state = wash_state;
-			}
-			else if((machine_state == wash_state) || (machine_state == rinse_state) || (machine_state == spin_state))
-			{
-				machine_state = standby_state;
-			}
-		} else if(get_button(BUTTON1, BUTTON1PIN))
-		{
-			if(machine_state == standby_state)
-			{
-				machine_state = wash_time_set;
-				current_fnd_setting_value = wash_time;
-				is_use_timer_set_status = 1;
-			}
-			else if(machine_state == wash_time_set)
-			{
-				machine_state = rinse_time_set;
-				current_fnd_setting_value = rinse_time;
-			}
-			else if(machine_state == rinse_time_set)
-			{
-				machine_state = spin_time_set;
-				current_fnd_setting_value = spin_time;
-			}
-			else if(machine_state == spin_time_set)	    
-			{
-				machine_state = standby_state;
-				current_fnd_washing_value = wash_time*60;
-			}
-		} else if(get_button(BUTTON2, BUTTON2PIN))	// 버튼 2를 누르면, 분 단위 시간 증가, 이후 버튼 1 누르면, 최종 시간으로 정해지는 거
-		{
-			if(machine_state == wash_time_set)
-			{
-				wash_time = (wash_time + 1) % 3;	// max 2
-				current_fnd_setting_value = wash_time;
-
-			}
-			else if(machine_state == rinse_time_set)	
-			{
-				rinse_time = (rinse_time + 1) % 3;
-				current_fnd_setting_value = rinse_time;
-		} 
-			else if(machine_state == spin_time_set)		
-			{
-				spin_time = (spin_time + 1) % 3;
-				current_fnd_setting_value = spin_time;
-			}
-		}
-		
-		// 상태에 따른 이벤트 발생시키기 : 시간 종료로 인한 상태 변화도 만들 것
-		if(machine_state == wash_state){
-			if(!wash_running())
-			{
-				machine_state = rinse_state;
-				current_fnd_washing_value = rinse_time*60;
-			}
-		} else if(machine_state == rinse_state)		// rinse_running() 측에서 다 마치면, 수정하는 걸로.
-		{
-			if(!rinse_running())
-			{
-				machine_state = spin_state;
-				current_fnd_washing_value = spin_time*60;
-			}
-		} else if(machine_state == spin_state)
-		{
-			if(!spin_running())
-			{
-				machine_state = standby_state;
-				led_all_off();
-			}
-		}
-		
-		if(machine_state == standby_state){
-			is_use_timer_set_status = 0;
-			is_use_timer_running_washmach = 0;
-			led_all_off();
-			stop_running();
-		}
-	}
+	TCNT0 = 6;	// TCNT0 6~256: 250개 pulse count 하기 위해
+	msec_count++;	// 1ms count
+	ultrasonic_check_time++;
 }
 
-// uart는 상태 + 남은 시간을 printf로 띄워주는 거.  + 시작 및 정지 명령 >> 아, 시작 및 정지 명령을 그 comport master로 보내는구나
+int main(void)
+{
+	// want to do : 500ms 주기로 바뀌도록 하기
+	init_led();
+	init_timer0();
+	init_uart0();
+	init_uart1();
+	init_button();
+	//init_motor_driver();
+	//init_timer3_pwm();
+
+//	init_ultrasonic();
+
+	stdout = &OUTPUT;	// printf가 동작할 수 있도록 stdout을 설정
+	sei();		// 전역(대문) interrupt 허용
+	
+    while (1) 
+    {
+		//pc_command_processing();	//	 circular queue 끄집어내서 처리하는 거
+//		ultrasonic_processing();
+    }
+}
+
+/*
+1. timer0을 초기화 한다.
+   AVR에서 8bit timer 0 / 2 중에서 0번을 초기화 한다.
+   임베디드에서 가장 신경을 써야 할 부분이 초기화 하는 부분. ☆
+   초기화가 잘못되면, 이후 과정이 꼬이니까
+2. 8bit가지고 1ms를 측정하는 timer/counter를 만들고자 한다.
+ 2-1. 분주비를 설정 (64분주)
+      : 기존에 n번만큼 진동하고, 이어서 반응함. 그런데 그걸 k분주만큼 진동해야, 1회 반응 하는도록 하는 것이 분주
+	    > 16MHz / 64 = 250,000Hz 
+ 2-2. 1주기가 잡아먹는 시간을 계산
+	    > T = 1 / f = 1 / 250,000 = 0.000004 sec = 4 us = 0.004ms
+ 2-3. 8bit로 카운트 하는 시간을 계산
+ 	    > 8 bit timer overflow : 256이 되는 순간 overflow
+		> 0.04ms * 256개 ==> 0.001024 sec = 1024 us (1.024ms) 
+		> 0.04ms * 250개 ==> 0.001sec (1ms)
+
+> 256 / 16MHz * 64 이거 아냐? 맞는데.. 과정을 그냥 나열한거구나..
+*/
+init_timer0(void)
+{
+	TCNT0 = 6;	// TCNT0 0~256 : 250개 pulse count 위해
+
+	TCCR0 &= ~(1 << CS02 | 1 << CS01 | 1 << CS00);	// 0분주
+	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;	// 64분주
+	
+	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT
+	sei();	// 전역(대문)
+}
+
+
+/*
+BTN0: start / stop
+BTN1: Speed up
+BTN2: Speed down
+BTN3: 방향 설정(정/역)
+
+------------------------
+
+PWR ON 8 Reset
+     ↓
+   초기화
+     ↓
+ ----------
+ |        | 
+ |  stop  |
+ |        |
+ ----------
+  ↑btn0  ↓ btn0
+ ----------
+ |        |
+ |  run   |
+ |        |
+ ----------
+	↑↓ btn1 + speed up
+	↑↓ btn2 + speed down 
+	↑↓ btn3 + 방향 설정(정/역)
+
+*/

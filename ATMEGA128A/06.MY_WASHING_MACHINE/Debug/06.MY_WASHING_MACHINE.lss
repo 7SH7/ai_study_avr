@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00000550  00000000  00000000  000059bc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000009e8  00000000  00000000  00005f0c  2**0
+ 10 .debug_str    00000a22  00000000  00000000  00005f0c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000c8f  00000000  00000000  000068f4  2**0
+ 11 .debug_loc    00000c8f  00000000  00000000  0000692e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000001c8  00000000  00000000  00007583  2**0
+ 12 .debug_ranges 000001c8  00000000  00000000  000075bd  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1307,10 +1307,10 @@ void stop_dc_motor(void)
      7b4:	08 95       	ret
 
 000007b6 <__vector_16>:
+extern volatile int is_use_timer_running_washmach;
 
 extern void time_set_fnd(int min_time);
 
-// 배워야할 점: ISR 내에서 다루는 변수는 모두 volatile 형식으로 선언해야함.
 ISR(TIMER0_OVF_vect)
 {
      7b6:	1f 92       	push	r1

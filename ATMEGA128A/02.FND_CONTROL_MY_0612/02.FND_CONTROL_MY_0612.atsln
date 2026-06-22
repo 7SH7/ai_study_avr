@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "02.FND_CONTROL_MY_0612", "02.FND_CONTROL_MY_0612.cproj", "{E80C87CA-B955-4BFE-98F6-48C0C7A7D5BE}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "06.MY_WASHING_MACHINE", "C:\Users\kccistc\Desktop\ai_study_avr\ATMEGA128A\06.MY_WASHING_MACHINE\06.MY_WASHING_MACHINE.cproj", "{77794D37-41A4-4B99-B28F-1EC29B317B80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -15,6 +17,10 @@ Global
 		{E80C87CA-B955-4BFE-98F6-48C0C7A7D5BE}.Debug|AVR.Build.0 = Debug|AVR
 		{E80C87CA-B955-4BFE-98F6-48C0C7A7D5BE}.Release|AVR.ActiveCfg = Release|AVR
 		{E80C87CA-B955-4BFE-98F6-48C0C7A7D5BE}.Release|AVR.Build.0 = Release|AVR
+		{77794D37-41A4-4B99-B28F-1EC29B317B80}.Debug|AVR.ActiveCfg = Debug|AVR
+		{77794D37-41A4-4B99-B28F-1EC29B317B80}.Debug|AVR.Build.0 = Debug|AVR
+		{77794D37-41A4-4B99-B28F-1EC29B317B80}.Release|AVR.ActiveCfg = Release|AVR
+		{77794D37-41A4-4B99-B28F-1EC29B317B80}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

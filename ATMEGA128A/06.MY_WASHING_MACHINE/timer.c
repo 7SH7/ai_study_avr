@@ -13,7 +13,6 @@ extern volatile int is_use_timer_running_washmach;
 
 extern void time_set_fnd(int min_time);
 
-// 배워야할 점: ISR 내에서 다루는 변수는 모두 volatile 형식으로 선언해야함.
 ISR(TIMER0_OVF_vect)
 {
 	TCNT0 = 6;

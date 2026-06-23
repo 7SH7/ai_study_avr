@@ -151,7 +151,7 @@ void auto_mode_check(void)
 	    hold_count = HOLD_CYCLES_BACK;
 		car_status_cnt(car_direction);
     }
-    else if(ultrasonic_distance_l < 15)
+    else if(ultrasonic_distance_l < 16)
     {
 	    car_direction = CAR_RIGHT;
 	    hold_count = HOLD_CYCLES_TURN;

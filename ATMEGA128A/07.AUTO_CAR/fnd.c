@@ -30,6 +30,17 @@ extern volatile uint32_t ms;
 extern volatile uint32_t sec_count;	
 extern volatile uint32_t dot_display;
 
+/*
+typedef enum { CAR_FORWARD, CAR_LEFT, CAR_RIGHT, CAR_STOP, CAR_BACK } car_state_t;
+car_state_t car_direction = CAR_STOP;
+car_direction_cnt[0] : forward
+car_direction_cnt[1] : left
+car_direction_cnt[2] : right
+car_direction_cnt[3] : stop
+car_direction_cnt[4] : back
+*/
+int car_direction_cnt[5] = {0,};	
+void car_status_cnt(int car_direction);
 
 void find_display_SND();
 
@@ -149,34 +160,42 @@ void run_stop_watch(uint32_t sec_count, uint32_t ms, int car_direction)
 		FND_DIGIT_PORT &= (uint8_t)~(1 << FST_FND_DIGIT_D1);
 		break;
 		
+/*
+car_direction_cnt[0] : forward 횟수!
+car_direction_cnt[1] : left
+car_direction_cnt[2] : right
+car_direction_cnt[3] : stop
+car_direction_cnt[4] : back
+*/
+		
 		// SND FND 방향표시 (PC4~PC7) - 1자리만 사용
+		// FORWARD
 		case 4:
-		FND_DATA_PORT = car_status_font[car_direction];
+		FND_DATA_PORT = find_font[car_direction_cnt[0]];
 		PORTC &=  ~(1 << SND_FND_DIGIT_D4);  // PC5만 LOW
 		break;
 
+		// BACKWARD
 		case 5:
-		FND_DATA_PORT = car_status_font[car_direction];
+		FND_DATA_PORT = find_font[car_direction_cnt[4]];
 		PORTC &= ~(1 << SND_FND_DIGIT_D3);  // PC5만 LOW
 		break;
 
+		// LEFT
 		case 6:
-
-		FND_DATA_PORT = car_status_font[car_direction];
+		FND_DATA_PORT = find_font[car_direction_cnt[1]];
 		PORTC &= ~(1 << SND_FND_DIGIT_D2);  // PC5만 LOW
 		break;
 
+		// RIGHT
 		case 7:
-		FND_DATA_PORT = car_status_font[car_direction];
+		FND_DATA_PORT = find_font[car_direction_cnt[2]];
 		PORTC &= ~(1 << SND_FND_DIGIT_D1);  // PC5만 LOW
 		break;
 	}
 	
 	digit_select = (digit_select + 1 ) % 8;
 }
-
-int car_direction_cnt[5] = {0,};
-void car_status_cnt(int car_direction);
 
 void car_status_cnt(int car_direction)
 {	

@@ -43,7 +43,6 @@ C_SRCS +=  \
 ../main.c \
 ../pwm.c \
 ../uart0.c \
-../uart1.c \
 ../ultrasonic.c
 
 
@@ -60,7 +59,6 @@ led.o \
 main.o \
 pwm.o \
 uart0.o \
-uart1.o \
 ultrasonic.o
 
 OBJS_AS_ARGS +=  \
@@ -70,7 +68,6 @@ led.o \
 main.o \
 pwm.o \
 uart0.o \
-uart1.o \
 ultrasonic.o
 
 C_DEPS +=  \
@@ -80,7 +77,6 @@ led.d \
 main.d \
 pwm.d \
 uart0.d \
-uart1.d \
 ultrasonic.d
 
 C_DEPS_AS_ARGS +=  \
@@ -90,7 +86,6 @@ led.d \
 main.d \
 pwm.d \
 uart0.d \
-uart1.d \
 ultrasonic.d
 
 OUTPUT_FILE_PATH +=07.AUTO_CAR.elf
@@ -143,13 +138,6 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./uart0.o: .././uart0.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega128a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega128a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-./uart1.o: .././uart1.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega128a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega128a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

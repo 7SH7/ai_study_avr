@@ -9,17 +9,19 @@
 #include <avr/io.h>		// PORTA, PORTB ... 에 대한 내용이 다 들어있음. (물리적인 symbol에 대한 정의)
 #include <util/delay.h>
 
-#define FND_DATA_DDR  DDRC
-#define FND_DATA_PORT PORTC
+#define FND_DATA_DDR  DDRD
+#define FND_DATA_PORT PORTD
 
-#define FND_DIGIT_DDR  DDRB
-#define FND_DIGIT_PORT PORTB
-#define FND_DIGIT_D1 4
-#define FND_DIGIT_D2 5
-#define FND_DIGIT_D3 6
-#define FND_DIGIT_D4 7
+#define FST_FND_DIGIT_DDR  DDRC
+#define FST_FND_DIGIT_PORT PORTC
+#define FST_FND_DIGIT_D1 0
+#define FST_FND_DIGIT_D2 1
+#define FST_FND_DIGIT_D3 2
+#define FST_FND_DIGIT_D4 3
 
-// 여기서 extern이면, .c에 있는 걸 쓸 수 있는 것
-extern volatile uint32_t ms_count;
-extern uint32_t sec_count;
-extern uint32_t dot_display;
+#define SND_FND_DIGIT_DDR  DDRC
+#define SND_FND_DIGIT_PORT PORTC
+#define SND_FND_DIGIT_D1 4
+#define SND_FND_DIGIT_D2 5
+#define SND_FND_DIGIT_D3 6
+#define SND_FND_DIGIT_D4 7

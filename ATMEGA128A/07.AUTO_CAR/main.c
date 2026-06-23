@@ -29,7 +29,8 @@ extern void backward(int);
 extern void turn_left(int);
 extern void turn_right(int);
 extern void stop(void);
-extern void find_display_FST(uint32_t sec_count, uint32_t dot_display);
+//extern void find_display_FST(uint32_t sec_count, uint32_t dot_display);
+extern void find_display_FST(uint32_t sec_count, uint32_t dot_display, int car_direction);
 extern void min_sec_clock();
 extern int get_button(int button_num, int button_pin);
 extern void init_button(void);
@@ -37,7 +38,9 @@ extern void init_timer0(void);
 extern void init_led(void);
 extern void init_fnd(void);
 extern volatile uint8_t data;
-extern void run_stop_watch(uint32_t sec_count, uint32_t ms_count);
+extern void run_stop_watch(uint32_t sec_count, uint32_t ms_count, int car_direction);
+extern void car_status_cnt(int car_direction);
+extern void find_display_SND(int car_direction);
 
 extern volatile int ultrasonic_distance_l;
 extern volatile int ultrasonic_distance_c;
@@ -146,20 +149,24 @@ void auto_mode_check(void)
     {
 	    car_direction = CAR_BACK;
 	    hold_count = HOLD_CYCLES_BACK;
+		car_status_cnt(car_direction);
     }
     else if(ultrasonic_distance_l < 15)
     {
 	    car_direction = CAR_RIGHT;
 	    hold_count = HOLD_CYCLES_TURN;
+		car_status_cnt(car_direction);
     }
     else if(ultrasonic_distance_r < 14)
     {
 	    car_direction = CAR_LEFT;
 	    hold_count = HOLD_CYCLES_TURN;
+		car_status_cnt(car_direction);
     }
     else
     {
 	    car_direction = CAR_FORWARD;
+		car_status_cnt(car_direction);
     }
 }
 
@@ -212,8 +219,8 @@ ISR(TIMER0_OVF_vect)
 	if(is_auto)
 	{
 		ms++;
-		find_display_FST(sec_count, dot_display);
-	
+		find_display_FST(sec_count, dot_display,car_direction);
+		
 		if(1000 <= ms)
 		{
 			sec_count++;
@@ -266,7 +273,7 @@ int main(void)
 		else if(func_state == MANUAL_MODE)
 		{
 			is_auto = 0;
-			run_stop_watch(sec_count, ms);
+			run_stop_watch(sec_count, ms, car_direction);
 		}
 	}
 }
@@ -280,5 +287,4 @@ void init_timer0(void)
 	TCCR0 |= 1 << CS02 | 0 << CS01 | 0 << CS00;	// 64분주
 	
 	TIMSK |= 1 << TOIE0;	// TIMER0 Overflow INT
-	sei();	// 전역(대문)
 }

@@ -78,8 +78,7 @@ typedef enum {
 	CENTER_TRIG_PIN,
 	RIGHT_TRIG_PIN
 }sensor_step_t;
-
-volatile sensor_step_t sensor_step = 0;
+sensor_step_t sensor_step = 0;
 
 void manual_mode(void)
 {
@@ -131,7 +130,7 @@ void auto_mode(void)
 #define HOLD_CYCLES_TURN  30
 volatile int hold_count = 0;
 
-// study todo: 확실히 상태를 enum처리하는 것이 더 처리하기 좋다
+// 확실히 상태를 enum처리하는 것이 더 처리하기 좋다
 void auto_mode_check(void)
 {
     printf("L=%d C=%d R=%d\r\n",
@@ -175,22 +174,21 @@ void distance_check(void)
 {
 	switch(sensor_step)
 	{	
-		case 0:
+		case LEFT_TRIG_PIN:
 			make_trigger(LEFT_TRIG_PIN);
 			sensor_step = 1;
 			break;
 
-		case 1:
+		case CENTER_TRIG_PIN:
 		if(flag_l)
 		{
 			flag_l = 0;
-
 			make_trigger(CENTER_TRIG_PIN);
 			sensor_step = 2;
 		}
 		break;
 
-		case 2:
+		case RIGHT_TRIG_PIN:
 		if(flag_c)
 		{
 			flag_c = 0;
@@ -200,7 +198,7 @@ void distance_check(void)
 		}
 		break;
 
-		case 3:
+		default:
 		if(flag_r)
 		{
 			flag_r = 0;
@@ -233,20 +231,19 @@ ISR(TIMER0_OVF_vect)
 
 int main(void)
 {
-	// want to do : 500ms 주기로 바뀌도록 하기
 	init_led();
 	init_timer0();
 	init_uart0();
 	init_fnd();
 	init_button();
 
-	sei();		// 전역(대문) interrupt 허용
+	sei();		
 
 	init_motor_driver();
 	init_timer1_pwm();
 	init_ultrasonic();
 
-	stdout = &OUTPUT;	// printf가 동작할 수 있도록 stdout을 설정
+	stdout = &OUTPUT;	
 	
     while (1) 
     {
@@ -264,7 +261,7 @@ int main(void)
 			is_auto = 1;
 			distance_check();
 	
-			if(sensor_step == 0)
+			if(sensor_step == LEFT_TRIG_PIN)
 			{
 				auto_mode_check();
 				auto_mode();

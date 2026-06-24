@@ -167,7 +167,7 @@ car_direction_cnt[2] : right
 car_direction_cnt[3] : stop
 car_direction_cnt[4] : back
 */
-		
+			
 		// SND FND 방향표시 (PC4~PC7) - 1자리만 사용
 		// FORWARD
 		case 4:

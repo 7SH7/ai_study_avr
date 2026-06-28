@@ -41,6 +41,26 @@ void dht11_main(void) {
 	DHT11_PORT |= 1 << DHT11_INPUT_PIN; // pull-up
 	_delay_us(30); // spec : 20~40us 유지
 	
+	/*
+	DDR : 입력할건지 출력할건지 설정
+	PORT: 무슨 말 출력할건지 정해 (DDR이 출력인 경우) | 내부 PULL UP 활성화/비활성화 (DDR이 입력인 경우)
+	PIN : 상대가 무슨 말 했는지 듣는 역할 (현재 핀에 걸려있는 실제 전압을 읽는 레지스터 > LOW? HIGH?
+
+	---
+
+	DDR
+	→ 내가 말할지(출력), 들을지(입력) 결정
+
+	PORT
+	→ 출력 모드에서는 내가 할 말(HIGH/LOW)
+	→ 입력 모드에서는 Pull-up 설정
+
+	PIN
+	→ 현재 핀의 실제 상태(HIGH/LOW)를 읽는다.
+
+	따라서, PORT에서 Pull up 설정으로 high를 해주면, PIN은 high로 나온다. (DDR이 출력모드인 경우)
+	*/
+
 	// 2. start signal 응답 check
 	DHT11_DDR &= ~(1 << DHT11_INPUT_PIN); // input mode 전환
 	

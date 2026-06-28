@@ -21,9 +21,10 @@
 #define DS1302_RST_DDR	DDRF
 #define DS1302_RST_PORT	PORTF
 
-#define DS1302_CLK	0
-#define DS1302_DAT	1
-#define DS1302_RST	2
+// 이 밑의 3개는 PIN!
+#define DS1302_CLK	0	// 쿨록
+#define DS1302_DAT	1	// 데이터 송수신
+#define DS1302_RST	2	// 통신 시작
 
 #define ADDR_SECONDS 0x80	// write만 define 하자. read는 write에 +1만 하면 되니까
 #define ADDR_MINUTES 0x82

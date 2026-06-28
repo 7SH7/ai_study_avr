@@ -28,7 +28,7 @@ void ds1302_main(void)
 	while(1)
 	{
 		// 1. read time
-		read_time_ds1302();
+		read_time_ds1302();	// ds1302: real time 시계
 		// 2. read date
 		
 		// 3. printf date & time
@@ -55,18 +55,19 @@ void read_ds1302(uint8_t addr)
 	// 5. reurn (bcd to dec)
 	
 	// 1. CE low --> high
-	DS1302_RST_PORT |= (1 << DS1302_RST);
+	// CE: Chip Enable = RST(RESET) = CS(Chip Select) : 지금부터 너랑 소통하겠다.
+	DS1302_RST_PORT |= (1 << DS1302_RST);	// 포트 = 1 >> high니까, 소통하겠음을 표기!
 	
 	// 2. ADDR 전송
-	tx_ds1302(addr + 1);
+	tx_ds1302(addr + 1);	// data addr 보내고
 	
 	// 3. DATA 읽어들이기
-	rx_ds1302(&data8bits);
+	rx_ds1302(&data8bits);	// data 받아들이고
 	
 	// 4. CE high --> low
-	DS1302_RST_PORT &= ~(1 << DS1302_RST);
+	DS1302_RST_PORT &= ~(1 << DS1302_RST);	// 다 받아들였으니, 소통 종료 (포트 = 0 > low)
 	
-	return (bcd2dec(data8bits));
+	return (bcd2dec(data8bits));	// 읽어들인 data addr 반환
 }
 
 void rx_ds1302(uint8_t* pdata8bits);
@@ -76,19 +77,21 @@ void rx_ds1302(uint8_t* pdata8bits){
 	uint8_t temp = 0;
 
 	// 1. 입력 mode로 설정
-	DS1302_DAT_DDR &= ~(1 << DS1302_DAT);	// read mode
+	DS1302_DAT_DDR &= ~(1 << DS1302_DAT);	// read mode >> data 송신 > 입력모드. DDR = 0
 	// 예) 0x80
 	//	MSB			LSB
 	//	1000		0000
 
-	// LSB부터 차례로 입력
+	// LSB부터 차례로 입력 > 1bit씩 들어옴..
 	for(int i = 0 ; i < 8 ; i++)
 	{
-		if(DS1302_DAT_PIN & (1 << DS1302_DAT) )
+		// DS1302_DAT_PIN 이 1이다. > 상대가 하는 말 들었는데, HIGH다. > 현재 상태가 1(high)
+		// PIN의 역할은 항상 현재 상태가 1(HIGH)인지, 0(LOW)인지 읽어들이는!
+		if(DS1302_DAT_PIN & (1 << DS1302_DAT) )	
 		{
 			temp |= (1 << i);	// 1의 조건만 set
 		}
-		// 3. CLK를 high -> low
+		// 3. CLK를 high -> low	>> 이거는 어딨지..
 		// 마지막 bit를 읽을 때는 clk를 보내지 않음.
 		if(i != 7)	clock_ds1302();
 	}
@@ -110,7 +113,7 @@ void init_ds1302(void)
 
 void clock_ds1302(void)
 {
-	// LOW -> HIGH -> LOW
+	// LOW -> HIGH -> LOW	>> LOW 코드 어디갔지?
 	DS1302_CLK_PORT &= ~(1 << DS1302_CLK);
 	DS1302_CLK_PORT |= (1 << DS1302_CLK);
 
@@ -177,18 +180,20 @@ void tx_ds1302(uint8_t data)
 	}
 }
 
+// 시계니까, 출력모드로 전부 설정
 void init_ddr_ds1302(void)
 {
 	DDRF &= ~( (1 << DS1302_CLK) | (1 << DS1302_DAT) | (1 << DS1302_RST));
 	DDRF |=( (1 << DS1302_CLK) | (1 << DS1302_DAT) | (1 << DS1302_RST));	// 출력 mode로 설정
 }
 
+// 문서에서 GPIO를 LOW로 하래. > PORT(내부 전압 설정 > 0이면 LOW!)
 void init_gpio_ds1302(void)
 {
 	DS1302_CLK_PORT &= ~( (1 << DS1302_CLK) | (1 << DS1302_DAT) | (1 << DS1302_RST));
 }
 
-
+// 작업 날짜로 초기화
 void init_date_time(void)
 {
 	ds1302.year = 26;

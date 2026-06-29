@@ -18,12 +18,18 @@
 
  FILE OUTPUT = FDEV_SETUP_STREAM(UART0_transmit, NULL, _FDEV_SETUP_WRITE);	// printf 사용..
 
+
  int main(void)
  {
+	 sei();
+	 
 	 init_uart0();
-	 stdout = &OUTPUT;	// printf가 동작할 수 있도록 stdout을 설정
- 
-	ds1302_main();
+	 stdout = &OUTPUT;	// 송수신이 하나에서 이뤄지니까..
+
+	//while(1)
+		//pc_command_processing();	
+		
+ 	 ds1302_main();
  
 	 while (1)
 	 {

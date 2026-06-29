@@ -21,20 +21,12 @@
 
  int main(void)
  {
-	 sei();
-	 
 	 init_uart0();
 	 stdout = &OUTPUT;	// 송수신이 하나에서 이뤄지니까..
-
-	//while(1)
-		//pc_command_processing();	
+	
+     sei();
 		
  	 ds1302_main();
  
-	 while (1)
-	 {
-		 dht11_main();
-		 _delay_ms(1500);
-	 }
  }
  

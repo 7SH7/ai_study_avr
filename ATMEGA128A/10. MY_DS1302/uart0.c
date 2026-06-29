@@ -5,16 +5,18 @@
  *  Author: kccistc
  */ 
 #include "uart0.h"
+#include "ds1302.h"
 
 extern int func_state;
 extern void (*fp[])(void);
 
 void init_uart0(void);
 void UART0_transmit(uint8_t data);
-void pc_command_processing(void);
+void pc_command_processing(t_ds1302* ds1302);
 
 volatile int rear=0;
 volatile int front=0;
+volatile int rtc_update_flag = 0;
 
 // p278 표 12-3
 // PC로부터 1byte가 들어오면 자동적으로 이곳으로 진입한다.
@@ -69,23 +71,26 @@ void UART0_transmit(uint8_t data)
 	UDR0 = data;  // HW 전송 register에 data 송신한다.
 }
 
-void pc_command_processing(void)
+void pc_command_processing(t_ds1302* ds1302)
 {
-	//if(front != rear) printf("%s\n", rx_buff[front]);	// 잘 들어옴.
-	
-	
-}
+	if (front != rear)    // data가 rx_buff에 존재 하는지 check
+	{
+		printf("%s", rx_buff[front]);  // printf("%s", &rx_buff[front][0])
+		if (strncmp((char *) rx_buff[front], "setrst", 6) == 0)
+		{
+			sscanf(rx_buff[front], "setrst%2hhu%2hhu%2hhu%2hhu%2hhu%2hhu",
+			&ds1302->year,
+			&ds1302->month,
+			&ds1302->date,
+			&ds1302->hours,
+			&ds1302->minutes,
+			&ds1302->seconds);
 
-/*
-void parse_ds1302_from_uart(t_ds1302* ds1302, char* rx_buff)
-{
-	// %2hhu: 2글자로 hhu = unsigned char (uint8_t)
-	sscanf(rx_buff, "setrtc%2hhu%2hhu%2hhu%2hhu%2hhu%2hhu",
-	&ds1302->year,
-	&ds1302->month,
-	&ds1302->date,
-	&ds1302->hours,
-	&ds1302->minutes,
-	&ds1302->seconds);
+			rtc_update_flag = 1;
+		}
+
+		memset(rx_buff[front], 0, sizeof(rx_buff[front]));
+        
+		front = (front + 1) % QUEUE_SIZE;  
+	}
 }
-*/

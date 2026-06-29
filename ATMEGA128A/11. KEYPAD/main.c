@@ -18,6 +18,7 @@ extern uint8_t keypad_scan(void);
 extern init_keypad(void);
 extern void insert_queue(uint8_t value);
 extern uint8_t read_queue();
+extern uint8_t read_queue_front();
 
 void init_timer0(void);
 
@@ -30,6 +31,7 @@ ISR(TIMER0_OVF_vect) {
 	volatile uint8_t keydata = 0;
 
 	TCNT0 = 6;
+	// keypad_counter 1번 누른 것에 대해서는 60만큼 기다렸다가 결과가 나오도록 하겠다.
 	if(++keypad_counter >= 60)
 	{
 		keypad_counter = 0;
@@ -41,6 +43,8 @@ ISR(TIMER0_OVF_vect) {
 	}
 }
 
+extern double  calculate(char* expression);
+
 int main(void) {
 
 	uint8_t key_value;
@@ -49,17 +53,46 @@ int main(void) {
 	init_timer0();
 	init_keypad();
 
+	queue_init();
+
 	stdout = &OUTPUT;
 	sei(); // 전역(대문) interrupt 허용
 
-	while(1)
+	char expression[1024];
+	int idx = 0;
+	double result = 0;
+	memset(expression, 0, sizeof(expression));
+
+	while(1)	
 	{
-		if(queue_empty() != TRUE)
+		// 비어있지 않으면
+		if(!queue_empty())
 		{
-			key_value = read_queue();
-			printf("key_value: %c\n", key_value);
+			// 값 가지고 나오고,,
+			uint8_t key = read_queue(); 
+
+			// = 인지 확인하고
+			if(key == '=')
+			{
+				expression[idx] = '\0';	
+				result = calculate(expression);
+				idx = 0;
+    
+				// avr에서는 .2f하면 에러..
+				int int_part = (int)result;
+				int dec_part = (int)((result - int_part) * 100);
+    
+				printf("expression: %s=%d.%02d\n", expression, int_part, dec_part);
+				continue;
+			}
+			
+			// 아니면 넣는다.
+			expression[idx++] = key;
 		}
 	}
+
+	
+	
 
 }
 

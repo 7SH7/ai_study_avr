@@ -13,7 +13,6 @@ void init_keypad(void)
 {
     KEYPAD_DDR = 0x0f; // row:입력  col : 출력
     KEYPAD_PORT = 0xff;
-
 }
 
 uint8_t keypad_scan(void)
@@ -26,7 +25,7 @@ uint8_t keypad_scan(void)
         {
             data = get_button(row,col);
             if(data)   //if data >= 1
-            return data;
+	            return data;
         }
     }
 }
@@ -42,12 +41,10 @@ uint8_t get_button(int row, int col)
     //ACTIVE-LOW로 동작
     static int8_t prev_state[4][4] =
     {
-        {
-            {1,1,1,1},
-            {1,1,1,1}, //초기버튼은 눌려지지 않은 상태로 한다.
-            {1,1,1,1},
-            {1,1,1,1}
-        }
+        {1,1,1,1},
+        {1,1,1,1}, //초기버튼은 눌려지지 않은 상태로 한다.
+        {1,1,1,1},
+        {1,1,1,1}
     };
 
         int8_t current_state = 1;
@@ -71,7 +68,7 @@ uint8_t get_button(int row, int col)
     else if(current_state == 1 && prev_state [row][col] == 0)
     { //이전에 버튼이 눌려지고 버튼을 뗀 상태이면 버튼을 1번 눌렀다 뗀것으로 인정
         prev_state [row][col] = 1; //prev_state를 초기화 
-        printf("key : %c\n",  keypad_char[row][col]);
+		printf("key : %c\n",  keypad_char[row][col]);
         return keypad_char[row][col];
     }
 

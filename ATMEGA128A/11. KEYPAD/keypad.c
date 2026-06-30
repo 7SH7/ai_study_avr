@@ -52,9 +52,9 @@ uint8_t get_button(int row, int col)
         KEYPAD_PORT = 0xff;
         KEYPAD_PORT &= ~(1 << 3 - col); // 3 - col: COL4가 PA0에 연결되어 있기 때문에 해당 COL에 전류가 흐른다.
 
-        for(int delay = 0; delay < 20; delay++);//keypad check를 위한 delay
+        for(int delay = 0; delay < 20; delay++);//keypad check를 위한 delay		>> 채터링 방지. 해당 스위치 눌렸다 떼진거 확실하게 확인하기 위한 것
                                                 // 0.625us x 20 = 1.25us
-        current_state = (KEYPAD_PIN & (1 << (row + 4))) >> (row + 4);
+        current_state = (KEYPAD_PIN & (1 << (row + 4))) >> (row + 4);	// row0을 호출했을 때, 0번자리의 값을 가져와야하는데, 현재 PA7에 꽃혀져 있으니, 맞춰 수정해준 것
 
         //ex row:0 PA4에 연결
         //76543210

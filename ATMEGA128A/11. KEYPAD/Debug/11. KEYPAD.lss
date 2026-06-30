@@ -280,7 +280,7 @@ double calculate(char* expression)
      178:	82 83       	std	Z+2, r24	; 0x02
      17a:	93 83       	std	Z+3, r25	; 0x03
 				operand_stack[operand_cnt++] = current_num;
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
 			}
 			
@@ -329,7 +329,7 @@ double calculate(char* expression)
      1be:	82 83       	std	Z+2, r24	; 0x02
      1c0:	93 83       	std	Z+3, r25	; 0x03
 				operand_stack[operand_cnt++] = current_num;
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
 			}
 			
@@ -363,7 +363,7 @@ double calculate(char* expression)
      1e8:	71 83       	std	Z+1, r23	; 0x01
      1ea:	82 83       	std	Z+2, r24	; 0x02
      1ec:	93 83       	std	Z+3, r25	; 0x03
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
      1ee:	99 20       	and	r9, r9
      1f0:	81 f0       	breq	.+32     	; 0x212 <calculate+0x148>
 				operator_stack[operator_cnt++] = last_operator;
@@ -382,7 +382,7 @@ double calculate(char* expression)
 			}
 			else {
 				operand_stack[operand_cnt++] = current_num;
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
      202:	c7 01       	movw	r24, r14
      204:	01 96       	adiw	r24, 0x01	; 1
@@ -394,7 +394,7 @@ double calculate(char* expression)
 			else {
 				operand_stack[operand_cnt++] = current_num;
      208:	59 01       	movw	r10, r18
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
 			}
 			
@@ -405,7 +405,7 @@ double calculate(char* expression)
      20e:	cb 01       	movw	r24, r22
      210:	05 c0       	rjmp	.+10     	; 0x21c <calculate+0x152>
 				operand_stack[operand_cnt++] = current_num;
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
 			}
 			
@@ -418,7 +418,7 @@ double calculate(char* expression)
 			else {
 				operand_stack[operand_cnt++] = current_num;
      214:	59 01       	movw	r10, r18
-				if(last_operator != 0)  // ← 수정
+				if(last_operator != 0)  
 				operator_stack[operator_cnt++] = last_operator;
 			}
 			
@@ -1096,7 +1096,7 @@ int main(void) {
      5ec:	10 e0       	ldi	r17, 0x00	; 0
 	memset(expression, 0, sizeof(expression));
 
-	while(1)
+	while(1)	
 	{
 		// 비어있지 않으면
 		if(!queue_empty())
@@ -1128,7 +1128,7 @@ int main(void) {
      60e:	f9 d1       	rcall	.+1010   	; 0xa02 <__fixsfsi>
 				idx = 0;
     
-				// %.2f 대신 정수로 쪼개서 출력
+				// avr에서는 .2f하면 에러..
 				int int_part = (int)result;
      610:	4b 01       	movw	r8, r22
      612:	5c 01       	movw	r10, r24
@@ -1179,7 +1179,7 @@ int main(void) {
 				idx = 0;
      65a:	e1 e0       	ldi	r30, 0x01	; 1
      65c:	f0 e0       	ldi	r31, 0x00	; 0
-				// %.2f 대신 정수로 쪼개서 출력
+				// avr에서는 .2f하면 에러..
 				int int_part = (int)result;
 				int dec_part = (int)((result - int_part) * 100);
     

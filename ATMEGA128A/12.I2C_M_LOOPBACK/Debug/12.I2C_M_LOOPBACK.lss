@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  000001dc  00000000  00000000  00003080  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000590  00000000  00000000  0000325c  2**0
+ 10 .debug_str    000005c6  00000000  00000000  0000325c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000003d4  00000000  00000000  000037ec  2**0
+ 11 .debug_loc    000003d4  00000000  00000000  00003822  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000b0  00000000  00000000  00003bc0  2**0
+ 12 .debug_ranges 000000b0  00000000  00000000  00003bf6  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -152,7 +152,7 @@ int i2c_main(void);
 // TWI(I2C) driver
 void init_i2c(void)
 {
-	DDRD |= 1 << 0 | 1 << 1;
+	DDRD |= 1 << 0 | 1 << 1;	// PD0 PD1 활성화
   c8:	81 b3       	in	r24, 0x11	; 17
   ca:	83 60       	ori	r24, 0x03	; 3
   cc:	81 bb       	out	0x11, r24	; 17
@@ -175,11 +175,11 @@ uint8_t i2c_start(void)
   dc:	80 93 74 00 	sts	0x0074, r24	; 0x800074 <__TEXT_REGION_LENGTH__+0x7e0074>
 	// TWINT        TWSTA: START 요청  TWEN: I2C HW 활성화 
 	// I2C HW가 동작이 완료 될떄 까지 기다린다. 동작이 완료 되면 TWINT 프래그를 1로 세트가 된다.
-	while( !(TWCR & (1 << TWINT)));
+	while( !(TWCR & (1 << TWINT)));	// ISR 발생했을 때, 처리할 수 있도록 세팅될때까지 기다려
   e0:	80 91 74 00 	lds	r24, 0x0074	; 0x800074 <__TEXT_REGION_LENGTH__+0x7e0074>
   e4:	88 23       	and	r24, r24
   e6:	e4 f7       	brge	.-8      	; 0xe0 <i2c_start+0x6>
-	st = TWSR & 0xf8;    // 7~3bit까지 값을 취함
+	st = TWSR & 0xf8;    // 7~3bit까지 값을 취함	0b11111 000 >> 3~7번 비트까지가 status코드
   e8:	80 91 71 00 	lds	r24, 0x0071	; 0x800071 <__TEXT_REGION_LENGTH__+0x7e0071>
   ec:	88 7f       	andi	r24, 0xF8	; 248
 	
@@ -223,7 +223,7 @@ uint8_t i2c_stop(void)
  10c:	08 95       	ret
 
 0000010e <i2c_slave_addr_send>:
-// SLAVE_ADDR+R SLAVE_ADDR+W
+// SLAVE_ADDR+R SLAVE_ADDR+W >> 이게 호출된 다음(처음 1회만)
 uint8_t i2c_slave_addr_send(uint8_t addr_rw)
 {
 	uint8_t st;
@@ -235,7 +235,7 @@ uint8_t i2c_slave_addr_send(uint8_t addr_rw)
  114:	80 93 74 00 	sts	0x0074, r24	; 0x800074 <__TEXT_REGION_LENGTH__+0x7e0074>
 	// TWINT        TWSTA: START 요청  TWEN: I2C HW 활성화
 	// I2C HW가 동작이 완료 될떄 까지 기다린다. 동작이 완료 되면 TWINT 프래그를 1로 세트가 된다.
-	while( !(TWCR & (1 << TWINT)));
+	while( !(TWCR & (1 << TWINT)));	// 전송 완료 대기
  118:	80 91 74 00 	lds	r24, 0x0074	; 0x800074 <__TEXT_REGION_LENGTH__+0x7e0074>
  11c:	88 23       	and	r24, r24
  11e:	e4 f7       	brge	.-8      	; 0x118 <i2c_slave_addr_send+0xa>
@@ -249,6 +249,7 @@ uint8_t i2c_slave_addr_send(uint8_t addr_rw)
 
 00000128 <i2c_data_write>:
 
+// 이게 계속 호출됨.
 uint8_t i2c_data_write(uint8_t data)
 {
 	
@@ -276,7 +277,7 @@ uint8_t i2c_data_write(uint8_t data)
 uint8_t i2c_data_read_acksend(void)
 {
 	
-	TWCR = 1 << TWINT | 1 << TWEN | 1 << TWEA;    // TWEA=1 ACK자동 전송 
+	TWCR = 1 << TWINT | 1 << TWEN | 1 << TWEA;    // TWEA=1 ACK자동 전송  (읽혀진 다음 ack로 신호 계속 해줘야하니까! >> TWEA를 1로!)
  142:	84 ec       	ldi	r24, 0xC4	; 196
  144:	80 93 74 00 	sts	0x0074, r24	; 0x800074 <__TEXT_REGION_LENGTH__+0x7e0074>
 	// TWINT        TWSTA: START 요청  TWEN: I2C HW 활성화
@@ -354,7 +355,7 @@ void loopback_test(void)
 	}
 	
 	// 2. SLAVE_ADDR+W  전송 
-	status = i2c_slave_addr_send((SLAVE_ADDR << 1) | 0);   // 0xC0 : SLAVE_ADDR+W
+	status = i2c_slave_addr_send((SLAVE_ADDR << 1) | 0);   // 0xC0 : SLAVE_ADDR+W >> slave+w는 전방 7자리니까 << 1 해주는거
  198:	51 c0       	rjmp	.+162    	; 0x23c <loopback_test+0xd2>
  19a:	80 ea       	ldi	r24, 0xA0	; 160
  19c:	b8 df       	rcall	.-144    	; 0x10e <i2c_slave_addr_send>
@@ -431,19 +432,19 @@ void loopback_test(void)
 	// PHASE#2: Master <--- slave 
 	//-----------------------------------------
 	//1. start
-		status = i2c_start();
+	status = i2c_start();
  1e6:	79 df       	rcall	.-270    	; 0xda <i2c_start>
  1e8:	88 23       	and	r24, r24
-		if (status) {
+	if (status) {
  1ea:	21 f0       	breq	.+8      	; 0x1f4 <loopback_test+0x8a>
  1ec:	8d e5       	ldi	r24, 0x5D	; 93
-			printf("ERR: START(read) failed !!!!\n");
+		printf("ERR: START(read) failed !!!!\n");
  1ee:	91 e0       	ldi	r25, 0x01	; 1
  1f0:	41 d1       	rcall	.+642    	; 0x474 <puts>
-			return;
+		return;
  1f2:	24 c0       	rjmp	.+72     	; 0x23c <loopback_test+0xd2>
-		}
-		
+	}
+	
 	// 2. SLAVE_ADDR+R  전송
 	status = i2c_slave_addr_send((SLAVE_ADDR << 1) | 1);   // 0xC1 : SLAVE_ADDR+R
  1f4:	81 ea       	ldi	r24, 0xA1	; 161

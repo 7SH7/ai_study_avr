@@ -41,6 +41,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "12.I2C_M_LOOPBACK", "12.I2C
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "12.I2C_S_LOPBACK", "12.I2C_S_LLOPBACK\12.I2C_S_LOPBACK.cproj", "{008B3B56-45A3-4E8E-B869-9A7965412087}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "13. RTC_LCD_calculator", "13. RTC_LCD_caculator\13. RTC_LCD_calculator.cproj", "{9D54CF40-37A7-47F9-B68F-F957C3CCF7D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -123,6 +125,10 @@ Global
 		{008B3B56-45A3-4E8E-B869-9A7965412087}.Debug|AVR.Build.0 = Debug|AVR
 		{008B3B56-45A3-4E8E-B869-9A7965412087}.Release|AVR.ActiveCfg = Release|AVR
 		{008B3B56-45A3-4E8E-B869-9A7965412087}.Release|AVR.Build.0 = Release|AVR
+		{9D54CF40-37A7-47F9-B68F-F957C3CCF7D8}.Debug|AVR.ActiveCfg = Debug|AVR
+		{9D54CF40-37A7-47F9-B68F-F957C3CCF7D8}.Debug|AVR.Build.0 = Debug|AVR
+		{9D54CF40-37A7-47F9-B68F-F957C3CCF7D8}.Release|AVR.ActiveCfg = Release|AVR
+		{9D54CF40-37A7-47F9-B68F-F957C3CCF7D8}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

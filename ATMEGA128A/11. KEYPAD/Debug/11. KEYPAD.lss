@@ -714,7 +714,7 @@ uint8_t get_button(int row, int col)
      3c6:	24 23       	and	r18, r20
      3c8:	2b bb       	out	0x1b, r18	; 27
 
-        for(int delay = 0; delay < 20; delay++);//keypad check를 위한 delay
+        for(int delay = 0; delay < 20; delay++);//keypad check를 위한 delay		>> 채터링 방지. 해당 스위치 눌렸다 떼진거 확실하게 확인하기 위한 것
      3ca:	20 e0       	ldi	r18, 0x00	; 0
      3cc:	30 e0       	ldi	r19, 0x00	; 0
      3ce:	02 c0       	rjmp	.+4      	; 0x3d4 <get_button+0x54>
@@ -724,7 +724,7 @@ uint8_t get_button(int row, int col)
      3d6:	31 05       	cpc	r19, r1
      3d8:	dc f3       	brlt	.-10     	; 0x3d0 <get_button+0x50>
                                                 // 0.625us x 20 = 1.25us
-        current_state = (KEYPAD_PIN & (1 << (row + 4))) >> (row + 4);
+        current_state = (KEYPAD_PIN & (1 << (row + 4))) >> (row + 4);	// row0을 호출했을 때, 0번자리의 값을 가져와야하는데, 현재 PA7에 꽃혀져 있으니, 맞춰 수정해준 것
      3da:	49 b3       	in	r20, 0x19	; 25
      3dc:	fc 01       	movw	r30, r24
      3de:	34 96       	adiw	r30, 0x04	; 4

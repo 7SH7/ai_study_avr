@@ -10,10 +10,8 @@
 void LCD_pulse_enable(void)
 {
 	LCD_CONTROL_PORT |= (1 << E_PIN);	// E를 HIGH
-	//_delay_ms(1);
 	_delay_us(1);
 	LCD_CONTROL_PORT &= ~(1 << E_PIN);	// E를 LOW	 >> 하강 에지에서 동작
-	//_delay_ms(1);
 	_delay_us(1);
 }
 
@@ -33,7 +31,6 @@ void LCD_write_data(uint8_t data)
 		LCD_pulse_enable();
 	}
 	_delay_us(50); 
-	//_delay_ms(2);
 }
 
 void LCD_write_high_nibble(uint8_t data)
@@ -44,8 +41,6 @@ void LCD_write_high_nibble(uint8_t data)
 	LCD_pulse_enable();
 		
 	_delay_us(50); 
-//	_delay_ms(2);
-	
 }
 
 void LCD_write_command(uint8_t command)
@@ -63,7 +58,6 @@ void LCD_write_command(uint8_t command)
 		LCD_pulse_enable();
 	}
 	_delay_us(50); 
-//	_delay_ms(2);
 }
 
 void LCD_clear(void)
@@ -85,7 +79,7 @@ void LCD_init(void)
 	
 	_delay_ms(20);	// doc 기준 15ms 기다리라고 함
 	
-	// high nibble을 3번 보내주는 작업을 해야함. > 이유는? doc에서 그렇게 하래.
+	// high nibble을 3번 보내주는 작업을 해야함. > doc 참고
 	LCD_write_high_nibble(0x30);	// RS : RW : DB7 : DB6 : DB5 : DB4 = 0 : 0 : 0 : 0 : 1 : 1
 	_delay_ms(5);	// 4.1ms 초과 기다림
 	
@@ -95,7 +89,7 @@ void LCD_init(void)
 	LCD_write_high_nibble(0x30);	// RS : RW : DB7 : DB6 : DB5 : DB4 = 0 : 0 : 0 : 0 : 1 : 1
 	_delay_us(150);	// 100us 초과 기다림
 	
-	LCD_write_high_nibble(0x20);	// RS : RW : DB7 : DB6 : DB5 : DB4 = 0 : 0 : 0 : 0 : 1 : 1
+	LCD_write_high_nibble(0x20);	// RS : RW : DB7 : DB6 : DB5 : DB4 = 0 : 0 : 0 : 0 : 1 : 0
 	_delay_ms(5);	// 4.1ms 초과 기다림
 	
 

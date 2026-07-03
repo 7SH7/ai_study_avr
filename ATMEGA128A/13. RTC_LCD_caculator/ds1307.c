@@ -54,11 +54,6 @@ void init_date_time(t_ds1307* ds1307) {
 }
 
 // 1. 입력 bcd
-// 예) 26년의 bcd
-// 7654 3210
-// 0010 0110
-// * 10
-// 26
 uint8_t bcd2dec(uint8_t data) {
 	uint8_t high, low;
 	
@@ -69,9 +64,6 @@ uint8_t bcd2dec(uint8_t data) {
 }
 
 // dec --> bcd
-// 예) 25
-// dec 00011001
-// bcd 00100101
 uint8_t dec2bcd(uint8_t data) {
 	uint8_t high, low;
 	
@@ -95,7 +87,7 @@ void write_DS1307(t_ds1307* ds1307)
 
 	i2c_start();
 	i2c_slave_addr_send((SLAVE_ADDR << 1) | 0);   // SLA+W
-	i2c_data_write(0x00);                         // Seconds 레지스터부터 시작
+	i2c_data_write(0x00);                         // 8bit에 전부 채울 거니까
 	for (int i = 0; i < 7; i++)
 		i2c_data_write(tx_data[i]);
 	i2c_stop();
@@ -105,13 +97,13 @@ void read_DS1307(t_ds1307* ds1307)
 {
 	i2c_start();
 	i2c_slave_addr_send((SLAVE_ADDR << 1) | 0);   // SLA+W (포인터 세팅용)
-	i2c_data_write(0x00);                         // 읽을 시작 주소 지정   >>  이걸 놓친 것
+	i2c_data_write(0x00);                         // 읽을 시작 주소 지정
 	i2c_start();                                  // Repeated START
 	i2c_slave_addr_send((SLAVE_ADDR << 1) | 1);   // SLA+R
 
-	ds1307->seconds   = bcd2dec(i2c_data_read_acksend()  & 0x7F);	// 왜 이렇게 해야하나?
+	ds1307->seconds   = bcd2dec(i2c_data_read_acksend()  & 0x7F);	// CH bit(오실레이터 정지 설정)
 	ds1307->minutes   = bcd2dec(i2c_data_read_acksend());
-	ds1307->hours     = bcd2dec(i2c_data_read_acksend()  & 0x3F);
+	ds1307->hours     = bcd2dec(i2c_data_read_acksend()  & 0x3F);	// 시간에 관련된 것만 얻기 위함
 	ds1307->dayofweek = bcd2dec(i2c_data_read_acksend());
 	ds1307->date      = bcd2dec(i2c_data_read_acksend());
 	ds1307->month     = bcd2dec(i2c_data_read_acksend());
@@ -139,17 +131,11 @@ void ds1307_main(t_ds1307* ds1307)
 	}
 
 	read_DS1307(ds1307);        
-
-	printf("20%02d-%02d-%02d %02d:%02d:%02d (day %d)\n",
-	ds1307->year, ds1307->month, ds1307->date,
-	ds1307->hours, ds1307->minutes, ds1307->seconds,
-	ds1307->dayofweek);
 }
 
-// 뒤에 출력만 해주면 되는거..!
 void print_calendar(t_ds1307* ds1307)
 {
-	char lcd_buf[32];   // 16x2 LCD 기준 한 줄 16자 + null
+	char lcd_buf[19];   // 16x2 LCD 기준 한 줄 16자 + null
 
 	LCD_clear();
 
@@ -167,6 +153,4 @@ void print_calendar(t_ds1307* ds1307)
 		sprintf(lcd_buf, "%02d:%02d:%02d", ds1307->hours, ds1307->minutes, ds1307->seconds);
 	}
 	LCD_write_string(lcd_buf);
-	
-//	_delay_ms(700);
 }

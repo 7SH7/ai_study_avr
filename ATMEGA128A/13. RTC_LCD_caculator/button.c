@@ -13,7 +13,7 @@ int get_button(int button_num, int button_pin);
 // 버튼 초기화 방향설정(입력) 
 void init_button(void)
 {
-	BUTTON_DDR &= ~(1 << BUTTON0PIN | 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN);
+	BUTTON_DDR &= ~(1 << BUTTON0PIN | 1 << BUTTON1PIN | 1 << BUTTON2PIN | 1 << BUTTON3PIN | 1 << BUTTON4PIN);
 	// BUTTON_DDR &= 0xf0;
 	// BUTTON_DDR &= 0x0f
 }
@@ -26,7 +26,7 @@ int get_button(int button_num, int button_pin)
 {
 	static unsigned char button_status[BUTTON_NUMBER] =
 	{
-		BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE
+		BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE
 	};
 	// static 지역변수에 static을 선언하면 함수를 빠져나와 다시 들어가도 이전값유지 
 	int current_state;

@@ -4,9 +4,9 @@
  * Created: 2026-07-02 오후 2:22:42
  *  Author: kccistc
  */ 
-#define F_CPU 16000000UL  // 16MHz
-#include <avr/io.h>  // PORTA PORTB PORTD... IO관련 reg가 들어 있다.
-#include <util/delay.h>  // _delay_ms _delay_us 등
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 
 #define KEYPAD_DDR DDRA

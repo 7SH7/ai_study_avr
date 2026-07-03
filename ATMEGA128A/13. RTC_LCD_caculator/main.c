@@ -62,7 +62,7 @@ ISR(TIMER0_OVF_vect)
 		if (++keypad_counter >= 60)
 		{
 			keypad_counter = 0;
-			uint8_t keydata = keypad_scan();
+			uint8_t keydata = keypad_scan();		// return 0;
 			if (keydata != 0) insert_queue(keydata);
 		}
 	}
@@ -79,6 +79,7 @@ int main(void)
 
 	init_timer0();
 	LCD_init();
+	init_keypad();
 	ds1307_init(ds1307);         // 1회 초기화
 
 	// RTC_CLOCK, CALCULATOR, RTC_CHG_MODE
@@ -94,8 +95,11 @@ int main(void)
 		if(get_button(BUTTON4, BUTTON4PIN))
 		{
 			program_stat = program_stat == RTC_CLOCK ? CALCULATOR : RTC_CLOCK;
+			LCD_clear();
+			if(program_stat== CALCULATOR) { calculator_processing('C'); idle_counter = 0; }
+			_delay_ms(50);
 		}
-		
+
 		// BTN3이 눌림 > print_chg_mode(ds1307);
 		// BTN3눌린 상태에서 BTN2가 눌리면 CHG_DATE / CHG_TIME 이렇게 뜨는거.	* chg_clock_stat 사용(한번 BTN2로 오면 계속 설정 선택만. BTN3 눌렸을때 NOTHING으로 설정)
 		if(get_button(BUTTON3, BUTTON3PIN) && (program_stat == RTC_CLOCK || program_stat == RTC_CHG_MODE)){	// 이땐 NOTHING
@@ -136,7 +140,7 @@ int main(void)
 				front = (front + 1) % QUEUE_SIZE;
 			}
 
-			cal_main(&idle_counter, TIMEOUT_MS, program_stat);
+			cal_main(&idle_counter, TIMEOUT_MS, &program_stat);
 		}
 	}
 }

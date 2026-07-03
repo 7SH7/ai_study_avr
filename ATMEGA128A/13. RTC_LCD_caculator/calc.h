@@ -6,5 +6,5 @@
  */ 
 #include <avr/io.h>
 
-void cal_main(uint32_t *cnt, uint32_t timeout, int program_stat);
+void cal_main(uint32_t *cnt, uint32_t timeout, int* program_stat);
 void calculator_processing(uint8_t key);

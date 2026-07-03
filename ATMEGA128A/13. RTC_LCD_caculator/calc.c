@@ -297,14 +297,16 @@ static int32_t eval_expression(const char* expr, int* valid)
  * @param timeout_max 제한 시간 (60000ms)
  * @param mode_var 현재 시스템 모드 변수 포인터 (타임아웃 시 시계로 변경용)
  */
-void cal_main(uint32_t *cnt, uint32_t timeout, int program_stat)
+void cal_main(uint32_t *cnt, uint32_t timeout, int* program_stat)
 {
+	printf("CAL_MAIN\n");
+	printf("CAL_MAIN state=%d idle=%lu\n", *program_stat, *cnt);
     static uint8_t l_btn0 = 0, l_btn1 = 0, l_btn2 = 0, l_btn3 = 0;
-
+	
     // 1. 1분간 무입력 타임아웃 검사
     if (*cnt >= timeout)
     {
-        program_stat = RTC_CLOCK; // MODE_CLOCK (0)으로 복귀
+        *program_stat = RTC_CLOCK; // MODE_CLOCK (0)으로 복귀
         LCD_clear();
         printf("\r\n[Timeout! Back to Clock Mode]\r\n");
         return;

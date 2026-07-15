@@ -22,7 +22,7 @@ void Main(void)
 	GPIOA_MODER = 0x1 << 10;
 	GPIOA_OTYPER = 0x0 << 5;
 
-	int i;
+	volatile int i;	// volatile을 붙이면, compiler optimizor가 이 변수에 대해서는 최적화를 배제해줌.
 
 	for(;;)
 	{

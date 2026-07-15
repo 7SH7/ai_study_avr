@@ -32,7 +32,7 @@ void Main(void)
 	// LED GPA[7]를 출력(General Open Drain) 모드로 설정하시오
 
     GPIOA_MODER = 0x00004000;
-    GPIOA_OTYPER = 0x00000080;	/		/ change general open drain
+    GPIOA_OTYPER = 0x00000080;	// change general open drain
 
     // GPA[7] LED를 ON 시키도록 설정하시오
 

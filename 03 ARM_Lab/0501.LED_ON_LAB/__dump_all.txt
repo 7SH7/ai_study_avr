@@ -268,17 +268,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 125 .debug_line   00000284  00000000  00000000  000068c8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-126 .debug_str    0000031a  00000000  00000000  00006b4c  2**0
+126 .debug_str    000002bd  00000000  00000000  00006b4c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-127 .comment      00000045  00000000  00000000  00006e66  2**0
+127 .comment      00000045  00000000  00000000  00006e09  2**0
                   CONTENTS, READONLY
-128 .ARM.attributes 00000032  00000000  00000000  00006eab  2**0
+128 .ARM.attributes 00000032  00000000  00000000  00006e4e  2**0
                   CONTENTS, READONLY
-129 .debug_frame  0000125c  00000000  00000000  00006ee0  2**2
+129 .debug_frame  0000125c  00000000  00000000  00006e80  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-130 .debug_loclists 000000cc  00000000  00000000  0000813c  2**0
+130 .debug_loclists 000000cc  00000000  00000000  000080dc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
-131 .debug_line_str 00000228  00000000  00000000  00008208  2**0
+131 .debug_line_str 0000021c  00000000  00000000  000081a8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 SYMBOL TABLE:
 08000000 l    d  .text	00000000 .text
@@ -783,57 +783,120 @@ Disassembly of section .text:
  800006e:	 			@ <UNDEFINED> instruction: 4b042000
 
 08000070 <Main>:
+// active low
+void Main(void)
+{
+	// LED GPA[7]를 출력(General Open Drain) 모드로 설정하시오
+
+    GPIOA_MODER = 0x00004000;
  8000070:	4b04      	ldr	r3, [pc, #16]	@ (8000084 <Main+0x14>)
  8000072:	f44f 4080 	mov.w	r0, #16384	@ 0x4000
+    GPIOA_OTYPER = 0x00000080;	// change general open drain
  8000076:	2180      	movs	r1, #128	@ 0x80
+
+    // GPA[7] LED를 ON 시키도록 설정하시오
+
+    GPIOA_ODR = 0x00000000;	
  8000078:	2200      	movs	r2, #0
+    GPIOA_OTYPER = 0x00000080;	// change general open drain
  800007a:	e9c3 0100 	strd	r0, r1, [r3]
+    GPIOA_ODR = 0x00000000;	
  800007e:	615a      	str	r2, [r3, #20]
+    // GPIOA_ODR = 0x00000080;	
+}
  8000080:	4770      	bx	lr
  8000082:	bf00      	nop
  8000084:	40020000 			@ <UNDEFINED> instruction: 40020000
 
 08000088 <_sbrk>:
+#include <errno.h>
+
+char * _sbrk(int inc)
+{
+	return (char *)0;
+}
  8000088:	2000      	movs	r0, #0
  800008a:	4770      	bx	lr
 
 0800008c <_write>:
+
+int _write(int file, char *ptr, int len) 
+{
+	return 0;
+}
  800008c:	2000      	movs	r0, #0
  800008e:	4770      	bx	lr
 
 08000090 <_read>:
+
+int _read(int file, char *ptr, int len) 
  8000090:	2000      	movs	r0, #0
  8000092:	4770      	bx	lr
 
 08000094 <_lseek>:
+}
+
+int _lseek(int file, int ptr, int dir)  
+{ 
+	return 0; 
+}
  8000094:	2000      	movs	r0, #0
  8000096:	4770      	bx	lr
 
 08000098 <_close>:
+
+int _close(int file) 
+{ 
+	return -1; 
+}
  8000098:	f04f 30ff 	mov.w	r0, #4294967295
  800009c:	4770      	bx	lr
  800009e:	bf00      	nop
 
 080000a0 <_fstat>:
+
+int _fstat(int file, struct stat *st) 
+{
+    st->st_mode = S_IFCHR;
  80000a0:	f44f 5300 	mov.w	r3, #8192	@ 0x2000
  80000a4:	604b      	str	r3, [r1, #4]
+    return 0;
+}
  80000a6:	2000      	movs	r0, #0
  80000a8:	4770      	bx	lr
  80000aa:	bf00      	nop
 
 080000ac <_isatty>:
+
+int _isatty(int file) 
+{ 
+	return 1; 
+}
  80000ac:	2001      	movs	r0, #1
  80000ae:	4770      	bx	lr
 
 080000b0 <_getpid>:
+
+int _getpid(void) 
+{
+    return 1;
+}
  80000b0:	2001      	movs	r0, #1
  80000b2:	4770      	bx	lr
 
 080000b4 <_kill>:
+
+int _kill(int pid, int sig)
+{
  80000b4:	b508      	push	{r3, lr}
+    (void)pid;
+    (void)sig;
+    
+    errno = EINVAL;
  80000b6:	f001 fa93 	bl	80015e0 <__errno>
  80000ba:	2316      	movs	r3, #22
  80000bc:	6003      	str	r3, [r0, #0]
+    return -1;
  80000be:	f04f 30ff 	mov.w	r0, #4294967295
  80000c2:	bd08      	pop	{r3, pc}
 	...
@@ -7767,13 +7830,13 @@ Disassembly of section .debug_info:
    0:	00000035 			@ <UNDEFINED> instruction: 00000035
    4:	04010005 			@ <UNDEFINED> instruction: 04010005
    8:	00000000 			@ <UNDEFINED> instruction: 00000000
-   c:	00005d01 			@ <UNDEFINED> instruction: 00005d01
-  10:	00560c00 			@ <UNDEFINED> instruction: 00560c00
-  14:	00000000 			@ <UNDEFINED> instruction: 00000000
+   c:	00000c01 			@ <UNDEFINED> instruction: 00000c01
+  10:	00050c00 			@ <UNDEFINED> instruction: 00050c00
+  14:	00c20000 			@ <UNDEFINED> instruction: 00c20000
   18:	00700000 			@ <UNDEFINED> instruction: 00700000
   1c:	00180800 			@ <UNDEFINED> instruction: 00180800
   20:	00000000 			@ <UNDEFINED> instruction: 00000000
-  24:	51020000 			@ <UNDEFINED> instruction: 51020000
+  24:	00020000 			@ <UNDEFINED> instruction: 00020000
   28:	01000000 			@ <UNDEFINED> instruction: 01000000
   2c:	0070061e 			@ <UNDEFINED> instruction: 0070061e
   30:	00180800 			@ <UNDEFINED> instruction: 00180800
@@ -7781,155 +7844,155 @@ Disassembly of section .debug_info:
   38:	00048300 			@ <UNDEFINED> instruction: 00048300
   3c:	01000500 			@ <UNDEFINED> instruction: 01000500
   40:	00002d04 			@ <UNDEFINED> instruction: 00002d04
-  44:	005d0d00 			@ <UNDEFINED> instruction: 005d0d00
-  48:	840c0000 			@ <UNDEFINED> instruction: 840c0000
-  4c:	00000002 			@ <UNDEFINED> instruction: 00000002
+  44:	000c0d00 			@ <UNDEFINED> instruction: 000c0d00
+  48:	740c0000 			@ <UNDEFINED> instruction: 740c0000
+  4c:	c2000002 			@ <UNDEFINED> instruction: c2000002
   50:	88000000 			@ <UNDEFINED> instruction: 88000000
   54:	3c080000 			@ <UNDEFINED> instruction: 3c080000
   58:	53000000 	movwpl	r0, #0
   5c:	03000000 	movweq	r0, #0
-  60:	012b0708 			@ <UNDEFINED> instruction: 012b0708
+  60:	011b0708 			@ <UNDEFINED> instruction: 011b0708
   64:	04030000 			@ <UNDEFINED> instruction: 04030000
-  68:	00013507 			@ <UNDEFINED> instruction: 00013507
+  68:	00012507 			@ <UNDEFINED> instruction: 00012507
   6c:	06010300 			@ <UNDEFINED> instruction: 06010300
-  70:	00000245 			@ <UNDEFINED> instruction: 00000245
-  74:	43080103 	movwmi	r0, #33027	@ 0x8103
+  70:	00000235 			@ <UNDEFINED> instruction: 00000235
+  74:	33080103 	movwcc	r0, #33027	@ 0x8103
   78:	03000002 	movweq	r0, #2
-  7c:	02510502 			@ <UNDEFINED> instruction: 02510502
+  7c:	02410502 			@ <UNDEFINED> instruction: 02410502
   80:	02030000 			@ <UNDEFINED> instruction: 02030000
-  84:	0001ce07 			@ <UNDEFINED> instruction: 0001ce07
+  84:	0001be07 			@ <UNDEFINED> instruction: 0001be07
   88:	05040300 			@ <UNDEFINED> instruction: 05040300
-  8c:	00000161 			@ <UNDEFINED> instruction: 00000161
-  90:	0001a301 			@ <UNDEFINED> instruction: 0001a301
+  8c:	00000151 			@ <UNDEFINED> instruction: 00000151
+  90:	00019301 			@ <UNDEFINED> instruction: 00019301
   94:	194f0200 			@ <UNDEFINED> instruction: 194f0200
   98:	00000063 			@ <UNDEFINED> instruction: 00000063
-  9c:	30070403 			@ <UNDEFINED> instruction: 30070403
+  9c:	20070403 			@ <UNDEFINED> instruction: 20070403
   a0:	03000001 	movweq	r0, #1
-  a4:	015c0508 			@ <UNDEFINED> instruction: 015c0508
-  a8:	4c010000 			@ <UNDEFINED> instruction: 4c010000
+  a4:	014c0508 			@ <UNDEFINED> instruction: 014c0508
+  a8:	3c010000 			@ <UNDEFINED> instruction: 3c010000
   ac:	02000001 			@ <UNDEFINED> instruction: 02000001
   b0:	006a1ec8 			@ <UNDEFINED> instruction: 006a1ec8
   b4:	040e0000 			@ <UNDEFINED> instruction: 040e0000
   b8:	746e6905 			@ <UNDEFINED> instruction: 746e6905
-  bc:	017a0100 			@ <UNDEFINED> instruction: 017a0100
+  bc:	016a0100 			@ <UNDEFINED> instruction: 016a0100
   c0:	1e030000 			@ <UNDEFINED> instruction: 1e030000
   c4:	0000500e 			@ <UNDEFINED> instruction: 0000500e
-  c8:	02190100 			@ <UNDEFINED> instruction: 02190100
+  c8:	02090100 			@ <UNDEFINED> instruction: 02090100
   cc:	22030000 			@ <UNDEFINED> instruction: 22030000
   d0:	0000500e 			@ <UNDEFINED> instruction: 0000500e
-  d4:	01140100 			@ <UNDEFINED> instruction: 01140100
+  d4:	01040100 			@ <UNDEFINED> instruction: 01040100
   d8:	2e030000 			@ <UNDEFINED> instruction: 2e030000
   dc:	0000500e 			@ <UNDEFINED> instruction: 0000500e
-  e0:	01ae0100 			@ <UNDEFINED> instruction: 01ae0100
+  e0:	019e0100 			@ <UNDEFINED> instruction: 019e0100
   e4:	38030000 			@ <UNDEFINED> instruction: 38030000
   e8:	0000420f 			@ <UNDEFINED> instruction: 0000420f
-  ec:	028e0100 			@ <UNDEFINED> instruction: 028e0100
+  ec:	027e0100 			@ <UNDEFINED> instruction: 027e0100
   f0:	3c030000 			@ <UNDEFINED> instruction: 3c030000
   f4:	00004918 			@ <UNDEFINED> instruction: 00004918
-  f8:	011b0100 			@ <UNDEFINED> instruction: 011b0100
+  f8:	010b0100 			@ <UNDEFINED> instruction: 010b0100
   fc:	3f030000 			@ <UNDEFINED> instruction: 3f030000
  100:	00004918 			@ <UNDEFINED> instruction: 00004918
- 104:	02740100 			@ <UNDEFINED> instruction: 02740100
+ 104:	02640100 			@ <UNDEFINED> instruction: 02640100
  108:	4b030000 			@ <UNDEFINED> instruction: 4b030000
  10c:	00004918 			@ <UNDEFINED> instruction: 00004918
- 110:	01710100 			@ <UNDEFINED> instruction: 01710100
+ 110:	01610100 			@ <UNDEFINED> instruction: 01610100
  114:	5a030000 			@ <UNDEFINED> instruction: 5a030000
  118:	00005714 			@ <UNDEFINED> instruction: 00005714
- 11c:	01130100 			@ <UNDEFINED> instruction: 01130100
+ 11c:	01030100 			@ <UNDEFINED> instruction: 01030100
  120:	66030000 			@ <UNDEFINED> instruction: 66030000
  124:	00009c10 			@ <UNDEFINED> instruction: 00009c10
- 128:	01e10100 			@ <UNDEFINED> instruction: 01e10100
+ 128:	01d10100 			@ <UNDEFINED> instruction: 01d10100
  12c:	d5030000 			@ <UNDEFINED> instruction: d5030000
  130:	00004918 			@ <UNDEFINED> instruction: 00004918
  134:	01010700 			@ <UNDEFINED> instruction: 01010700
  138:	01030000 			@ <UNDEFINED> instruction: 01030000
- 13c:	00024c08 			@ <UNDEFINED> instruction: 00024c08
- 140:	02250100 			@ <UNDEFINED> instruction: 02250100
+ 13c:	00023c08 			@ <UNDEFINED> instruction: 00023c08
+ 140:	02150100 			@ <UNDEFINED> instruction: 02150100
  144:	2a040000 			@ <UNDEFINED> instruction: 2a040000
  148:	00007112 			@ <UNDEFINED> instruction: 00007112
- 14c:	026b0a00 			@ <UNDEFINED> instruction: 026b0a00
+ 14c:	025b0a00 			@ <UNDEFINED> instruction: 025b0a00
  150:	05100000 			@ <UNDEFINED> instruction: 05100000
  154:	00013b2f 			@ <UNDEFINED> instruction: 00013b2f
- 158:	02120200 			@ <UNDEFINED> instruction: 02120200
+ 158:	02020200 			@ <UNDEFINED> instruction: 02020200
  15c:	30050000 			@ <UNDEFINED> instruction: 30050000
  160:	00010809 			@ <UNDEFINED> instruction: 00010809
- 164:	0a020000 			@ <UNDEFINED> instruction: 0a020000
- 168:	05000002 			@ <UNDEFINED> instruction: 05000002
+ 164:	fa020000 	blx	8016c <__RW_SIZE__+0x7ffa4>
+ 168:	05000001 			@ <UNDEFINED> instruction: 05000001
  16c:	00500731 			@ <UNDEFINED> instruction: 00500731
  170:	00080000 			@ <UNDEFINED> instruction: 00080000
- 174:	00017c01 			@ <UNDEFINED> instruction: 00017c01
+ 174:	00016c01 			@ <UNDEFINED> instruction: 00016c01
  178:	14610600 			@ <UNDEFINED> instruction: 14610600
  17c:	00000084 			@ <UNDEFINED> instruction: 00000084
- 180:	00021b01 			@ <UNDEFINED> instruction: 00021b01
+ 180:	00020b01 			@ <UNDEFINED> instruction: 00020b01
  184:	15660600 			@ <UNDEFINED> instruction: 15660600
  188:	00000090 			@ <UNDEFINED> instruction: 00000090
- 18c:	00027601 			@ <UNDEFINED> instruction: 00027601
+ 18c:	00026601 			@ <UNDEFINED> instruction: 00026601
  190:	12890600 			@ <UNDEFINED> instruction: 12890600
  194:	000000cc 			@ <UNDEFINED> instruction: 000000cc
- 198:	00011501 			@ <UNDEFINED> instruction: 00011501
+ 198:	00010501 			@ <UNDEFINED> instruction: 00010501
  19c:	129b0600 			@ <UNDEFINED> instruction: 129b0600
  1a0:	000000e4 			@ <UNDEFINED> instruction: 000000e4
- 1a4:	0001b001 			@ <UNDEFINED> instruction: 0001b001
+ 1a4:	0001a001 			@ <UNDEFINED> instruction: 0001a001
  1a8:	129f0600 			@ <UNDEFINED> instruction: 129f0600
  1ac:	000000a8 			@ <UNDEFINED> instruction: 000000a8
- 1b0:	00029001 			@ <UNDEFINED> instruction: 00029001
+ 1b0:	00028001 			@ <UNDEFINED> instruction: 00028001
  1b4:	12a30600 			@ <UNDEFINED> instruction: 12a30600
  1b8:	000000b4 			@ <UNDEFINED> instruction: 000000b4
- 1bc:	00011d01 			@ <UNDEFINED> instruction: 00011d01
+ 1bc:	00010d01 			@ <UNDEFINED> instruction: 00010d01
  1c0:	12a70600 			@ <UNDEFINED> instruction: 12a70600
  1c4:	000000c0 			@ <UNDEFINED> instruction: 000000c0
- 1c8:	00017301 			@ <UNDEFINED> instruction: 00017301
+ 1c8:	00016301 			@ <UNDEFINED> instruction: 00016301
  1cc:	12bb0600 			@ <UNDEFINED> instruction: 12bb0600
  1d0:	000000d8 	ldrdeq	r0, [r0], -r8
- 1d4:	0001e301 			@ <UNDEFINED> instruction: 0001e301
+ 1d4:	0001d301 			@ <UNDEFINED> instruction: 0001d301
  1d8:	13c00600 			@ <UNDEFINED> instruction: 13c00600
  1dc:	000000f0 	strdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
- 1e0:	00018e0a 			@ <UNDEFINED> instruction: 00018e0a
+ 1e0:	00017e0a 			@ <UNDEFINED> instruction: 00017e0a
  1e4:	1b075800 			@ <UNDEFINED> instruction: 1b075800
  1e8:	0000026a 			@ <UNDEFINED> instruction: 0000026a
- 1ec:	0002a302 			@ <UNDEFINED> instruction: 0002a302
+ 1ec:	00029302 			@ <UNDEFINED> instruction: 00029302
  1f0:	0a1d0700 			@ <UNDEFINED> instruction: 0a1d0700
  1f4:	0000016b 			@ <UNDEFINED> instruction: 0000016b
- 1f8:	016a0200 			@ <UNDEFINED> instruction: 016a0200
+ 1f8:	015a0200 			@ <UNDEFINED> instruction: 015a0200
  1fc:	1e070000 			@ <UNDEFINED> instruction: 1e070000
  200:	0001530a 			@ <UNDEFINED> instruction: 0001530a
- 204:	02020200 			@ <UNDEFINED> instruction: 02020200
- 208:	07000002 			@ <UNDEFINED> instruction: 07000002
+ 204:	f2020200 	vhsub.s8	d0, d2, d0
+ 208:	07000001 			@ <UNDEFINED> instruction: 07000001
  20c:	018f0a1f 			@ <UNDEFINED> instruction: 018f0a1f
  210:	02040000 			@ <UNDEFINED> instruction: 02040000
- 214:	0000023a 			@ <UNDEFINED> instruction: 0000023a
+ 214:	0000022a 			@ <UNDEFINED> instruction: 0000022a
  218:	9b0b2007 			@ <UNDEFINED> instruction: 9b0b2007
  21c:	08000001 			@ <UNDEFINED> instruction: 08000001
- 220:	0001b602 			@ <UNDEFINED> instruction: 0001b602
+ 220:	0001a602 			@ <UNDEFINED> instruction: 0001a602
  224:	0a210700 			@ <UNDEFINED> instruction: 0a210700
  228:	00000177 			@ <UNDEFINED> instruction: 00000177
- 22c:	029c020a 			@ <UNDEFINED> instruction: 029c020a
+ 22c:	028c020a 			@ <UNDEFINED> instruction: 028c020a
  230:	22070000 			@ <UNDEFINED> instruction: 22070000
  234:	0001830a 			@ <UNDEFINED> instruction: 0001830a
- 238:	7c020c00 			@ <UNDEFINED> instruction: 7c020c00
+ 238:	6c020c00 			@ <UNDEFINED> instruction: 6c020c00
  23c:	07000002 			@ <UNDEFINED> instruction: 07000002
  240:	016b0a23 			@ <UNDEFINED> instruction: 016b0a23
  244:	020e0000 			@ <UNDEFINED> instruction: 020e0000
- 248:	000001f3 	strdeq	r0, [r0], -r3
+ 248:	000001e3 			@ <UNDEFINED> instruction: 000001e3
  24c:	5f0a2407 			@ <UNDEFINED> instruction: 5f0a2407
  250:	10000001 			@ <UNDEFINED> instruction: 10000001
- 254:	00019b02 			@ <UNDEFINED> instruction: 00019b02
+ 254:	00018b02 			@ <UNDEFINED> instruction: 00018b02
  258:	13340700 			@ <UNDEFINED> instruction: 13340700
  25c:	00000114 			@ <UNDEFINED> instruction: 00000114
- 260:	02aa0218 			@ <UNDEFINED> instruction: 02aa0218
+ 260:	029a0218 			@ <UNDEFINED> instruction: 029a0218
  264:	35070000 			@ <UNDEFINED> instruction: 35070000
  268:	00011413 			@ <UNDEFINED> instruction: 00011413
- 26c:	23022800 	movwcs	r2, #10240	@ 0x2800
+ 26c:	13022800 	movwne	r2, #10240	@ 0x2800
  270:	07000001 			@ <UNDEFINED> instruction: 07000001
  274:	01141336 			@ <UNDEFINED> instruction: 01141336
  278:	02380000 			@ <UNDEFINED> instruction: 02380000
- 27c:	00000260 			@ <UNDEFINED> instruction: 00000260
+ 27c:	00000250 			@ <UNDEFINED> instruction: 00000250
  280:	47113707 			@ <UNDEFINED> instruction: 47113707
  284:	48000001 			@ <UNDEFINED> instruction: 48000001
- 288:	00014202 			@ <UNDEFINED> instruction: 00014202
+ 288:	00013202 			@ <UNDEFINED> instruction: 00013202
  28c:	0c380700 			@ <UNDEFINED> instruction: 0c380700
  290:	0000013b 			@ <UNDEFINED> instruction: 0000013b
- 294:	01bd024c 			@ <UNDEFINED> instruction: 01bd024c
+ 294:	01ad024c 			@ <UNDEFINED> instruction: 01ad024c
  298:	3a070000 			@ <UNDEFINED> instruction: 3a070000
  29c:	00026a09 			@ <UNDEFINED> instruction: 00026a09
  2a0:	0f005000 			@ <UNDEFINED> instruction: 0f005000
@@ -7937,11 +8000,11 @@ Disassembly of section .debug_info:
  2a8:	0000027a 			@ <UNDEFINED> instruction: 0000027a
  2ac:	00002d10 			@ <UNDEFINED> instruction: 00002d10
  2b0:	11000100 			@ <UNDEFINED> instruction: 11000100
- 2b4:	00000232 			@ <UNDEFINED> instruction: 00000232
+ 2b4:	00000222 			@ <UNDEFINED> instruction: 00000222
  2b8:	860d1308 			@ <UNDEFINED> instruction: 860d1308
  2bc:	07000002 			@ <UNDEFINED> instruction: 07000002
  2c0:	0000007d 			@ <UNDEFINED> instruction: 0000007d
- 2c4:	00029604 			@ <UNDEFINED> instruction: 00029604
+ 2c4:	00028604 			@ <UNDEFINED> instruction: 00028604
  2c8:	7d052e00 			@ <UNDEFINED> instruction: 7d052e00
  2cc:	b4000000 			@ <UNDEFINED> instruction: b4000000
  2d0:	10080000 			@ <UNDEFINED> instruction: 10080000
@@ -7959,30 +8022,30 @@ Disassembly of section .debug_info:
  300:	12000000 			@ <UNDEFINED> instruction: 12000000
  304:	080000ba 			@ <UNDEFINED> instruction: 080000ba
  308:	0000027a 			@ <UNDEFINED> instruction: 0000027a
- 30c:	01931300 			@ <UNDEFINED> instruction: 01931300
+ 30c:	01831300 			@ <UNDEFINED> instruction: 01831300
  310:	29010000 			@ <UNDEFINED> instruction: 29010000
  314:	00007d05 			@ <UNDEFINED> instruction: 00007d05
  318:	0000b000 			@ <UNDEFINED> instruction: 0000b000
  31c:	00000408 			@ <UNDEFINED> instruction: 00000408
  320:	049c0100 			@ <UNDEFINED> instruction: 049c0100
- 324:	000001eb 			@ <UNDEFINED> instruction: 000001eb
+ 324:	000001db 	ldrdeq	r0, [r0], -fp
  328:	007d0524 			@ <UNDEFINED> instruction: 007d0524
  32c:	00ac0000 			@ <UNDEFINED> instruction: 00ac0000
  330:	00040800 			@ <UNDEFINED> instruction: 00040800
  334:	9c010000 			@ <UNDEFINED> instruction: 9c010000
  338:	00000317 			@ <UNDEFINED> instruction: 00000317
- 33c:	00025b05 			@ <UNDEFINED> instruction: 00025b05
+ 33c:	00024b05 			@ <UNDEFINED> instruction: 00024b05
  340:	7d112400 			@ <UNDEFINED> instruction: 7d112400
  344:	40000000 			@ <UNDEFINED> instruction: 40000000
  348:	3c000000 			@ <UNDEFINED> instruction: 3c000000
  34c:	00000000 			@ <UNDEFINED> instruction: 00000000
- 350:	00018c04 			@ <UNDEFINED> instruction: 00018c04
+ 350:	00017c04 			@ <UNDEFINED> instruction: 00017c04
  354:	7d051e00 			@ <UNDEFINED> instruction: 7d051e00
  358:	a0000000 			@ <UNDEFINED> instruction: a0000000
  35c:	0a080000 			@ <UNDEFINED> instruction: 0a080000
  360:	01000000 			@ <UNDEFINED> instruction: 01000000
  364:	0003509c 			@ <UNDEFINED> instruction: 0003509c
- 368:	025b0500 			@ <UNDEFINED> instruction: 025b0500
+ 368:	024b0500 			@ <UNDEFINED> instruction: 024b0500
  36c:	101e0000 			@ <UNDEFINED> instruction: 101e0000
  370:	0000007d 			@ <UNDEFINED> instruction: 0000007d
  374:	00000058 			@ <UNDEFINED> instruction: 00000058
@@ -7991,25 +8054,25 @@ Disassembly of section .debug_info:
  380:	0350231e 			@ <UNDEFINED> instruction: 0350231e
  384:	51010000 			@ <UNDEFINED> instruction: 51010000
  388:	01a70700 			@ <UNDEFINED> instruction: 01a70700
- 38c:	c7040000 			@ <UNDEFINED> instruction: c7040000
+ 38c:	b7040000 			@ <UNDEFINED> instruction: b7040000
  390:	19000001 			@ <UNDEFINED> instruction: 19000001
  394:	00007d05 			@ <UNDEFINED> instruction: 00007d05
  398:	00009800 			@ <UNDEFINED> instruction: 00009800
  39c:	00000608 			@ <UNDEFINED> instruction: 00000608
  3a0:	829c0100 			@ <UNDEFINED> instruction: 829c0100
  3a4:	05000003 			@ <UNDEFINED> instruction: 05000003
- 3a8:	0000025b 			@ <UNDEFINED> instruction: 0000025b
+ 3a8:	0000024b 			@ <UNDEFINED> instruction: 0000024b
  3ac:	007d1019 			@ <UNDEFINED> instruction: 007d1019
  3b0:	00700000 			@ <UNDEFINED> instruction: 00700000
  3b4:	006c0000 			@ <UNDEFINED> instruction: 006c0000
  3b8:	04000000 			@ <UNDEFINED> instruction: 04000000
- 3bc:	00000185 			@ <UNDEFINED> instruction: 00000185
+ 3bc:	00000175 			@ <UNDEFINED> instruction: 00000175
  3c0:	007d0514 			@ <UNDEFINED> instruction: 007d0514
  3c4:	00940000 			@ <UNDEFINED> instruction: 00940000
  3c8:	00040800 			@ <UNDEFINED> instruction: 00040800
  3cc:	9c010000 			@ <UNDEFINED> instruction: 9c010000
  3d0:	000003c9 			@ <UNDEFINED> instruction: 000003c9
- 3d4:	00025b05 			@ <UNDEFINED> instruction: 00025b05
+ 3d4:	00024b05 			@ <UNDEFINED> instruction: 00024b05
  3d8:	7d101400 			@ <UNDEFINED> instruction: 7d101400
  3dc:	88000000 			@ <UNDEFINED> instruction: 88000000
  3e0:	84000000 			@ <UNDEFINED> instruction: 84000000
@@ -8020,11 +8083,11 @@ Disassembly of section .debug_info:
  3f4:	72696409 			@ <UNDEFINED> instruction: 72696409
  3f8:	7d231400 			@ <UNDEFINED> instruction: 7d231400
  3fc:	01000000 			@ <UNDEFINED> instruction: 01000000
- 400:	2c140052 			@ <UNDEFINED> instruction: 2c140052
+ 400:	1c140052 			@ <UNDEFINED> instruction: 1c140052
  404:	01000002 			@ <UNDEFINED> instruction: 01000002
  408:	007d050f 			@ <UNDEFINED> instruction: 007d050f
  40c:	03fb0000 			@ <UNDEFINED> instruction: 03fb0000
- 410:	5b0b0000 			@ <UNDEFINED> instruction: 5b0b0000
+ 410:	4b0b0000 			@ <UNDEFINED> instruction: 4b0b0000
  414:	0f000002 			@ <UNDEFINED> instruction: 0f000002
  418:	00007d0f 			@ <UNDEFINED> instruction: 00007d0f
  41c:	74700600 			@ <UNDEFINED> instruction: 74700600
@@ -8033,11 +8096,11 @@ Disassembly of section .debug_info:
  428:	6e656c06 			@ <UNDEFINED> instruction: 6e656c06
  42c:	7d240f00 			@ <UNDEFINED> instruction: 7d240f00
  430:	00000000 			@ <UNDEFINED> instruction: 00000000
- 434:	0001fb15 			@ <UNDEFINED> instruction: 0001fb15
+ 434:	0001eb15 			@ <UNDEFINED> instruction: 0001eb15
  438:	050a0100 			@ <UNDEFINED> instruction: 050a0100
  43c:	0000007d 			@ <UNDEFINED> instruction: 0000007d
  440:	00042e01 			@ <UNDEFINED> instruction: 00042e01
- 444:	025b0b00 			@ <UNDEFINED> instruction: 025b0b00
+ 444:	024b0b00 			@ <UNDEFINED> instruction: 024b0b00
  448:	100a0000 			@ <UNDEFINED> instruction: 100a0000
  44c:	0000007d 			@ <UNDEFINED> instruction: 0000007d
  450:	72747006 			@ <UNDEFINED> instruction: 72747006
@@ -8046,7 +8109,7 @@ Disassembly of section .debug_info:
  45c:	006e656c 			@ <UNDEFINED> instruction: 006e656c
  460:	007d250a 			@ <UNDEFINED> instruction: 007d250a
  464:	04000000 			@ <UNDEFINED> instruction: 04000000
- 468:	000002b2 			@ <UNDEFINED> instruction: 000002b2
+ 468:	000002a2 			@ <UNDEFINED> instruction: 000002a2
  46c:	00fc0805 			@ <UNDEFINED> instruction: 00fc0805
  470:	00880000 			@ <UNDEFINED> instruction: 00880000
  474:	00040800 			@ <UNDEFINED> instruction: 00040800
@@ -8073,9 +8136,9 @@ Disassembly of section .debug_info:
  4c8:	000001a8 			@ <UNDEFINED> instruction: 000001a8
  4cc:	00021401 			@ <UNDEFINED> instruction: 00021401
  4d0:	00000000 			@ <UNDEFINED> instruction: 00000000
- 4d4:	02b87008 			@ <UNDEFINED> instruction: 02b87008
- 4d8:	02bf0000 			@ <UNDEFINED> instruction: 02bf0000
- 4dc:	030c0000 	movweq	r0, #49152	@ 0xc000
+ 4d4:	02a87008 			@ <UNDEFINED> instruction: 02a87008
+ 4d8:	00c20000 			@ <UNDEFINED> instruction: 00c20000
+ 4dc:	02af0000 			@ <UNDEFINED> instruction: 02af0000
  4e0:	80010000 			@ <UNDEFINED> instruction: 80010000
 
 Disassembly of section .debug_abbrev:
@@ -8365,8 +8428,8 @@ Disassembly of section .debug_line:
  234:	0000011f 			@ <UNDEFINED> instruction: 0000011f
  238:	01020000 			@ <UNDEFINED> instruction: 01020000
  23c:	020f021f 			@ <UNDEFINED> instruction: 020f021f
- 240:	0000004d 			@ <UNDEFINED> instruction: 0000004d
- 244:	00004d00 			@ <UNDEFINED> instruction: 00004d00
+ 240:	00000041 			@ <UNDEFINED> instruction: 00000041
+ 244:	00004100 			@ <UNDEFINED> instruction: 00004100
  248:	05000000 			@ <UNDEFINED> instruction: 05000000
  24c:	00000802 			@ <UNDEFINED> instruction: 00000802
  250:	010f0308 			@ <UNDEFINED> instruction: 010f0308
@@ -8386,206 +8449,182 @@ Disassembly of section .debug_line:
 Disassembly of section .debug_str:
 
 00000000 <.debug_str>:
-   0:	555c3a43 			@ <UNDEFINED> instruction: 555c3a43
-   4:	73726573 			@ <UNDEFINED> instruction: 73726573
-   8:	63636b5c 			@ <UNDEFINED> instruction: 63636b5c
-   c:	63747369 			@ <UNDEFINED> instruction: 63747369
-  10:	776f445c 			@ <UNDEFINED> instruction: 776f445c
-  14:	616f6c6e 			@ <UNDEFINED> instruction: 616f6c6e
-  18:	ec5c7364 	mrrc	3, 6, r7, ip, cr4
-  1c:	8aeca48b 			@ <UNDEFINED> instruction: 8aeca48b
-  20:	909eecb5 			@ <UNDEFINED> instruction: 909eecb5
-  24:	288ca3eb 			@ <UNDEFINED> instruction: 288ca3eb
-  28:	68747950 			@ <UNDEFINED> instruction: 68747950
-  2c:	4d5f6e6f 			@ <UNDEFINED> instruction: 4d5f6e6f
-  30:	2b435f34 			@ <UNDEFINED> instruction: 2b435f34
-  34:	325c292b 			@ <UNDEFINED> instruction: 325c292b
-  38:	4d52412e 			@ <UNDEFINED> instruction: 4d52412e
-  3c:	62614c5f 			@ <UNDEFINED> instruction: 62614c5f
-  40:	3035305c 			@ <UNDEFINED> instruction: 3035305c
-  44:	454c2e31 			@ <UNDEFINED> instruction: 454c2e31
-  48:	4e4f5f44 			@ <UNDEFINED> instruction: 4e4f5f44
-  4c:	42414c5f 			@ <UNDEFINED> instruction: 42414c5f
-  50:	69614d00 			@ <UNDEFINED> instruction: 69614d00
-  54:	616d006e 			@ <UNDEFINED> instruction: 616d006e
-  58:	632e6e69 			@ <UNDEFINED> instruction: 632e6e69
-  5c:	554e4700 			@ <UNDEFINED> instruction: 554e4700
-  60:	39394320 			@ <UNDEFINED> instruction: 39394320
-  64:	2e353120 			@ <UNDEFINED> instruction: 2e353120
-  68:	20312e32 			@ <UNDEFINED> instruction: 20312e32
-  6c:	35323032 			@ <UNDEFINED> instruction: 35323032
-  70:	33303231 			@ <UNDEFINED> instruction: 33303231
-  74:	636d2d20 			@ <UNDEFINED> instruction: 636d2d20
-  78:	633d7570 			@ <UNDEFINED> instruction: 633d7570
-  7c:	6574726f 			@ <UNDEFINED> instruction: 6574726f
-  80:	346d2d78 			@ <UNDEFINED> instruction: 346d2d78
-  84:	746d2d20 			@ <UNDEFINED> instruction: 746d2d20
-  88:	626d7568 			@ <UNDEFINED> instruction: 626d7568
-  8c:	666d2d20 			@ <UNDEFINED> instruction: 666d2d20
-  90:	663d7570 			@ <UNDEFINED> instruction: 663d7570
-  94:	2d347670 			@ <UNDEFINED> instruction: 2d347670
-  98:	642d7073 			@ <UNDEFINED> instruction: 642d7073
-  9c:	2d203631 			@ <UNDEFINED> instruction: 2d203631
-  a0:	6f6c666d 			@ <UNDEFINED> instruction: 6f6c666d
-  a4:	612d7461 			@ <UNDEFINED> instruction: 612d7461
-  a8:	683d6962 			@ <UNDEFINED> instruction: 683d6962
-  ac:	20647261 			@ <UNDEFINED> instruction: 20647261
-  b0:	72616d2d 			@ <UNDEFINED> instruction: 72616d2d
-  b4:	613d6863 			@ <UNDEFINED> instruction: 613d6863
-  b8:	37766d72 			@ <UNDEFINED> instruction: 37766d72
-  bc:	2b6d2d65 			@ <UNDEFINED> instruction: 2b6d2d65
-  c0:	2d207066 			@ <UNDEFINED> instruction: 2d207066
-  c4:	4f2d2067 			@ <UNDEFINED> instruction: 4f2d2067
-  c8:	732d2033 			@ <UNDEFINED> instruction: 732d2033
-  cc:	673d6474 			@ <UNDEFINED> instruction: 673d6474
-  d0:	3939756e 			@ <UNDEFINED> instruction: 3939756e
-  d4:	6e662d20 			@ <UNDEFINED> instruction: 6e662d20
-  d8:	75622d6f 			@ <UNDEFINED> instruction: 75622d6f
-  dc:	69746c69 			@ <UNDEFINED> instruction: 69746c69
-  e0:	662d206e 			@ <UNDEFINED> instruction: 662d206e
-  e4:	69736e75 			@ <UNDEFINED> instruction: 69736e75
-  e8:	64656e67 			@ <UNDEFINED> instruction: 64656e67
-  ec:	6168632d 			@ <UNDEFINED> instruction: 6168632d
-  f0:	662d2072 			@ <UNDEFINED> instruction: 662d2072
-  f4:	732d6f6e 			@ <UNDEFINED> instruction: 732d6f6e
-  f8:	63697274 			@ <UNDEFINED> instruction: 63697274
-  fc:	6c612d74 			@ <UNDEFINED> instruction: 6c612d74
- 100:	69736169 			@ <UNDEFINED> instruction: 69736169
- 104:	2d20676e 			@ <UNDEFINED> instruction: 2d20676e
- 108:	2d6f6e66 			@ <UNDEFINED> instruction: 2d6f6e66
- 10c:	6d6d6f63 			@ <UNDEFINED> instruction: 6d6d6f63
- 110:	5f006e6f 			@ <UNDEFINED> instruction: 5f006e6f
- 114:	66666f5f 	uqsaxvs	r6, r6, pc	@ <UNPREDICTABLE>
- 118:	5f00745f 			@ <UNDEFINED> instruction: 5f00745f
- 11c:	6469675f 			@ <UNDEFINED> instruction: 6469675f
- 120:	7300745f 	movwvc	r7, #1119	@ 0x45f
- 124:	74635f74 			@ <UNDEFINED> instruction: 74635f74
- 128:	6c006d69 			@ <UNDEFINED> instruction: 6c006d69
- 12c:	20676e6f 			@ <UNDEFINED> instruction: 20676e6f
- 130:	676e6f6c 			@ <UNDEFINED> instruction: 676e6f6c
- 134:	736e7520 			@ <UNDEFINED> instruction: 736e7520
- 138:	656e6769 			@ <UNDEFINED> instruction: 656e6769
- 13c:	6e692064 			@ <UNDEFINED> instruction: 6e692064
- 140:	74730074 			@ <UNDEFINED> instruction: 74730074
- 144:	6f6c625f 			@ <UNDEFINED> instruction: 6f6c625f
- 148:	00736b63 			@ <UNDEFINED> instruction: 00736b63
- 14c:	6e695f5f 			@ <UNDEFINED> instruction: 6e695f5f
- 150:	656c5f74 			@ <UNDEFINED> instruction: 656c5f74
- 154:	36747361 			@ <UNDEFINED> instruction: 36747361
- 158:	00745f34 			@ <UNDEFINED> instruction: 00745f34
- 15c:	676e6f6c 			@ <UNDEFINED> instruction: 676e6f6c
- 160:	6e6f6c20 			@ <UNDEFINED> instruction: 6e6f6c20
- 164:	6e692067 			@ <UNDEFINED> instruction: 6e692067
- 168:	74730074 			@ <UNDEFINED> instruction: 74730074
- 16c:	6f6e695f 			@ <UNDEFINED> instruction: 6f6e695f
- 170:	6d5f5f00 			@ <UNDEFINED> instruction: 6d5f5f00
- 174:	5f65646f 			@ <UNDEFINED> instruction: 5f65646f
- 178:	5f5f0074 			@ <UNDEFINED> instruction: 5f5f0074
- 17c:	636b6c62 			@ <UNDEFINED> instruction: 636b6c62
- 180:	745f746e 			@ <UNDEFINED> instruction: 745f746e
- 184:	736c5f00 			@ <UNDEFINED> instruction: 736c5f00
- 188:	006b6565 			@ <UNDEFINED> instruction: 006b6565
- 18c:	7473665f 			@ <UNDEFINED> instruction: 7473665f
- 190:	5f007461 			@ <UNDEFINED> instruction: 5f007461
- 194:	70746567 			@ <UNDEFINED> instruction: 70746567
- 198:	73006469 	movwvc	r6, #1129	@ 0x469
- 19c:	74615f74 			@ <UNDEFINED> instruction: 74615f74
- 1a0:	5f006d69 			@ <UNDEFINED> instruction: 5f006d69
- 1a4:	6e69755f 			@ <UNDEFINED> instruction: 6e69755f
- 1a8:	5f323374 			@ <UNDEFINED> instruction: 5f323374
- 1ac:	5f5f0074 			@ <UNDEFINED> instruction: 5f5f0074
- 1b0:	5f766564 			@ <UNDEFINED> instruction: 5f766564
- 1b4:	74730074 			@ <UNDEFINED> instruction: 74730074
- 1b8:	6469755f 			@ <UNDEFINED> instruction: 6469755f
- 1bc:	5f747300 			@ <UNDEFINED> instruction: 5f747300
- 1c0:	72617073 			@ <UNDEFINED> instruction: 72617073
- 1c4:	5f003465 			@ <UNDEFINED> instruction: 5f003465
- 1c8:	736f6c63 			@ <UNDEFINED> instruction: 736f6c63
- 1cc:	68730065 			@ <UNDEFINED> instruction: 68730065
- 1d0:	2074726f 			@ <UNDEFINED> instruction: 2074726f
- 1d4:	69736e75 			@ <UNDEFINED> instruction: 69736e75
- 1d8:	64656e67 			@ <UNDEFINED> instruction: 64656e67
- 1dc:	746e6920 			@ <UNDEFINED> instruction: 746e6920
- 1e0:	6e5f5f00 			@ <UNDEFINED> instruction: 6e5f5f00
- 1e4:	6b6e696c 			@ <UNDEFINED> instruction: 6b6e696c
- 1e8:	5f00745f 			@ <UNDEFINED> instruction: 5f00745f
- 1ec:	74617369 			@ <UNDEFINED> instruction: 74617369
- 1f0:	73007974 	movwvc	r7, #2420	@ 0x974
- 1f4:	69735f74 			@ <UNDEFINED> instruction: 69735f74
- 1f8:	5f00657a 			@ <UNDEFINED> instruction: 5f00657a
- 1fc:	74697277 			@ <UNDEFINED> instruction: 74697277
- 200:	74730065 			@ <UNDEFINED> instruction: 74730065
- 204:	646f6d5f 			@ <UNDEFINED> instruction: 646f6d5f
- 208:	76740065 			@ <UNDEFINED> instruction: 76740065
- 20c:	65736e5f 			@ <UNDEFINED> instruction: 65736e5f
- 210:	76740063 			@ <UNDEFINED> instruction: 76740063
- 214:	6365735f 			@ <UNDEFINED> instruction: 6365735f
- 218:	625f5f00 			@ <UNDEFINED> instruction: 625f5f00
- 21c:	69736b6c 			@ <UNDEFINED> instruction: 69736b6c
- 220:	745f657a 			@ <UNDEFINED> instruction: 745f657a
- 224:	6d697400 			@ <UNDEFINED> instruction: 6d697400
- 228:	00745f65 			@ <UNDEFINED> instruction: 00745f65
- 22c:	6165725f 			@ <UNDEFINED> instruction: 6165725f
- 230:	5f5f0064 			@ <UNDEFINED> instruction: 5f5f0064
- 234:	6e727265 			@ <UNDEFINED> instruction: 6e727265
- 238:	7473006f 			@ <UNDEFINED> instruction: 7473006f
- 23c:	696c6e5f 			@ <UNDEFINED> instruction: 696c6e5f
- 240:	75006b6e 			@ <UNDEFINED> instruction: 75006b6e
- 244:	6769736e 			@ <UNDEFINED> instruction: 6769736e
- 248:	2064656e 			@ <UNDEFINED> instruction: 2064656e
- 24c:	72616863 			@ <UNDEFINED> instruction: 72616863
- 250:	6f687300 			@ <UNDEFINED> instruction: 6f687300
- 254:	69207472 			@ <UNDEFINED> instruction: 69207472
- 258:	6600746e 			@ <UNDEFINED> instruction: 6600746e
- 25c:	00656c69 			@ <UNDEFINED> instruction: 00656c69
- 260:	625f7473 			@ <UNDEFINED> instruction: 625f7473
- 264:	69736b6c 			@ <UNDEFINED> instruction: 69736b6c
- 268:	7400657a 			@ <UNDEFINED> instruction: 7400657a
- 26c:	73656d69 			@ <UNDEFINED> instruction: 73656d69
- 270:	00636570 			@ <UNDEFINED> instruction: 00636570
- 274:	6e695f5f 			@ <UNDEFINED> instruction: 6e695f5f
- 278:	00745f6f 			@ <UNDEFINED> instruction: 00745f6f
- 27c:	725f7473 			@ <UNDEFINED> instruction: 725f7473
- 280:	00766564 			@ <UNDEFINED> instruction: 00766564
- 284:	746e7572 			@ <UNDEFINED> instruction: 746e7572
- 288:	2e656d69 			@ <UNDEFINED> instruction: 2e656d69
- 28c:	5f5f0063 			@ <UNDEFINED> instruction: 5f5f0063
- 290:	5f646975 			@ <UNDEFINED> instruction: 5f646975
- 294:	6b5f0074 			@ <UNDEFINED> instruction: 6b5f0074
- 298:	006c6c69 			@ <UNDEFINED> instruction: 006c6c69
- 29c:	675f7473 			@ <UNDEFINED> instruction: 675f7473
- 2a0:	73006469 	movwvc	r6, #1129	@ 0x469
- 2a4:	65645f74 			@ <UNDEFINED> instruction: 65645f74
- 2a8:	74730076 			@ <UNDEFINED> instruction: 74730076
- 2ac:	69746d5f 			@ <UNDEFINED> instruction: 69746d5f
- 2b0:	735f006d 			@ <UNDEFINED> instruction: 735f006d
- 2b4:	006b7262 			@ <UNDEFINED> instruction: 006b7262
- 2b8:	30747263 			@ <UNDEFINED> instruction: 30747263
- 2bc:	4300732e 	movwmi	r7, #814	@ 0x32e
- 2c0:	73555c3a 			@ <UNDEFINED> instruction: 73555c3a
- 2c4:	5c737265 			@ <UNDEFINED> instruction: 5c737265
- 2c8:	6963636b 			@ <UNDEFINED> instruction: 6963636b
- 2cc:	5c637473 			@ <UNDEFINED> instruction: 5c637473
- 2d0:	6e776f44 			@ <UNDEFINED> instruction: 6e776f44
- 2d4:	64616f6c 			@ <UNDEFINED> instruction: 64616f6c
- 2d8:	c7bd5c73 			@ <UNDEFINED> instruction: c7bd5c73
- 2dc:	dac0c0bd 			@ <UNDEFINED> instruction: dac0c0bd
- 2e0:	5028e1b7 	strhtpl	lr, [r8], -r7
- 2e4:	6f687479 			@ <UNDEFINED> instruction: 6f687479
- 2e8:	344d5f6e 			@ <UNDEFINED> instruction: 344d5f6e
- 2ec:	2b2b435f 			@ <UNDEFINED> instruction: 2b2b435f
- 2f0:	2e325c29 			@ <UNDEFINED> instruction: 2e325c29
- 2f4:	5f4d5241 			@ <UNDEFINED> instruction: 5f4d5241
- 2f8:	5c62614c 			@ <UNDEFINED> instruction: 5c62614c
- 2fc:	31303530 			@ <UNDEFINED> instruction: 31303530
- 300:	44454c2e 			@ <UNDEFINED> instruction: 44454c2e
- 304:	5f4e4f5f 			@ <UNDEFINED> instruction: 5f4e4f5f
- 308:	0042414c 			@ <UNDEFINED> instruction: 0042414c
- 30c:	20554e47 			@ <UNDEFINED> instruction: 20554e47
- 310:	32205341 			@ <UNDEFINED> instruction: 32205341
- 314:	2e35342e 			@ <UNDEFINED> instruction: 2e35342e
- 318:	Address 0x318 is out of bounds.
-
+   0:	6e69614d 			@ <UNDEFINED> instruction: 6e69614d
+   4:	69616d00 			@ <UNDEFINED> instruction: 69616d00
+   8:	00632e6e 			@ <UNDEFINED> instruction: 00632e6e
+   c:	20554e47 			@ <UNDEFINED> instruction: 20554e47
+  10:	20393943 			@ <UNDEFINED> instruction: 20393943
+  14:	322e3531 			@ <UNDEFINED> instruction: 322e3531
+  18:	3220312e 			@ <UNDEFINED> instruction: 3220312e
+  1c:	31353230 			@ <UNDEFINED> instruction: 31353230
+  20:	20333032 			@ <UNDEFINED> instruction: 20333032
+  24:	70636d2d 			@ <UNDEFINED> instruction: 70636d2d
+  28:	6f633d75 			@ <UNDEFINED> instruction: 6f633d75
+  2c:	78657472 			@ <UNDEFINED> instruction: 78657472
+  30:	20346d2d 			@ <UNDEFINED> instruction: 20346d2d
+  34:	68746d2d 			@ <UNDEFINED> instruction: 68746d2d
+  38:	20626d75 			@ <UNDEFINED> instruction: 20626d75
+  3c:	70666d2d 			@ <UNDEFINED> instruction: 70666d2d
+  40:	70663d75 			@ <UNDEFINED> instruction: 70663d75
+  44:	732d3476 			@ <UNDEFINED> instruction: 732d3476
+  48:	31642d70 			@ <UNDEFINED> instruction: 31642d70
+  4c:	6d2d2036 			@ <UNDEFINED> instruction: 6d2d2036
+  50:	616f6c66 			@ <UNDEFINED> instruction: 616f6c66
+  54:	62612d74 			@ <UNDEFINED> instruction: 62612d74
+  58:	61683d69 			@ <UNDEFINED> instruction: 61683d69
+  5c:	2d206472 			@ <UNDEFINED> instruction: 2d206472
+  60:	6372616d 			@ <UNDEFINED> instruction: 6372616d
+  64:	72613d68 			@ <UNDEFINED> instruction: 72613d68
+  68:	6537766d 			@ <UNDEFINED> instruction: 6537766d
+  6c:	662b6d2d 			@ <UNDEFINED> instruction: 662b6d2d
+  70:	672d2070 			@ <UNDEFINED> instruction: 672d2070
+  74:	334f2d20 	movtcc	r2, #64800	@ 0xfd20
+  78:	74732d20 			@ <UNDEFINED> instruction: 74732d20
+  7c:	6e673d64 			@ <UNDEFINED> instruction: 6e673d64
+  80:	20393975 			@ <UNDEFINED> instruction: 20393975
+  84:	6f6e662d 			@ <UNDEFINED> instruction: 6f6e662d
+  88:	6975622d 			@ <UNDEFINED> instruction: 6975622d
+  8c:	6e69746c 			@ <UNDEFINED> instruction: 6e69746c
+  90:	75662d20 			@ <UNDEFINED> instruction: 75662d20
+  94:	6769736e 			@ <UNDEFINED> instruction: 6769736e
+  98:	2d64656e 			@ <UNDEFINED> instruction: 2d64656e
+  9c:	72616863 			@ <UNDEFINED> instruction: 72616863
+  a0:	6e662d20 			@ <UNDEFINED> instruction: 6e662d20
+  a4:	74732d6f 			@ <UNDEFINED> instruction: 74732d6f
+  a8:	74636972 			@ <UNDEFINED> instruction: 74636972
+  ac:	696c612d 			@ <UNDEFINED> instruction: 696c612d
+  b0:	6e697361 			@ <UNDEFINED> instruction: 6e697361
+  b4:	662d2067 			@ <UNDEFINED> instruction: 662d2067
+  b8:	632d6f6e 			@ <UNDEFINED> instruction: 632d6f6e
+  bc:	6f6d6d6f 			@ <UNDEFINED> instruction: 6f6d6d6f
+  c0:	3a43006e 			@ <UNDEFINED> instruction: 3a43006e
+  c4:	6573555c 			@ <UNDEFINED> instruction: 6573555c
+  c8:	6b5c7372 			@ <UNDEFINED> instruction: 6b5c7372
+  cc:	73696363 			@ <UNDEFINED> instruction: 73696363
+  d0:	445c6374 			@ <UNDEFINED> instruction: 445c6374
+  d4:	746b7365 			@ <UNDEFINED> instruction: 746b7365
+  d8:	615c706f 			@ <UNDEFINED> instruction: 615c706f
+  dc:	74735f69 			@ <UNDEFINED> instruction: 74735f69
+  e0:	5f796475 			@ <UNDEFINED> instruction: 5f796475
+  e4:	5c727661 			@ <UNDEFINED> instruction: 5c727661
+  e8:	41203330 			@ <UNDEFINED> instruction: 41203330
+  ec:	4c5f4d52 	mrrcmi	13, 5, r4, pc, cr2	@ <UNPREDICTABLE>
+  f0:	305c6261 			@ <UNDEFINED> instruction: 305c6261
+  f4:	2e313035 			@ <UNDEFINED> instruction: 2e313035
+  f8:	5f44454c 			@ <UNDEFINED> instruction: 5f44454c
+  fc:	4c5f4e4f 	mrrcmi	14, 4, r4, pc, cr15	@ <UNPREDICTABLE>
+ 100:	5f004241 			@ <UNDEFINED> instruction: 5f004241
+ 104:	66666f5f 	uqsaxvs	r6, r6, pc	@ <UNPREDICTABLE>
+ 108:	5f00745f 			@ <UNDEFINED> instruction: 5f00745f
+ 10c:	6469675f 			@ <UNDEFINED> instruction: 6469675f
+ 110:	7300745f 	movwvc	r7, #1119	@ 0x45f
+ 114:	74635f74 			@ <UNDEFINED> instruction: 74635f74
+ 118:	6c006d69 			@ <UNDEFINED> instruction: 6c006d69
+ 11c:	20676e6f 			@ <UNDEFINED> instruction: 20676e6f
+ 120:	676e6f6c 			@ <UNDEFINED> instruction: 676e6f6c
+ 124:	736e7520 			@ <UNDEFINED> instruction: 736e7520
+ 128:	656e6769 			@ <UNDEFINED> instruction: 656e6769
+ 12c:	6e692064 			@ <UNDEFINED> instruction: 6e692064
+ 130:	74730074 			@ <UNDEFINED> instruction: 74730074
+ 134:	6f6c625f 			@ <UNDEFINED> instruction: 6f6c625f
+ 138:	00736b63 			@ <UNDEFINED> instruction: 00736b63
+ 13c:	6e695f5f 			@ <UNDEFINED> instruction: 6e695f5f
+ 140:	656c5f74 			@ <UNDEFINED> instruction: 656c5f74
+ 144:	36747361 			@ <UNDEFINED> instruction: 36747361
+ 148:	00745f34 			@ <UNDEFINED> instruction: 00745f34
+ 14c:	676e6f6c 			@ <UNDEFINED> instruction: 676e6f6c
+ 150:	6e6f6c20 			@ <UNDEFINED> instruction: 6e6f6c20
+ 154:	6e692067 			@ <UNDEFINED> instruction: 6e692067
+ 158:	74730074 			@ <UNDEFINED> instruction: 74730074
+ 15c:	6f6e695f 			@ <UNDEFINED> instruction: 6f6e695f
+ 160:	6d5f5f00 			@ <UNDEFINED> instruction: 6d5f5f00
+ 164:	5f65646f 			@ <UNDEFINED> instruction: 5f65646f
+ 168:	5f5f0074 			@ <UNDEFINED> instruction: 5f5f0074
+ 16c:	636b6c62 			@ <UNDEFINED> instruction: 636b6c62
+ 170:	745f746e 			@ <UNDEFINED> instruction: 745f746e
+ 174:	736c5f00 			@ <UNDEFINED> instruction: 736c5f00
+ 178:	006b6565 			@ <UNDEFINED> instruction: 006b6565
+ 17c:	7473665f 			@ <UNDEFINED> instruction: 7473665f
+ 180:	5f007461 			@ <UNDEFINED> instruction: 5f007461
+ 184:	70746567 			@ <UNDEFINED> instruction: 70746567
+ 188:	73006469 	movwvc	r6, #1129	@ 0x469
+ 18c:	74615f74 			@ <UNDEFINED> instruction: 74615f74
+ 190:	5f006d69 			@ <UNDEFINED> instruction: 5f006d69
+ 194:	6e69755f 			@ <UNDEFINED> instruction: 6e69755f
+ 198:	5f323374 			@ <UNDEFINED> instruction: 5f323374
+ 19c:	5f5f0074 			@ <UNDEFINED> instruction: 5f5f0074
+ 1a0:	5f766564 			@ <UNDEFINED> instruction: 5f766564
+ 1a4:	74730074 			@ <UNDEFINED> instruction: 74730074
+ 1a8:	6469755f 			@ <UNDEFINED> instruction: 6469755f
+ 1ac:	5f747300 			@ <UNDEFINED> instruction: 5f747300
+ 1b0:	72617073 			@ <UNDEFINED> instruction: 72617073
+ 1b4:	5f003465 			@ <UNDEFINED> instruction: 5f003465
+ 1b8:	736f6c63 			@ <UNDEFINED> instruction: 736f6c63
+ 1bc:	68730065 			@ <UNDEFINED> instruction: 68730065
+ 1c0:	2074726f 			@ <UNDEFINED> instruction: 2074726f
+ 1c4:	69736e75 			@ <UNDEFINED> instruction: 69736e75
+ 1c8:	64656e67 			@ <UNDEFINED> instruction: 64656e67
+ 1cc:	746e6920 			@ <UNDEFINED> instruction: 746e6920
+ 1d0:	6e5f5f00 			@ <UNDEFINED> instruction: 6e5f5f00
+ 1d4:	6b6e696c 			@ <UNDEFINED> instruction: 6b6e696c
+ 1d8:	5f00745f 			@ <UNDEFINED> instruction: 5f00745f
+ 1dc:	74617369 			@ <UNDEFINED> instruction: 74617369
+ 1e0:	73007974 	movwvc	r7, #2420	@ 0x974
+ 1e4:	69735f74 			@ <UNDEFINED> instruction: 69735f74
+ 1e8:	5f00657a 			@ <UNDEFINED> instruction: 5f00657a
+ 1ec:	74697277 			@ <UNDEFINED> instruction: 74697277
+ 1f0:	74730065 			@ <UNDEFINED> instruction: 74730065
+ 1f4:	646f6d5f 			@ <UNDEFINED> instruction: 646f6d5f
+ 1f8:	76740065 			@ <UNDEFINED> instruction: 76740065
+ 1fc:	65736e5f 			@ <UNDEFINED> instruction: 65736e5f
+ 200:	76740063 			@ <UNDEFINED> instruction: 76740063
+ 204:	6365735f 			@ <UNDEFINED> instruction: 6365735f
+ 208:	625f5f00 			@ <UNDEFINED> instruction: 625f5f00
+ 20c:	69736b6c 			@ <UNDEFINED> instruction: 69736b6c
+ 210:	745f657a 			@ <UNDEFINED> instruction: 745f657a
+ 214:	6d697400 			@ <UNDEFINED> instruction: 6d697400
+ 218:	00745f65 			@ <UNDEFINED> instruction: 00745f65
+ 21c:	6165725f 			@ <UNDEFINED> instruction: 6165725f
+ 220:	5f5f0064 			@ <UNDEFINED> instruction: 5f5f0064
+ 224:	6e727265 			@ <UNDEFINED> instruction: 6e727265
+ 228:	7473006f 			@ <UNDEFINED> instruction: 7473006f
+ 22c:	696c6e5f 			@ <UNDEFINED> instruction: 696c6e5f
+ 230:	75006b6e 			@ <UNDEFINED> instruction: 75006b6e
+ 234:	6769736e 			@ <UNDEFINED> instruction: 6769736e
+ 238:	2064656e 			@ <UNDEFINED> instruction: 2064656e
+ 23c:	72616863 			@ <UNDEFINED> instruction: 72616863
+ 240:	6f687300 			@ <UNDEFINED> instruction: 6f687300
+ 244:	69207472 			@ <UNDEFINED> instruction: 69207472
+ 248:	6600746e 			@ <UNDEFINED> instruction: 6600746e
+ 24c:	00656c69 			@ <UNDEFINED> instruction: 00656c69
+ 250:	625f7473 			@ <UNDEFINED> instruction: 625f7473
+ 254:	69736b6c 			@ <UNDEFINED> instruction: 69736b6c
+ 258:	7400657a 			@ <UNDEFINED> instruction: 7400657a
+ 25c:	73656d69 			@ <UNDEFINED> instruction: 73656d69
+ 260:	00636570 			@ <UNDEFINED> instruction: 00636570
+ 264:	6e695f5f 			@ <UNDEFINED> instruction: 6e695f5f
+ 268:	00745f6f 			@ <UNDEFINED> instruction: 00745f6f
+ 26c:	725f7473 			@ <UNDEFINED> instruction: 725f7473
+ 270:	00766564 			@ <UNDEFINED> instruction: 00766564
+ 274:	746e7572 			@ <UNDEFINED> instruction: 746e7572
+ 278:	2e656d69 			@ <UNDEFINED> instruction: 2e656d69
+ 27c:	5f5f0063 			@ <UNDEFINED> instruction: 5f5f0063
+ 280:	5f646975 			@ <UNDEFINED> instruction: 5f646975
+ 284:	6b5f0074 			@ <UNDEFINED> instruction: 6b5f0074
+ 288:	006c6c69 			@ <UNDEFINED> instruction: 006c6c69
+ 28c:	675f7473 			@ <UNDEFINED> instruction: 675f7473
+ 290:	73006469 	movwvc	r6, #1129	@ 0x469
+ 294:	65645f74 			@ <UNDEFINED> instruction: 65645f74
+ 298:	74730076 			@ <UNDEFINED> instruction: 74730076
+ 29c:	69746d5f 			@ <UNDEFINED> instruction: 69746d5f
+ 2a0:	735f006d 			@ <UNDEFINED> instruction: 735f006d
+ 2a4:	006b7262 			@ <UNDEFINED> instruction: 006b7262
+ 2a8:	30747263 			@ <UNDEFINED> instruction: 30747263
+ 2ac:	4700732e 			@ <UNDEFINED> instruction: 4700732e
+ 2b0:	4120554e 			@ <UNDEFINED> instruction: 4120554e
+ 2b4:	2e322053 			@ <UNDEFINED> instruction: 2e322053
+ 2b8:	312e3534 			@ <UNDEFINED> instruction: 312e3534
+	...
 
 Disassembly of section .comment:
 
@@ -9867,137 +9906,134 @@ Disassembly of section .debug_line_str:
    4:	73726573 			@ <UNDEFINED> instruction: 73726573
    8:	63636b5c 			@ <UNDEFINED> instruction: 63636b5c
    c:	63747369 			@ <UNDEFINED> instruction: 63747369
-  10:	776f445c 			@ <UNDEFINED> instruction: 776f445c
-  14:	616f6c6e 			@ <UNDEFINED> instruction: 616f6c6e
-  18:	bd5c7364 			@ <UNDEFINED> instruction: bd5c7364
-  1c:	c0c0bdc7 			@ <UNDEFINED> instruction: c0c0bdc7
-  20:	28e1b7da 			@ <UNDEFINED> instruction: 28e1b7da
-  24:	68747950 			@ <UNDEFINED> instruction: 68747950
-  28:	4d5f6e6f 			@ <UNDEFINED> instruction: 4d5f6e6f
-  2c:	2b435f34 			@ <UNDEFINED> instruction: 2b435f34
-  30:	325c292b 			@ <UNDEFINED> instruction: 325c292b
-  34:	4d52412e 			@ <UNDEFINED> instruction: 4d52412e
-  38:	62614c5f 			@ <UNDEFINED> instruction: 62614c5f
-  3c:	3035305c 			@ <UNDEFINED> instruction: 3035305c
-  40:	454c2e31 			@ <UNDEFINED> instruction: 454c2e31
-  44:	4e4f5f44 			@ <UNDEFINED> instruction: 4e4f5f44
-  48:	42414c5f 			@ <UNDEFINED> instruction: 42414c5f
-  4c:	74726300 			@ <UNDEFINED> instruction: 74726300
-  50:	00732e30 			@ <UNDEFINED> instruction: 00732e30
-  54:	7461642f 			@ <UNDEFINED> instruction: 7461642f
-  58:	656a2f61 			@ <UNDEFINED> instruction: 656a2f61
-  5c:	6e696b6e 	vnmulvs.f64	d22, d9, d30
-  60:	6f772f73 			@ <UNDEFINED> instruction: 6f772f73
-  64:	70736b72 			@ <UNDEFINED> instruction: 70736b72
-  68:	2f656361 			@ <UNDEFINED> instruction: 2f656361
-  6c:	2d554e47 			@ <UNDEFINED> instruction: 2d554e47
-  70:	6c6f6f74 			@ <UNDEFINED> instruction: 6c6f6f74
-  74:	69616863 			@ <UNDEFINED> instruction: 69616863
-  78:	72612f6e 			@ <UNDEFINED> instruction: 72612f6e
-  7c:	35312d6d 			@ <UNDEFINED> instruction: 35312d6d
-  80:	6975622f 			@ <UNDEFINED> instruction: 6975622f
-  84:	6e2d646c 			@ <UNDEFINED> instruction: 6e2d646c
-  88:	696c7765 			@ <UNDEFINED> instruction: 696c7765
-  8c:	72612d62 			@ <UNDEFINED> instruction: 72612d62
-  90:	6f6e2d6d 			@ <UNDEFINED> instruction: 6f6e2d6d
-  94:	652d656e 			@ <UNDEFINED> instruction: 652d656e
-  98:	2f696261 			@ <UNDEFINED> instruction: 2f696261
-  9c:	2f6a626f 			@ <UNDEFINED> instruction: 2f6a626f
-  a0:	6c77656e 			@ <UNDEFINED> instruction: 6c77656e
-  a4:	6e2d6269 			@ <UNDEFINED> instruction: 6e2d6269
-  a8:	2f6f6e61 			@ <UNDEFINED> instruction: 2f6f6e61
-  ac:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
-  b0:	656e6f6e 			@ <UNDEFINED> instruction: 656e6f6e
-  b4:	6261652d 			@ <UNDEFINED> instruction: 6261652d
-  b8:	68742f69 			@ <UNDEFINED> instruction: 68742f69
-  bc:	2f626d75 			@ <UNDEFINED> instruction: 2f626d75
-  c0:	2d653776 			@ <UNDEFINED> instruction: 2d653776
-  c4:	70662b6d 			@ <UNDEFINED> instruction: 70662b6d
-  c8:	7261682f 			@ <UNDEFINED> instruction: 7261682f
-  cc:	656e2f64 			@ <UNDEFINED> instruction: 656e2f64
-  d0:	62696c77 			@ <UNDEFINED> instruction: 62696c77
-  d4:	61642f00 			@ <UNDEFINED> instruction: 61642f00
-  d8:	6a2f6174 			@ <UNDEFINED> instruction: 6a2f6174
-  dc:	696b6e65 			@ <UNDEFINED> instruction: 696b6e65
-  e0:	772f736e 			@ <UNDEFINED> instruction: 772f736e
-  e4:	736b726f 			@ <UNDEFINED> instruction: 736b726f
-  e8:	65636170 			@ <UNDEFINED> instruction: 65636170
-  ec:	554e472f 			@ <UNDEFINED> instruction: 554e472f
-  f0:	6f6f742d 			@ <UNDEFINED> instruction: 6f6f742d
-  f4:	6168636c 			@ <UNDEFINED> instruction: 6168636c
-  f8:	612f6e69 			@ <UNDEFINED> instruction: 612f6e69
-  fc:	312d6d72 			@ <UNDEFINED> instruction: 312d6d72
- 100:	72732f35 			@ <UNDEFINED> instruction: 72732f35
- 104:	656e2f63 			@ <UNDEFINED> instruction: 656e2f63
- 108:	62696c77 			@ <UNDEFINED> instruction: 62696c77
- 10c:	6779632d 			@ <UNDEFINED> instruction: 6779632d
- 110:	2f6e6977 			@ <UNDEFINED> instruction: 2f6e6977
- 114:	6c77656e 			@ <UNDEFINED> instruction: 6c77656e
- 118:	6c2f6269 			@ <UNDEFINED> instruction: 6c2f6269
- 11c:	2f636269 			@ <UNDEFINED> instruction: 2f636269
- 120:	6863616d 			@ <UNDEFINED> instruction: 6863616d
- 124:	2f656e69 			@ <UNDEFINED> instruction: 2f656e69
- 128:	006d7261 			@ <UNDEFINED> instruction: 006d7261
- 12c:	636d656d 			@ <UNDEFINED> instruction: 636d656d
- 130:	532e7268 			@ <UNDEFINED> instruction: 532e7268
- 134:	72747300 			@ <UNDEFINED> instruction: 72747300
- 138:	2d6e656c 			@ <UNDEFINED> instruction: 2d6e656c
- 13c:	6d756874 			@ <UNDEFINED> instruction: 6d756874
- 140:	4f2d3262 			@ <UNDEFINED> instruction: 4f2d3262
- 144:	00532e73 			@ <UNDEFINED> instruction: 00532e73
- 148:	63727473 			@ <UNDEFINED> instruction: 63727473
- 14c:	612d706d 			@ <UNDEFINED> instruction: 612d706d
- 150:	742d6d72 			@ <UNDEFINED> instruction: 742d6d72
- 154:	2e796e69 			@ <UNDEFINED> instruction: 2e796e69
- 158:	642f0053 			@ <UNDEFINED> instruction: 642f0053
- 15c:	2f617461 			@ <UNDEFINED> instruction: 2f617461
- 160:	6b6e656a 			@ <UNDEFINED> instruction: 6b6e656a
- 164:	2f736e69 			@ <UNDEFINED> instruction: 2f736e69
- 168:	6b726f77 			@ <UNDEFINED> instruction: 6b726f77
- 16c:	63617073 			@ <UNDEFINED> instruction: 63617073
- 170:	4e472f65 			@ <UNDEFINED> instruction: 4e472f65
- 174:	6f742d55 			@ <UNDEFINED> instruction: 6f742d55
- 178:	68636c6f 			@ <UNDEFINED> instruction: 68636c6f
- 17c:	2f6e6961 			@ <UNDEFINED> instruction: 2f6e6961
- 180:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
- 184:	622f3531 			@ <UNDEFINED> instruction: 622f3531
- 188:	646c6975 			@ <UNDEFINED> instruction: 646c6975
- 18c:	77656e2d 			@ <UNDEFINED> instruction: 77656e2d
- 190:	2d62696c 			@ <UNDEFINED> instruction: 2d62696c
- 194:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
- 198:	656e6f6e 			@ <UNDEFINED> instruction: 656e6f6e
- 19c:	6261652d 			@ <UNDEFINED> instruction: 6261652d
- 1a0:	626f2f69 			@ <UNDEFINED> instruction: 626f2f69
- 1a4:	63672f6a 			@ <UNDEFINED> instruction: 63672f6a
- 1a8:	612f3263 			@ <UNDEFINED> instruction: 612f3263
- 1ac:	6e2d6d72 			@ <UNDEFINED> instruction: 6e2d6d72
- 1b0:	2d656e6f 			@ <UNDEFINED> instruction: 2d656e6f
- 1b4:	69626165 			@ <UNDEFINED> instruction: 69626165
- 1b8:	7568742f 			@ <UNDEFINED> instruction: 7568742f
- 1bc:	762f626d 			@ <UNDEFINED> instruction: 762f626d
- 1c0:	6d2d6537 			@ <UNDEFINED> instruction: 6d2d6537
- 1c4:	2f70662b 			@ <UNDEFINED> instruction: 2f70662b
- 1c8:	64726168 			@ <UNDEFINED> instruction: 64726168
- 1cc:	62696c2f 			@ <UNDEFINED> instruction: 62696c2f
- 1d0:	00636367 			@ <UNDEFINED> instruction: 00636367
- 1d4:	7461642f 			@ <UNDEFINED> instruction: 7461642f
- 1d8:	656a2f61 			@ <UNDEFINED> instruction: 656a2f61
- 1dc:	6e696b6e 	vnmulvs.f64	d22, d9, d30
- 1e0:	6f772f73 			@ <UNDEFINED> instruction: 6f772f73
- 1e4:	70736b72 			@ <UNDEFINED> instruction: 70736b72
- 1e8:	2f656361 			@ <UNDEFINED> instruction: 2f656361
- 1ec:	2d554e47 			@ <UNDEFINED> instruction: 2d554e47
- 1f0:	6c6f6f74 			@ <UNDEFINED> instruction: 6c6f6f74
- 1f4:	69616863 			@ <UNDEFINED> instruction: 69616863
- 1f8:	72612f6e 			@ <UNDEFINED> instruction: 72612f6e
- 1fc:	35312d6d 			@ <UNDEFINED> instruction: 35312d6d
- 200:	6372732f 			@ <UNDEFINED> instruction: 6372732f
- 204:	6363672f 			@ <UNDEFINED> instruction: 6363672f
- 208:	62696c2f 			@ <UNDEFINED> instruction: 62696c2f
- 20c:	2f636367 			@ <UNDEFINED> instruction: 2f636367
- 210:	666e6f63 			@ <UNDEFINED> instruction: 666e6f63
- 214:	612f6769 			@ <UNDEFINED> instruction: 612f6769
- 218:	69006d72 			@ <UNDEFINED> instruction: 69006d72
- 21c:	37656565 			@ <UNDEFINED> instruction: 37656565
- 220:	642d3435 			@ <UNDEFINED> instruction: 642d3435
- 224:	00532e66 			@ <UNDEFINED> instruction: 00532e66
+  10:	7365445c 			@ <UNDEFINED> instruction: 7365445c
+  14:	706f746b 			@ <UNDEFINED> instruction: 706f746b
+  18:	5f69615c 			@ <UNDEFINED> instruction: 5f69615c
+  1c:	64757473 			@ <UNDEFINED> instruction: 64757473
+  20:	76615f79 	uqsub16vc	r5, r1, r9
+  24:	33305c72 			@ <UNDEFINED> instruction: 33305c72
+  28:	4d524120 			@ <UNDEFINED> instruction: 4d524120
+  2c:	62614c5f 			@ <UNDEFINED> instruction: 62614c5f
+  30:	3035305c 			@ <UNDEFINED> instruction: 3035305c
+  34:	454c2e31 			@ <UNDEFINED> instruction: 454c2e31
+  38:	4e4f5f44 			@ <UNDEFINED> instruction: 4e4f5f44
+  3c:	42414c5f 			@ <UNDEFINED> instruction: 42414c5f
+  40:	74726300 			@ <UNDEFINED> instruction: 74726300
+  44:	00732e30 			@ <UNDEFINED> instruction: 00732e30
+  48:	7461642f 			@ <UNDEFINED> instruction: 7461642f
+  4c:	656a2f61 			@ <UNDEFINED> instruction: 656a2f61
+  50:	6e696b6e 	vnmulvs.f64	d22, d9, d30
+  54:	6f772f73 			@ <UNDEFINED> instruction: 6f772f73
+  58:	70736b72 			@ <UNDEFINED> instruction: 70736b72
+  5c:	2f656361 			@ <UNDEFINED> instruction: 2f656361
+  60:	2d554e47 			@ <UNDEFINED> instruction: 2d554e47
+  64:	6c6f6f74 			@ <UNDEFINED> instruction: 6c6f6f74
+  68:	69616863 			@ <UNDEFINED> instruction: 69616863
+  6c:	72612f6e 			@ <UNDEFINED> instruction: 72612f6e
+  70:	35312d6d 			@ <UNDEFINED> instruction: 35312d6d
+  74:	6975622f 			@ <UNDEFINED> instruction: 6975622f
+  78:	6e2d646c 			@ <UNDEFINED> instruction: 6e2d646c
+  7c:	696c7765 			@ <UNDEFINED> instruction: 696c7765
+  80:	72612d62 			@ <UNDEFINED> instruction: 72612d62
+  84:	6f6e2d6d 			@ <UNDEFINED> instruction: 6f6e2d6d
+  88:	652d656e 			@ <UNDEFINED> instruction: 652d656e
+  8c:	2f696261 			@ <UNDEFINED> instruction: 2f696261
+  90:	2f6a626f 			@ <UNDEFINED> instruction: 2f6a626f
+  94:	6c77656e 			@ <UNDEFINED> instruction: 6c77656e
+  98:	6e2d6269 			@ <UNDEFINED> instruction: 6e2d6269
+  9c:	2f6f6e61 			@ <UNDEFINED> instruction: 2f6f6e61
+  a0:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
+  a4:	656e6f6e 			@ <UNDEFINED> instruction: 656e6f6e
+  a8:	6261652d 			@ <UNDEFINED> instruction: 6261652d
+  ac:	68742f69 			@ <UNDEFINED> instruction: 68742f69
+  b0:	2f626d75 			@ <UNDEFINED> instruction: 2f626d75
+  b4:	2d653776 			@ <UNDEFINED> instruction: 2d653776
+  b8:	70662b6d 			@ <UNDEFINED> instruction: 70662b6d
+  bc:	7261682f 			@ <UNDEFINED> instruction: 7261682f
+  c0:	656e2f64 			@ <UNDEFINED> instruction: 656e2f64
+  c4:	62696c77 			@ <UNDEFINED> instruction: 62696c77
+  c8:	61642f00 			@ <UNDEFINED> instruction: 61642f00
+  cc:	6a2f6174 			@ <UNDEFINED> instruction: 6a2f6174
+  d0:	696b6e65 			@ <UNDEFINED> instruction: 696b6e65
+  d4:	772f736e 			@ <UNDEFINED> instruction: 772f736e
+  d8:	736b726f 			@ <UNDEFINED> instruction: 736b726f
+  dc:	65636170 			@ <UNDEFINED> instruction: 65636170
+  e0:	554e472f 			@ <UNDEFINED> instruction: 554e472f
+  e4:	6f6f742d 			@ <UNDEFINED> instruction: 6f6f742d
+  e8:	6168636c 			@ <UNDEFINED> instruction: 6168636c
+  ec:	612f6e69 			@ <UNDEFINED> instruction: 612f6e69
+  f0:	312d6d72 			@ <UNDEFINED> instruction: 312d6d72
+  f4:	72732f35 			@ <UNDEFINED> instruction: 72732f35
+  f8:	656e2f63 			@ <UNDEFINED> instruction: 656e2f63
+  fc:	62696c77 			@ <UNDEFINED> instruction: 62696c77
+ 100:	6779632d 			@ <UNDEFINED> instruction: 6779632d
+ 104:	2f6e6977 			@ <UNDEFINED> instruction: 2f6e6977
+ 108:	6c77656e 			@ <UNDEFINED> instruction: 6c77656e
+ 10c:	6c2f6269 			@ <UNDEFINED> instruction: 6c2f6269
+ 110:	2f636269 			@ <UNDEFINED> instruction: 2f636269
+ 114:	6863616d 			@ <UNDEFINED> instruction: 6863616d
+ 118:	2f656e69 			@ <UNDEFINED> instruction: 2f656e69
+ 11c:	006d7261 			@ <UNDEFINED> instruction: 006d7261
+ 120:	636d656d 			@ <UNDEFINED> instruction: 636d656d
+ 124:	532e7268 			@ <UNDEFINED> instruction: 532e7268
+ 128:	72747300 			@ <UNDEFINED> instruction: 72747300
+ 12c:	2d6e656c 			@ <UNDEFINED> instruction: 2d6e656c
+ 130:	6d756874 			@ <UNDEFINED> instruction: 6d756874
+ 134:	4f2d3262 			@ <UNDEFINED> instruction: 4f2d3262
+ 138:	00532e73 			@ <UNDEFINED> instruction: 00532e73
+ 13c:	63727473 			@ <UNDEFINED> instruction: 63727473
+ 140:	612d706d 			@ <UNDEFINED> instruction: 612d706d
+ 144:	742d6d72 			@ <UNDEFINED> instruction: 742d6d72
+ 148:	2e796e69 			@ <UNDEFINED> instruction: 2e796e69
+ 14c:	642f0053 			@ <UNDEFINED> instruction: 642f0053
+ 150:	2f617461 			@ <UNDEFINED> instruction: 2f617461
+ 154:	6b6e656a 			@ <UNDEFINED> instruction: 6b6e656a
+ 158:	2f736e69 			@ <UNDEFINED> instruction: 2f736e69
+ 15c:	6b726f77 			@ <UNDEFINED> instruction: 6b726f77
+ 160:	63617073 			@ <UNDEFINED> instruction: 63617073
+ 164:	4e472f65 			@ <UNDEFINED> instruction: 4e472f65
+ 168:	6f742d55 			@ <UNDEFINED> instruction: 6f742d55
+ 16c:	68636c6f 			@ <UNDEFINED> instruction: 68636c6f
+ 170:	2f6e6961 			@ <UNDEFINED> instruction: 2f6e6961
+ 174:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
+ 178:	622f3531 			@ <UNDEFINED> instruction: 622f3531
+ 17c:	646c6975 			@ <UNDEFINED> instruction: 646c6975
+ 180:	77656e2d 			@ <UNDEFINED> instruction: 77656e2d
+ 184:	2d62696c 			@ <UNDEFINED> instruction: 2d62696c
+ 188:	2d6d7261 			@ <UNDEFINED> instruction: 2d6d7261
+ 18c:	656e6f6e 			@ <UNDEFINED> instruction: 656e6f6e
+ 190:	6261652d 			@ <UNDEFINED> instruction: 6261652d
+ 194:	626f2f69 			@ <UNDEFINED> instruction: 626f2f69
+ 198:	63672f6a 			@ <UNDEFINED> instruction: 63672f6a
+ 19c:	612f3263 			@ <UNDEFINED> instruction: 612f3263
+ 1a0:	6e2d6d72 			@ <UNDEFINED> instruction: 6e2d6d72
+ 1a4:	2d656e6f 			@ <UNDEFINED> instruction: 2d656e6f
+ 1a8:	69626165 			@ <UNDEFINED> instruction: 69626165
+ 1ac:	7568742f 			@ <UNDEFINED> instruction: 7568742f
+ 1b0:	762f626d 			@ <UNDEFINED> instruction: 762f626d
+ 1b4:	6d2d6537 			@ <UNDEFINED> instruction: 6d2d6537
+ 1b8:	2f70662b 			@ <UNDEFINED> instruction: 2f70662b
+ 1bc:	64726168 			@ <UNDEFINED> instruction: 64726168
+ 1c0:	62696c2f 			@ <UNDEFINED> instruction: 62696c2f
+ 1c4:	00636367 			@ <UNDEFINED> instruction: 00636367
+ 1c8:	7461642f 			@ <UNDEFINED> instruction: 7461642f
+ 1cc:	656a2f61 			@ <UNDEFINED> instruction: 656a2f61
+ 1d0:	6e696b6e 	vnmulvs.f64	d22, d9, d30
+ 1d4:	6f772f73 			@ <UNDEFINED> instruction: 6f772f73
+ 1d8:	70736b72 			@ <UNDEFINED> instruction: 70736b72
+ 1dc:	2f656361 			@ <UNDEFINED> instruction: 2f656361
+ 1e0:	2d554e47 			@ <UNDEFINED> instruction: 2d554e47
+ 1e4:	6c6f6f74 			@ <UNDEFINED> instruction: 6c6f6f74
+ 1e8:	69616863 			@ <UNDEFINED> instruction: 69616863
+ 1ec:	72612f6e 			@ <UNDEFINED> instruction: 72612f6e
+ 1f0:	35312d6d 			@ <UNDEFINED> instruction: 35312d6d
+ 1f4:	6372732f 			@ <UNDEFINED> instruction: 6372732f
+ 1f8:	6363672f 			@ <UNDEFINED> instruction: 6363672f
+ 1fc:	62696c2f 			@ <UNDEFINED> instruction: 62696c2f
+ 200:	2f636367 			@ <UNDEFINED> instruction: 2f636367
+ 204:	666e6f63 			@ <UNDEFINED> instruction: 666e6f63
+ 208:	612f6769 			@ <UNDEFINED> instruction: 612f6769
+ 20c:	69006d72 			@ <UNDEFINED> instruction: 69006d72
+ 210:	37656565 			@ <UNDEFINED> instruction: 37656565
+ 214:	642d3435 			@ <UNDEFINED> instruction: 642d3435
+ 218:	00532e66 			@ <UNDEFINED> instruction: 00532e66

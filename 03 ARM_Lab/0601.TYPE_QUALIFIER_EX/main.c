@@ -22,7 +22,9 @@ void Main(void)
 	GPIOA_MODER = 0x1 << 10;
 	GPIOA_OTYPER = 0x0 << 5;
 
-	volatile int i;	// volatile을 붙이면, compiler optimizor가 이 변수에 대해서는 최적화를 배제해줌.
+	// volatile을 붙이면, compiler optimizor가 이 변수에 대해서는 최적화를 배제해줌.
+	// 대부분 현업 개발자는 debug(최적화 낮은 ver)로 개발하고, release(최적화 높은 ver)로 배포해야하는데, debug로 개발하고, debug로 release하는 경우가 많다..
+	volatile int i;		
 
 	for(;;)
 	{

@@ -11,3 +11,9 @@
 
 #define Macro_Check_Bit_Set(dest, pos)				((((unsigned)dest)>>(pos)) & 0x1)
 #define Macro_Check_Bit_Clear(dest, pos)			(!((((unsigned)dest)>>(pos)) & 0x1))
+
+/*
+macro_set_bit : pos위치의 bit를 1로 set해라 >
+#defin Macro_Set_Bit(dest, pos)  (dest |= (0x1 << pos))
+
+*/

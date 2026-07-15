@@ -27,7 +27,7 @@ void Main(void)
 	for(;;)
 	{
 		GPIOA_ODR = 0x1 << 5; 
-		for(i=0; i<0x40000; i++);
+		for(i=0; i<0x40000; i++);	// delay 역할 > compilor에 의해서 최적화되면서 무시됨.
 		
 		GPIOA_ODR = 0x0 << 5; 
 		for(i=0; i<0x40000; i++);

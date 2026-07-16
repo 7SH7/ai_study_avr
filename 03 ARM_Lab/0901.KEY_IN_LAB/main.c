@@ -12,7 +12,7 @@ static void Sys_Init(int baud)
 
 /* Key 인식 */
 
-#if 1
+#if 0
 
 void Main(void)
 {
@@ -51,10 +51,12 @@ void Main(void)
 
 /* Key에 의한 LED Toggling */
 
-#if 0
+#if 1
 
 void Main(void)
 {
+	int check = 0;
+
 	Sys_Init(115200);
 	printf("KEY Input Toggling #1\n");
 
@@ -64,8 +66,16 @@ void Main(void)
 	for(;;)
 	{
 		// KEY(PC13)이 눌릴때마다 LED(PA5)가 Toggling하도록 코드 작성		
-		
+		if(check == 0 && Macro_Check_Bit_Clear(GPIOC->IDR, 13)){
+			Macro_Invert_Bit(GPIOA->ODR, 5);
+			check = 1;
+		} else if((check == 1) && (Macro_Check_Bit_Set(GPIOC->IDR, 13)))
+		{
+			check = 0;
+		}
 	}
 }
+
+
 
 #endif

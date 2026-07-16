@@ -1,9 +1,9 @@
-#if 1
+#if 0
     #define SYSCLK	16000000
     #define HCLK	SYSCLK
     #define PCLK2	HCLK
     #define PCLK1	HCLK
-#else
+#else   // 주파수를 올리면, wait를 넣어서, cpu가 따라올 수 있도록 해주어야 한다.
     #define SYSCLK	96000000
     #define HCLK	SYSCLK
     #define PCLK2	HCLK

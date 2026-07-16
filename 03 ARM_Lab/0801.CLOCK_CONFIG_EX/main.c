@@ -9,14 +9,14 @@ static void Sys_Init(int baud)
 	LED_Init();
 }
 
-#if 1
+#if 0
 
 /* 반드시 Option.h의 조건부 컴파일 부분을 변경한 후 실험 */
 
 void Main(void)
 {
 	Sys_Init(115200);
-	printf("SysClock = 8MHz(HSI)\n");
+	printf("SysClock = 16MHz(HSI)\n");
 
 	for(;;)
 	{
@@ -39,7 +39,7 @@ void Main(void)
 	Clock_Init();
 
 	Sys_Init(115200);
-	printf("SysClock = 100MHz(HSI)\n");
+	printf("SysClock = 96MHz(HSI)\n");
 
 	for(;;)
 	{

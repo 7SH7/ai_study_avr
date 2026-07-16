@@ -16,6 +16,8 @@ static void Sys_Init(int baud)
 
 void Main(void)
 {
+	int k;
+
 	Sys_Init(115200);
 	printf("KEY Input Test #1\n");
 
@@ -23,13 +25,25 @@ void Main(void)
 	Macro_Set_Bit(RCC->AHB1ENR, 2); 
 
 	// KEY(PC13)을 GPIO 입력으로 선언
-	
+	Macro_Write_Block(GPIOC->MODER, 0x3, 0x0, 26);	// INPUT으로 설정
 	
 	for(;;)
 	{
+		#if 0
 		// KEY가 눌렸으면 LED(PA5) ON, 안 눌렸으면 OFF
-	
-	
+		// 여기서 버튼은 pull up으로 간다고 했으니까..
+		// >> if / else / 삼향연산자 사용 안 하는 게 좋다.
+		if(Macro_Check_Bit_Set(GPIOC->IDR, 13)){
+			LED_Off();
+		} else {
+			LED_On();
+		}
+		#else
+		k = Macro_Extract_Area(~GPIOC->ODR, 0x1, 13);	// c99문법: 변수를 아무곳에서 선언하는 것
+		// int k = Macro_Extract_Area(~GPIOC->ODR, 0x1, 13);	// c99문법: 변수를 아무곳에서 선언하는 것
+		Macro_Write_Block(GPIOA->ODR, 0x1, k, 5)
+
+		#endif
 	}
 }
 

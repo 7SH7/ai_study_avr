@@ -10,6 +10,30 @@ static void Sys_Init(int baud)
 	LED_Init();
 }
 
+#if 0
+void Main(void)
+{
+	Sys_Init(115200);
+	printf("\nUART Echo-Back Test\n");
+
+	Uart1_Init(115200);
+
+	char x, y;
+
+
+	while(!Macro_Check_Bit_Set(USART1->SR, 7)); 
+	USART1->DR = 'A'; 
+	
+	while(!Macro_Check_Bit_Set(USART1->SR, 7)); 
+	USART1->DR = 'B'; 
+	
+	while(!Macro_Check_Bit_Set(USART1->SR, 7)); 
+	USART1->DR = 'C';
+
+}
+#endif
+
+#if 0
 void Main(void)
 {
 	Sys_Init(115200);
@@ -30,3 +54,34 @@ void Main(void)
 		printf("%c ", y);
 	}
 }
+#endif
+
+#if 1
+
+void Main(void)
+{
+	Sys_Init(115200);
+	printf("\nUART Echo-Back Test\n");
+
+	Uart1_Init(115200);
+
+	for(;;)
+	{
+		char x;
+
+		//수신?
+		while(!Macro_Check_Bit_Set(USART1->SR, 5)); 
+		// x = dr
+		x = USART1->DR;
+		
+		// 송신?
+		while(!Macro_Check_Bit_Set(USART1->SR, 7)); 
+		// dr = x;
+		USART1->DR = x;
+
+		
+	}
+
+}
+
+#endif

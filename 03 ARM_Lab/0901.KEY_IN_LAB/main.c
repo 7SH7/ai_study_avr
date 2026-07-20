@@ -10,6 +10,37 @@ static void Sys_Init(int baud)
 	LED_Init();
 }
 
+#if 1
+
+void Main(void)
+{
+	int k;
+
+	Sys_Init(115200);
+	printf("KEY Input Test #1\n");
+
+	/* 아래 코드 수정 금지 : Port-C Clock Enable */
+	Macro_Set_Bit(RCC->AHB1ENR, 2); 
+
+	// KEY(PC13)을 GPIO 입력으로 선언
+	Macro_Write_Block(GPIOC->MODER, 0x3, 0x0, 14);	// INPUT으로 설정
+	Macro_Write_Block(GPIOC->PUPDR, 0x3, 0x1 ,14);
+
+	for(;;)
+	{
+		// KEY가 눌렸으면 LED(PA5) ON, 안 눌렸으면 OFF
+		// 여기서 버튼은 pull up으로 간다고 했으니까..
+		// >> if / else / 삼향연산자 사용 안 하는 게 좋다.
+		if(Macro_Check_Bit_Set(GPIOC->IDR, 7)){
+			LED_Off();
+		} else {
+			LED_On();
+		}
+	}
+}
+
+#endif
+
 /* Key 인식 */
 
 #if 0
@@ -51,7 +82,7 @@ void Main(void)
 
 /* Key에 의한 LED Toggling */
 
-#if 1
+#if 0
 
 void Main(void)
 {

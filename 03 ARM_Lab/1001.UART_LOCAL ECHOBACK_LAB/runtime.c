@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
+// ☆ _sbrk 기능도 필수
 char * _sbrk(int inc)
 {
 	extern unsigned char __ZI_LIMIT__;
@@ -22,6 +23,7 @@ char * _sbrk(int inc)
 	return prevHeap;
 }
 
+// ☆ read, write도 필수
 int _write(int file, char *ptr, int len) 
 {
     for (int i = 0; i < len; i++) 
@@ -32,6 +34,7 @@ int _write(int file, char *ptr, int len)
 	return len;
 }
 
+// ☆ todo: len 길이만큼 받아서 ptr에 담아서 보내면, 될 듯
 int _read(int file, char *ptr, int len) 
 { 
 	return 0; 

@@ -20,11 +20,11 @@ void Main(void)
 
 	for(i = 1; i <= 4; i++)
 	{
-		SysTick_Run(1000);
 		cnt = 0x40000 * i;
+		SysTick_Run(1000);
 		for(j = 0; j < cnt; j++);
 		SysTick_Stop();
-		cnt = (int)((SysTick_Get_Load_Time() - SysTick_Get_Time()) * (8.*1000./HCLK));
+		cnt = (int)((SysTick_Get_Load_Time() - SysTick_Get_Time()) * (8.*1000./HCLK));	// timer 역할
 		printf("Delay Time = %u msec\n", cnt);
 	}
 

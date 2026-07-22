@@ -1,6 +1,19 @@
 #include "device_driver.h"
 #include <stdio.h>
 
+// #define MOTOR_STOP_TIME	3000
+// #define MOTOR_STOP_TIME_REF	1000
+
+typedef enum{
+	MOTOR_STOP = -1,
+	MOTOR_CW,
+	MOTOR_CCW
+} motor_state_t;
+
+motor_state_t motor_state;
+
+int key_state = 0;
+
 static void Sys_Init(int baud) 
 {
 	SCB->CPACR |= (0x3 << 10*2)|(0x3 << 11*2); 
@@ -8,163 +21,153 @@ static void Sys_Init(int baud)
 	Uart2_Init(baud);
 	setvbuf(stdout, NULL, _IONBF, 0);
 	LED_Init();
+	Key_Poll_Init();
+	// MOTOR_Init();
+	TIM5_Out_Init();
 }
 
-// 스위치: PC13									>> INPUT
-// PA0, PA1 :: PA0: 1A / PA1: 2A			   >> OUTPUT >> 모터 움직이는거..  
-
-#define TIM2_MAX    (0xffffffff)	// TIM2
-#define TIM2_TICK	(20)   // 주기 us
-#define TIM2_FRAG	(1000000. / TIM2_TICK)   // 진동수(pulse) Hz
-#define TIM2_1ms_FRAG  (TIM2_FRAG / 1000.)	// 1ms의 pulse
 
 
-void init_out_gpio(void)
-{
-	Macro_Set_Bit(RCC->AHB1ENR, 0);
-	GPIOA->MODER = (0x0 << 3) | (0x1 << 2) | (0x0 << 1) | (0x1 << 0);
-	GPIOA->OTYPER = (0x0 << 1) | (0x0 << 0);
-}
-
-void init_in_gpio(void)
-{
-	Macro_Set_Bit(RCC->AHB1ENR, 2);
-	GPIOC->MODER = (0x0 << 27) | (0x0 << 26);
-	GPIOC->PUPDR = (0x0 << 27) | (0x1 << 26);	// pull up
-}
-
-void start_stopwatch(void)
-{
-	// timer2 사용 set
-	Macro_Set_Bit(RCC->APB1ENR, 0);			// tim2 en
-
-	TIM2->CR1 = (0x1 << 4) | (0x1 << 3);	// down count + 1회만 돌리는
-
-	// TIMXCLK / (희망하는 진동수) = 분주기
-	TIM2->PSC = (unsigned int)(TIMXCLK / TIM2_FRAG + 0.5) - 1; 	// PSC_buf에서 +1로 분주기 해주니까..
-	TIM2->ARR = TIM2_MAX;
-	
-	// 메뉴얼 모드 > 값 수정 시, 바로 작동
-	Macro_Set_Bit(TIM2->EGR, 0);
-
-	// timer 사용 set
-	Macro_Set_Bit(TIM2->CR1, 0);	// CEN = 1 >> T2시작
-}
-
-unsigned int stop_stopwatch(void)
-{
-	unsigned int time = 0;
-
-	Macro_Clear_Bit(TIM2->CR1, 0);	// clear 해주면, 멈춤.
-	time = (TIM2_MAX - TIM2->CNT) * TIM2_TICK;
-
-	return time;
-}
-
-int delay_stopwatch(int time)
-{
-	Macro_Set_Bit(RCC->APB1ENR, 0);
-	TIM2->CR1 = (0x1 << 4) | (0x0 << 3); 	// delay니까 repeat이지 않나..
-	
-	TIM2->PSC = (unsigned int)(TIMXCLK / TIM2_FRAG + 0.5) - 1;
-	unsigned int pls = time * TIM2_1ms_FRAG;
-	int n = pls / TIM2_MAX;
-	int m = pls % TIM2_MAX;
-	int i;
-
-	for(i = 0; i < n; i++)
-	{
-		// 여기서 한 일
-		TIM2->ARR = TIM2_MAX;
-		Macro_Set_Bit(TIM2->EGR, 0);
-		Macro_Clear_Bit(TIM2->SR, 0);
-		Macro_Set_Bit(TIM2->CR1, 0);
-		while(!Macro_Check_Bit_Set(TIM2->SR, 0));
-	}
-
-	// 동일하게 여기서도
-	TIM2->PSC = m;	// m분주
-	Macro_Set_Bit(TIM2->EGR, 0);
-	Macro_Clear_Bit(TIM2->SR, 0);
-	Macro_Set_Bit(TIM2->CR1, 0);
-	while(!Macro_Check_Bit_Set(TIM2->SR, 0));
-
-	Macro_Clear_Bit(TIM2->CR1, 0);
-
-	return 0;
-}
-
-void init_motor(void)
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
-}
-
-void stop_motor(void)
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
-}
-
-void turn_left_motor()
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x1, 0);
-}
-
-void turn_right_motor()
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x2, 0);
-}
+// Mini Project
+#if 0
 
 void Main(void)
 {
+	int lock = 0;
+	int re_cnt = 0;
+	int rst = 0;
+
 	Sys_Init(115200);
-	printf("start\n");
-
-	int flag = 0;
-
-	init_out_gpio();
-	init_in_gpio();
-	init_motor();
-
-	int check_time;
+	printf("Motor Control Project\n");
+	
 	for(;;)
 	{
-		// 눌렸어?
-		// 바로 시간 측정해
-		// 3sec 되기 전에 또 눌렸으면, 방향바꾸고, 시간 초기화
-		if(!Macro_Check_Bit_Set(GPIOC->IDR, 13))
+		
+		if(lock == 0 && Macro_Check_Bit_Clear(GPIOC -> IDR, 13))
 		{
-			start_stopwatch();
-			check_time = 0;
-
-			while(!Macro_Check_Bit_Set(GPIOC->IDR, 13))
-			{
-				int pls = TIM2_TICK * (TIM2_MAX - TIM2->CNT);
-				if(pls >= 3000000)
-				{
-					check_time = 1;
-					break;
-				}
-			}
-			stop_stopwatch();
-			if(check_time)
-			{
-				stop_motor();
-			}
-			else{
-				if(flag == 0)
-				{
-					turn_left_motor();
-					flag = 1;
-				} else if(flag == 1)
-				{
-					turn_right_motor();
-					flag = 0;
-				}
-
-			}
-			while(!Macro_Check_Bit_Set(GPIOC->IDR, 13));
+			lock = 1;
+			TIM4_Repeat(MOTOR_STOP_TIME_REF);
+			
 		}
-	}
 
+		else if(lock == 1 && Macro_Check_Bit_Set(GPIOC -> IDR, 13))
+		{
+			if(rst)
+			{
+				lock = 0;
+				rst = 0;
+			}
+			else
+			{
+				if(!Macro_Extract_Area(GPIOA -> ODR, 0x3, IN_1A))
+					motor_cw();
+				else
+					motor_inverse();
+
+				lock = 0;
+				TIM4_Stop();
+				re_cnt = 0;
+			}
+			
+		}
+		if(TIM4_Check_Timeout())
+		{
+			re_cnt ++;
+			if(re_cnt == (MOTOR_STOP_TIME / MOTOR_STOP_TIME_REF))
+			{
+				motor_stop();
+				re_cnt = 0;
+				rst = 1;
+			}
+		}
+
+	}
 }
 
+#endif
+
+#if 1
+
+void Main(void)
+{
+	int lock = 0;
+	motor_state = MOTOR_STOP;
+
+    Sys_Init(115200);
+    printf("start\n");
+
+	for(;;)
+	{
+		if(!key_state)
+		{
+			//printf("key_state = 0");
+			switch(motor_state)
+			{
+				case -1:
+					motor_stop();
+					break;
+				case 0:
+					printf("cw   ");
+					motor_cw();
+					break;
+				case 1:
+					printf("ccw   ");
+					motor_ccw();
+					break;
+			}
+
+			if(lock ==1 && Key_Get_Released())
+				lock = 0;
+
+			else if (lock == 0 && Key_Get_Pressed()) // 1pulse
+			{
+				lock = 1;
+				key_state = 1;
+				TIM2_1Pls(3000);
+			}
+		}
+
+		else // !key_state == 1
+		{
+			if(TIM2_Check_Timeout())
+			{
+				motor_state = MOTOR_STOP;
+				key_state = 0;
+			}
+
+			else if(lock == 1 && Key_Get_Released())
+			{
+				TIM2_Stop();
+				
+				if(motor_state == MOTOR_STOP)
+				{
+					motor_state = MOTOR_CW;
+					key_state = 0;
+					continue;
+				}
+
+				else
+				{
+					printf("motor toggle");
+					motor_stop();
+
+					if(TIM4_Check_Timeout())
+					{
+						printf("TIM4 check");
+						motor_state ^= 1;
+						key_state = 0;
+					}
+
+					else if(Macro_Check_Bit_Clear(TIM4 -> CR1, 0))
+					{
+						printf("TIM4 START");
+						TIM4_1Pls(1000);
+					}	
+				}
+
+			}
+			
+		}
+	}
+}
+#endif

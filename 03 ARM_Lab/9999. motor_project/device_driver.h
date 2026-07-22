@@ -2,6 +2,7 @@
 #include "option.h"
 #include "macro.h"
 #include "malloc.h"
+#include "motor.h"
 
 // Uart.c
 
@@ -37,6 +38,7 @@ extern void Clock_Init(void);
 
 extern void Key_Poll_Init(void);
 extern int Key_Get_Pressed(void);
+extern int Key_Get_Released(void);
 extern void Key_Wait_Key_Released(void);
 extern void Key_Wait_Key_Pressed(void);
 
@@ -46,6 +48,22 @@ extern void TIM2_Delay(int time);
 extern void TIM2_Stopwatch_Start(void);
 extern unsigned int TIM2_Stopwatch_Stop(void);
 extern void TIM4_Repeat(int time);
+extern void TIM4_1Pls(int time);
 extern int TIM4_Check_Timeout(void);
 extern void TIM4_Stop(void);
-extern void TIM4_Change_Value(int time);
+//extern void TIM2_Oneshot(int time);
+extern void TIM2_1Pls(int time);
+extern int TIM2_Check_Timeout(void);
+extern void TIM2_Stop(void);
+extern void TIM5_Out_PWM_Generation(unsigned short freq, int duty, int a0, int a1);
+extern void TIM5_Out_Init(void);
+extern void TIM5_Out_Init(void);
+extern void TIM5_Out_Stop(void);
+
+// motor.c
+
+extern void MOTOR_Init(void);
+extern void motor_cw(void);
+extern void motor_ccw(void);
+extern void motor_stop(void);
+// extern void motor_inverse(void);

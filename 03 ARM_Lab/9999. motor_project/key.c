@@ -11,6 +11,11 @@ int Key_Get_Pressed(void)
 	return Macro_Check_Bit_Clear(GPIOC->IDR, 13);	
 }
 
+int Key_Get_Released(void)
+{
+	return Macro_Check_Bit_Set(GPIOC->IDR, 13);	
+}
+
 void Key_Wait_Key_Pressed(void)
 {
 	while(!Macro_Check_Bit_Clear(GPIOC->IDR, 13));

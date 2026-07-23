@@ -51,11 +51,8 @@ void Uart2_RX_Interrupt_Enable(int en)
 {
   if(en)
   {
-		// USART2 RX Interrupt Enable
     Macro_Set_Bit(USART2->CR1, 5);
-		// NIVC Pending Clear
-		NVIC_ClearPendingIRQ(38);
-    // NVIC Interrupt Enable
+    NVIC_ClearPendingIRQ(38);
     NVIC_EnableIRQ(38);
   }
   else
@@ -113,6 +110,17 @@ void Uart1_Send_String(char *pt)
   {
     Uart1_Send_Byte(*pt++);
   }
+}
+
+void Uart1_Printf(char *fmt,...)
+{
+	va_list ap;
+	char string[256];
+
+	va_start(ap,fmt);
+	vsprintf(string,fmt,ap);
+	Uart1_Send_String(string);
+	va_end(ap);
 }
 
 char Uart1_Get_Pressed(void)

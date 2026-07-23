@@ -29,6 +29,8 @@ static void Sys_Init(int baud)
 
 
 // Mini Project
+
+#pragma region 필요없는 코드
 #if 0
 
 void Main(void)
@@ -85,6 +87,8 @@ void Main(void)
 }
 
 #endif
+
+#pragma endregion 필요없는 코드
 
 #if 1
 

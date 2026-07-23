@@ -27,9 +27,9 @@ void Main(void)
 			Key_Pressed = 0;
 		}
 
-		LED_On();
-		TIM2_Delay(500);
-		LED_Off();
-		TIM2_Delay(500);
+		// LED_On();
+		// TIM2_Delay(500);
+		// LED_Off();
+		// TIM2_Delay(500);
 	}
 }

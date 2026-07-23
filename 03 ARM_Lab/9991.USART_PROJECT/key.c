@@ -23,32 +23,23 @@ void Key_Wait_Key_Released(void)
 
 void Key_ISR_Enable(int en)
 {
-	if(en)	// true면 여기
+	if(en)
 	{
 		Macro_Set_Bit(RCC->AHB1ENR, 2); 
 		Macro_Write_Block(GPIOC->MODER, 0x3, 0x0, 26);
 
-		// syscfg 장치 켜고, 지역 예선부터 한 다음, 전체 결선해서 보내기
-		// SYSCFG 장치 Clock On
 		Macro_Set_Bit(RCC->APB2ENR, 14); 
-		// PC13을 EXTI 13의 소스가 되도록 설정
 		Macro_Write_Block(SYSCFG->EXTICR[3], 0xf, 0x2, 4);
 
-		// EXTI 13을 Falling Edge Trigger로 설정	// 누를 때 작업
 		Macro_Set_Bit(EXTI->FTSR, 13);
-		// EXTI 13 Pending Clear	// 모든 interrupt는 pending clear 필수! (EXIT->PR에서) :: sub source
 		EXTI->PR = 0x1 << 13;
-		// NVIC EXTI15_9 Interrupt Pending Clear	//  interrupt source
-		NVIC_ClearPendingIRQ(40);
-		// EXTI 13 Interrupt Enable	// EXIT->IMR
+		
+		NVIC_ClearPendingIRQ((IRQn_Type)40);
 		Macro_Set_Bit(EXTI->IMR, 13);
-		// NVIC EXTI15_9 Interrupt Enable	// 40번 interrupt에 대해서 enable 
-		NVIC_EnableIRQ(40);
+		NVIC_EnableIRQ((IRQn_Type)40);
 	}
 
-
-
-	else	// false면 여기
+	else
 	{
 		NVIC_DisableIRQ((IRQn_Type)40);
 	}

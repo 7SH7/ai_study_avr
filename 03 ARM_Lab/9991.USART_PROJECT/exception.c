@@ -22,20 +22,25 @@ void EXTI15_10_IRQHandler(void)
 extern volatile int Uart_Data_In;
 extern volatile unsigned char Uart_Data;
 
+extern volatile char *p;
+extern volatile int Uart_Tx_End;
+
 void USART2_IRQHandler(void)
 {
-	Uart_Data = (unsigned char)USART2->DR;
-	Uart_Data_In = 1;
-	NVIC_ClearPendingIRQ(38);
-}
+    static int i = 0;
 
-extern volatile int TIM4_Expired;
+    USART2->DR = p[i];
 
-void TIM4_IRQHandler(void)
-{
-	// TIM4 Interrupt Pending Clear
-	Macro_Clear_Bit(TIM4->SR, 0);
-	// NVIC Pending Clear
-	NVIC_ClearPendingIRQ(30);
-	TIM4_Expired = 1;
+    if (p[i] == '\0') {
+        Uart_Tx_End = 1;
+        Macro_Clear_Bit(USART2->CR1, 7);
+        NVIC_DisableIRQ(38);
+    }
+    i++;
+    // // 수신된 데이터는 Uart_Data에 저장
+    // Uart_Data = USART2->DR;
+    // // Uart_Data_In Flag Setting
+    // Uart_Data_In = 1;
+    // NVIC Pending Clear
+    NVIC_ClearPendingIRQ(38);
 }

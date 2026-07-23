@@ -123,40 +123,6 @@ void TIM4_Change_Value(int time)
 	TIM4->ARR = TIME4_PLS_OF_1ms * time;
 }
 
-void TIM4_Repeat_Interrupt_Enable(int en, int time)
-{
-	if(en)
-	{
-		// TIM4 Clock On
-
-		TIM4->CR1 = (1<<4)|(0<<3);
-		TIM4->PSC = (unsigned int)(TIMXCLK/(double)TIM4_FREQ + 0.5)-1;
-		TIM4->ARR = TIME4_PLS_OF_1ms * time;
-		Macro_Set_Bit(TIM4->EGR,0);
-
-		// TIM4 Pending Clear
-		Macro_Clear_Bit(TIM4->SR, 0);
-		// NVIC Pending Clear
-		NVIC_ClearPendingIRQ(30);
-
-		// TIM4 Interrupt Enable
-		Macro_Set_Bit(TIM4->DIER, 0);
-		// NVIC Interrupt Enable
-		NVIC_EnableIRQ(30);
-
-		// TIM4 Start
-		Macro_Set_Bit(TIM4->CR1, 0);
-
-	}
-
-	else
-	{
-		NVIC_DisableIRQ(30);
-		Macro_Clear_Bit(TIM4->CR1, 0);
-		Macro_Clear_Bit(TIM4->DIER, 0);
-	}
-}
-
 #define TIM3_FREQ 	  			(8000000) 	      	// Hz
 #define TIM3_TICK	  			(1000000/TIM3_FREQ)	// usec
 #define TIME3_PLS_OF_1ms  		(1000/TIM3_TICK)

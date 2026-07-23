@@ -34,7 +34,21 @@ void Main(void)
 
 	TIM3_Out_Init();
 
-	printf("%s ", note_name[C1]);
+	// printf("%s ", note_name[C1]);
+
+	printf("TIM3_Out_PWM_Generation(10000, 80)\n");
+	TIM3_Out_PWM_Generation(10000, 80);
+	TIM2_Delay(1000);
+	
+	printf("TIM3_Out_PWM_Generation(10000, 20)\n");
+	TIM3_Out_PWM_Generation(10000, 20);
+	TIM2_Delay(1000);
+	
+	printf("TIM3_Out_PWM_Generation(10000, 50)\n");
+	TIM3_Out_PWM_Generation(10000, 50);
+	TIM2_Delay(1000);
+	
+	#if 0
 	Buzzer_Beep(C1,N4);
 	printf("%s ", note_name[D1]);
 	Buzzer_Beep(D1,N4);
@@ -58,4 +72,5 @@ void Main(void)
 		printf("%s ", note_name[song1[i][0]]);
 		Buzzer_Beep(song1[i][0], song1[i][1]);
 	}
+	#endif
 }

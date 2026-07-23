@@ -166,8 +166,59 @@ void Main(void)
 				}
 
 			}
+		}
+	}
+}
+#else
+
+
+void Main(void)
+{
+	Sys_Init(115200);
+	printf("\nTest\n");
+
+	int state = 0;   
+
+	Macro_Write_Block(GPIOA->MODER, 0xf, 0x5, 0);
+	Macro_Write_Block(GPIOA->OTYPER, 0x3, 0x0, 0);
+	Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);  
+
+	Macro_Set_Bit(RCC->AHB1ENR, 2); 
+	Macro_Write_Block(GPIOC->MODER, 0x3, 0x0, 26);   
+	Macro_Write_Block(GPIOC->PUPDR, 0x3, 0x1, 26);   
+
+
+	for(;;)
+	{
+		if(!Macro_Check_Bit_Set(GPIOC->IDR, 13))
+		{
+			state = (state + 1) % 4; 
+
+			switch(state)
+			{
+				case 0:   
+					Macro_Write_Block(GPIOA->ODR, 0x3, 0x1, 0);
+					break;
+				case 1:   
+					Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
+					break;
+				case 2:
+					Macro_Write_Block(GPIOA->ODR, 0x3, 0x2, 0);
+					break;
+				case 3:
+					Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
+					break;
+				default: 
+					state = 0;
+					Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
+					break;
+			}
+
+			while(!Macro_Check_Bit_Set(GPIOC->IDR, 13));
 			
 		}
 	}
 }
+
+
 #endif

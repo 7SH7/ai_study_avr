@@ -304,6 +304,12 @@ void Main(void)
 // 스위치: PC13									>> INPUT
 // PA0, PA1 :: PA0: 1A / PA1: 2A			   >> OUTPUT >> 모터 움직이는거..  
 
+#define SYSCLK  96000000
+#define HCLK	SYSCLK
+#define PCLK2	HCLK
+#define PCLK1	HCLK/2
+#define TIMXCLK ((HCLK == PCLK1)?(PCLK1):(PCLK1*2))
+
 #define TIM2_MAX    (0xffffffff)	// TIM2
 #define TIM2_TICK	(20)   // 주기 us
 #define TIM2_FRAG	(1000000. / TIM2_TICK)   // 진동수(pulse) Hz
@@ -379,7 +385,7 @@ void delay_stopwatch(int time)
 	Macro_Set_Bit(TIM2->CR1, 0);
 	while(!Macro_Check_Bit_Set(TIM2->SR, 0));
 
-	Macro_Set_Bit(TIM2->EGR, 0)	// 작동 될 때, PSC랑 같이 SET 되어야 함.
+	Macro_Set_Bit(TIM2->EGR, 0);	// 작동 될 때, PSC랑 같이 SET 되어야 함.
 
 	Macro_Set_Bit(TIM2->CR1, 0);	// enable > TIM2 작동 시작
 	
@@ -418,6 +424,9 @@ void turn_right_motor()
 
 void Main(void)
 {
+	Sys_Init(115200);
+	printf("start\n");
+
 	int state = -1;
 	int flag = 0;
 
@@ -436,7 +445,7 @@ void Main(void)
 			flag = 0;
 			turn_right_motor();
 		}
-
+		while(!Macro_Check_Bit_Set(GPIOC->IDR, 13));
 	}
 }
 

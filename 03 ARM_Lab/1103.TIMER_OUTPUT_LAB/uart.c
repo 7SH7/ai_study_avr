@@ -3,6 +3,20 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
+
+char Uart2_Get_Pressed(void)
+{
+	if(Macro_Check_Bit_Set(USART2->SR, 5))
+	{
+		return (char)USART2->DR;
+	}
+
+	else
+	{
+		return (char)0;
+	}
+}
+
 #include <ctype.h>
 
 void Uart2_Init(int baud)

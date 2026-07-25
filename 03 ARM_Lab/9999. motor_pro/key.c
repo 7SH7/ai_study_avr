@@ -4,7 +4,6 @@
 
 void do_key_work(void)
 {
-	static motor_lock = 0;
 	// pwm 기반으로 돌아야해.
 	// 멈춰진 상태야.. 그럼 
 	if(motor_state == STOP)
@@ -15,17 +14,8 @@ void do_key_work(void)
 		motor_state = CW;
 	} else {
 		// cw <-> ccw  :: bit만 바꿔줘..
-		if(motor_lock)
-		{
-			motor_state = CW;	
-			change_motor_state();
-			motor_lock ^= 1;
-		} else if (!motor_lock)
-		{
-			motor_state = CCW;	
-			change_motor_state();
-			motor_lock ^= 1;
-		}
+		motor_state = motor_state == CW ? CCW : CW;
+		change_motor_state();
 	}
 }
 

@@ -45,15 +45,21 @@ void Main(void)
 	init_out_gpio();	// key init (PA0, PA1): pwm 사용을 위함.
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
 
+	int prev = 0;	// prev 상태를 기억해야, 현재랑 비교해서 for에서 계속 호출 안 할 수 있어.
 	for(;;)
 	{
+		// 계속 바뀌는 상태는 변수에 담아서 처리한다.
+		int key_pressed_present = Key_Get_Pressed(); 
 		if(uart2_flag)
 		{
 			// uart2에서 값이 들어온 경우
 			// do_usart_work();
-		} else if(!uart2_flag && Key_Get_Pressed()) {
+		} else if(!uart2_flag && key_pressed_present 
+			&& prev != key_pressed_present) {
 			// 버튼으로 처리하는 경우
 			do_key_work();
+			
+			prev = key_pressed_present;
 		}
 	}
 }

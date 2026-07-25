@@ -59,8 +59,8 @@ void Main(void)
 			// 버튼으로 처리하는 경우
 			do_key_work();
 			
-			prev = key_pressed_present;
 		}
+		prev = key_pressed_present;
 	}
 }
 

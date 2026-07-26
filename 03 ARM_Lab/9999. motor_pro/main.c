@@ -19,6 +19,7 @@ volatile int Uart_Data_In = 0;
 volatile unsigned char Uart_Data = 0;
 volatile int TIM4_Expired = 0;
 volatile int TIM2_Expired = 0;
+volatile int long_press = 0;
 motor_state_t motor_state = STOP;
 
 // 스위치: PC13									>> INPUT
@@ -40,21 +41,34 @@ void Main(void)
 	// init_out_gpio();	// key init (PA0, PA1): 버튼 클릭으로 처리 >> 차후 pwm으로 변경 필요
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
 	TIM5_Out_Init();	//  pwm으로 변경
+	Key_ISR_Enable(1);
 	
+	// TODO
+	// 1. TIM3으로 방향 바뀔때 500ms 멈추도록 하기
+	// 2. USART 적용하기
+
 	for(;;)
 	{
 		if(uart2_flag)
 		{
 			// uart2에서 값이 들어온 경우
 			// do_usart_work();
-		} else if(!uart2_flag && Key_Get_Pressed()) {
-			Key_ISR_Enable(1);
-			do_key_work();	// 버튼으로 처리하는 경우
-			if(TIM2_Expired)
-			{
-				motor_state = STOP;
-				stop_motor();
-			}
+		} 
+
+		if(TIM2_Expired)
+		{
+			motor_state = STOP;
+			stop_motor();
+			TIM2_Expired = 0;
+			long_press = 1;
 		}
+
+		// 버튼을 released했을때, 실행이 되도록!
+		if(Key_Pressed) {
+			Key_Pressed = 0;
+			if(long_press) long_press = 0;
+			else do_key_work();	
+		}
+		
 	}
 }

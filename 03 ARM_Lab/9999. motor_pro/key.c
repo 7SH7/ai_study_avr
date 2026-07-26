@@ -5,13 +5,15 @@
 void do_key_work(void)
 {
 	// pwm 기반으로 돌아야해.
-	Key_Wait_Key_Released();
-	printf("here1: %d\n", motor_state);
+
+	printf("here: %d\n", motor_state);
+	
 	if(motor_state == STOP)
 		motor_state = CW;
 	else 
 		motor_state = motor_state == CW ? CCW : CW;
-	TIM5_Set_Duty_Key(70, motor_state);
+	// 여기에 TIM3 써서 시간 500ms 동안 모터 멈추도록 하는 거 넣으면 될 거고
+	TIM5_Set_Duty_Key(60, motor_state);
 }
 
 

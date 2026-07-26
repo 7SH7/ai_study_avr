@@ -15,11 +15,11 @@ extern volatile int Key_Pressed;
 
 void EXTI15_10_IRQHandler(void)
 {
-	if(Key_Get_Pressed())
-	{
+	if(Key_Get_Pressed()){
 		TIM2_Interrupt_Enable(1, 3000);
 	} else {
 		TIM2_Interrupt_Enable(0, 3000);
+		Key_Pressed = 1;
 	}
 	
 	EXTI->PR = 0x1 << 13;
@@ -52,9 +52,11 @@ extern volatile int TIM2_Expired;
 // 3sec 다 세고, time out 되면 여기로 와.
 void TIM2_IRQHandler(void)
 {
+	if(Macro_Check_Bit_Set(TIM2->SR, 0))
+		TIM2_Expired = 1;
+	
 	// TIM4 Interrupt Pending Clear
 	Macro_Clear_Bit(TIM2->SR, 0);
 	// NVIC Pending Clear
 	NVIC_ClearPendingIRQ(28);
-	TIM2_Expired = 1;
 }

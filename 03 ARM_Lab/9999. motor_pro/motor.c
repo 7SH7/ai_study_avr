@@ -1,6 +1,6 @@
 #include "device_driver.h"
 #include "timer.h"
-
+#include <stdio.h>
 
 void init_motor(void)
 {
@@ -12,16 +12,6 @@ void stop_motor(void)
 	// Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
 	TIM5->CCR1 = 0;
 	TIM5->CCR2 = 0;
-}
-
-void turn_motor_ccw()
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x1, 0);
-}
-
-void turn_motor_cw()
-{
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x2, 0);
 }
 
 // PWM을 하는 이유.. MOTOR..

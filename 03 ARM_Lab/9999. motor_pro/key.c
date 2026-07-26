@@ -11,7 +11,7 @@ void do_key_work(void)
 		motor_state = CW;
 	else 
 		motor_state = motor_state == CW ? CCW : CW;
-	TIM5_Set_Duty_Key(50, motor_state);
+	TIM5_Set_Duty_Key(70, motor_state);
 }
 
 
@@ -38,26 +38,28 @@ void Key_Wait_Key_Released(void)
 	while(!Macro_Check_Bit_Set(GPIOC->IDR, 13));
 }
 
+// 외부 interrupt도 다른 것과 동일하게 enable func 1개, handler 1개
 void Key_ISR_Enable(int en)
 {
 	if(en)
 	{
-		Macro_Set_Bit(RCC->AHB1ENR, 2); 
-		Macro_Write_Block(GPIOC->MODER, 0x3, 0x0, 26);
+		Macro_Set_Bit(RCC->AHB1ENR, 2);
+		Macro_Write_Block(GPIOC->MODER, 0x3 , 0x0, 26);
 
-		Macro_Set_Bit(RCC->APB2ENR, 14); 
-		Macro_Write_Block(SYSCFG->EXTICR[3], 0xf, 0x2, 4);
+		// 외부 소스 set 
+		Macro_Set_Bit(RCC->APB2ENR, 14);	// 얘는 왜 필요하지?
+		Macro_Write_Block(SYSCFG->EXTICR[3], 0xf, 0x2, 4);	// 13번 포트 사용
 
-		Macro_Set_Bit(EXTI->FTSR, 13);
-		EXTI->PR = 0x1 << 13;
-		
-		NVIC_ClearPendingIRQ((IRQn_Type)40);
+		Macro_Set_Bit(EXTI->FTSR, 13);	// falling edge (버튼 눌렸을 때)
+		Macro_Set_Bit(EXTI->RTSR, 13);	// rising edge (버튼 떼었을 때)
+		EXTI->PR = (0x1 << 13);			// pending clear
+
+		// 내부 소스 set
+		NVIC_ClearPendingIRQ(40);
 		Macro_Set_Bit(EXTI->IMR, 13);
-		NVIC_EnableIRQ((IRQn_Type)40);
-	}
+		NVIC_EnableIRQ(40);
 
-	else
-	{
-		NVIC_DisableIRQ((IRQn_Type)40);
+	} else {
+		NVIC_DisableIRQ(40);
 	}
 }

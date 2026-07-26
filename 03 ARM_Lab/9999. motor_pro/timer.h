@@ -16,3 +16,4 @@ extern void TIM5_Out_Init(void);
 extern void TIM2_Stopwatch_Start(void);
 extern unsigned int TIM2_Stopwatch_Stop(void);
 extern void TIM2_Delay(int time);
+extern int TIM2_Interrupt_Enable(int en, int time);

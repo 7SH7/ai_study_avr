@@ -1,5 +1,6 @@
 #include "device_driver.h"
 #include "timer.h"
+#include "motor.h"
 
 /* PWM 공부: 값을 전환시켜서 특정 기점(CCR) 이후로 값을 전환해주는..
 분주비 N : N개의 CLK마다 CNT를 +1 GOWNRPtEK.
@@ -8,8 +9,9 @@ ARR: 몇 카운트마다 리셋할것인가?
 */
 
 // 분주비를 정하자. > 기준 분주비 정하기가 핵심!
+extern volatile int TIM2_Expired;
 
-
+#pragma region TIM2함수(미사용)
 void TIM2_Stopwatch_Start(void)
 {
 	// timer 사용 enable 해주고
@@ -64,6 +66,51 @@ void TIM2_Delay(int time)
 
 	// while (Macro_Check_Bit_Clear(TIM2->SR, 0));
 	// Macro_Clear_Bit(TIM2->CR1, 0);
+}
+#pragma endregion TIM2함수(미사용)
+
+// timer2의 경우,, 내부 버튼 통해서
+// 인터럽트 발생시키는 함수 1개 (여기에 init도 하는 것)
+// handler 1개
+
+int TIM2_Interrupt_Enable(int en, int time)
+{
+	if(en)
+	{
+		// timer 사용 enable 해주고
+		Macro_Set_Bit(RCC->APB1ENR, 0);
+
+		// timer 설정 (CR1, PSC, ARR)
+		TIM2->CR1 = (1<<4)|(1<<3);
+		TIM2->PSC = (unsigned int)(TIMXCLK/TIM2_FREQ + 0.5)-1;
+		TIM2->ARR = TIME2_PLS_OF_1ms * time;
+
+		// EGR로 PSC, ARR 적용
+		Macro_Set_Bit(TIM2->EGR,0);
+
+		// 초기화
+		Macro_Clear_Bit(TIM2->SR, 0);
+		NVIC_ClearPendingIRQ(28);
+
+		// Enable 설정
+		Macro_Set_Bit(TIM2->DIER, 0);
+		NVIC_EnableIRQ(28);
+
+		// timer 구동 >> 제일 마지막!
+		Macro_Set_Bit(TIM2->CR1, 0);
+
+		if(TIM2_Expired)
+		{
+			motor_state = STOP;
+			stop_motor();
+		} 
+
+
+	} else {
+		NVIC_DisableIRQ(28);
+		Macro_Clear_Bit(TIM2->CR1, 0);
+		Macro_Clear_Bit(TIM2->DIER, 0);
+	}
 }
 
 void TIM4_Repeat(int time)

@@ -18,6 +18,7 @@ volatile int Key_Pressed = 0;
 volatile int Uart_Data_In = 0;
 volatile unsigned char Uart_Data = 0;
 volatile int TIM4_Expired = 0;
+volatile int TIM2_Expired = 0;
 motor_state_t motor_state = STOP;
 
 // 스위치: PC13									>> INPUT
@@ -40,7 +41,6 @@ void Main(void)
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
 	TIM5_Out_Init();	//  pwm으로 변경
 	
-
 	for(;;)
 	{
 		if(uart2_flag)
@@ -48,15 +48,12 @@ void Main(void)
 			// uart2에서 값이 들어온 경우
 			// do_usart_work();
 		} else if(!uart2_flag && Key_Get_Pressed()) {
-			TIM2_Stopwatch_Start();	// TIM2 시작: 3sec 측정
-			TIM2_Delay(3000);
+			Key_ISR_Enable(1);
 			do_key_work();	// 버튼으로 처리하는 경우
-			if(Macro_Check_Bit_Set(TIM2->SR, 0))
+			if(TIM2_Expired)
 			{
 				motor_state = STOP;
 				stop_motor();
-			} else {
-				TIM2_Stopwatch_Stop();
 			}
 		}
 	}

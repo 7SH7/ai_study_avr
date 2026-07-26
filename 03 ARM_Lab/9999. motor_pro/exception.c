@@ -1,4 +1,6 @@
 #include "device_driver.h"
+#include "motor.h"
+#include "timer.h"
 #include <stdio.h>
 
 void _Invalid_ISR(void)
@@ -13,7 +15,12 @@ extern volatile int Key_Pressed;
 
 void EXTI15_10_IRQHandler(void)
 {
-	Key_Pressed = 1;
+	if(Key_Get_Pressed())
+	{
+		TIM2_Interrupt_Enable(1, 3000);
+	} else {
+		TIM2_Interrupt_Enable(0, 3000);
+	}
 	
 	EXTI->PR = 0x1 << 13;
 	NVIC_ClearPendingIRQ(40);
@@ -38,4 +45,16 @@ void TIM4_IRQHandler(void)
 	// NVIC Pending Clear
 	NVIC_ClearPendingIRQ(30);
 	TIM4_Expired = 1;
+}
+
+extern volatile int TIM2_Expired;
+
+// 3sec 다 세고, time out 되면 여기로 와.
+void TIM2_IRQHandler(void)
+{
+	// TIM4 Interrupt Pending Clear
+	Macro_Clear_Bit(TIM2->SR, 0);
+	// NVIC Pending Clear
+	NVIC_ClearPendingIRQ(28);
+	TIM2_Expired = 1;
 }

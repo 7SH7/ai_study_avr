@@ -1,5 +1,6 @@
 # Tool information
 TOOL_DIR		= C:\arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi
+CUBE_DIR		= C:\Program Files\STMicroelectronics\STM32Cube\STM32CubeProgrammer\bin
 VERSION			= 15.2.1
 TARGET			= arm-none-eabi
 
@@ -61,4 +62,4 @@ clean :
 	rm -f $(DUMP)
 
 run: # for STM32CubeProgrammer
-	STM32_Programmer_CLI.exe -c port=SWD -w ./rom_0x08000000.elf -v -rst -q	
+	"$(CUBE_DIR)/STM32_Programmer_CLI.exe" -c port=SWD -w ./rom_0x08000000.elf -v -rst -q

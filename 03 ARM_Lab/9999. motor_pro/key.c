@@ -14,6 +14,8 @@ void do_key_work(void)
 		motor_state = CW;
 	} else {
 		// cw <-> ccw  :: bit만 바꿔줘..
+		Key_Wait_Key_Released();
+		printf("here2: %d\n", motor_state);
 		motor_state = motor_state == CW ? CCW : CW;
 		change_motor_state();
 	}

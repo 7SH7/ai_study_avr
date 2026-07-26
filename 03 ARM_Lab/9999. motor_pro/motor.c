@@ -24,3 +24,5 @@ void change_motor_state()
 {
 	Macro_Invert_Area(GPIOA->ODR, 0x3, 0);
 }
+
+// PWM을 하는 이유.. MOTOR..

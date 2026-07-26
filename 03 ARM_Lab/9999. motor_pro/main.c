@@ -42,25 +42,21 @@ void Main(void)
 	Sys_Init(115200);
 	printf("start\n");
 
-	init_out_gpio();	// key init (PA0, PA1): pwm 사용을 위함.
+	init_out_gpio();	// key init (PA0, PA1): 버튼 클릭으로 처리 >> 차후 pwm으로 변경 필요
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
+	TIM2_Stopwatch_Start();
 
-	int prev = 0;	// prev 상태를 기억해야, 현재랑 비교해서 for에서 계속 호출 안 할 수 있어.
 	for(;;)
 	{
-		// 계속 바뀌는 상태는 변수에 담아서 처리한다.
-		int key_pressed_present = Key_Get_Pressed(); 
 		if(uart2_flag)
 		{
 			// uart2에서 값이 들어온 경우
 			// do_usart_work();
-		} else if(!uart2_flag && key_pressed_present 
-			&& prev != key_pressed_present) {
+		} else if(!uart2_flag && Key_Get_Pressed()) {
 			// 버튼으로 처리하는 경우
 			do_key_work();
-			
+			Key_Wait_Key_Released();
 		}
-		prev = key_pressed_present;
 	}
 }
 

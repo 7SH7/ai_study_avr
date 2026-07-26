@@ -5,20 +5,13 @@
 void do_key_work(void)
 {
 	// pwm 기반으로 돌아야해.
-	// 멈춰진 상태야.. 그럼 
+	Key_Wait_Key_Released();
+	printf("here1: %d\n", motor_state);
 	if(motor_state == STOP)
-	{
-		// cw 돌려.
-		printf("here1: %d\n", motor_state);
-		turn_motor_cw();
 		motor_state = CW;
-	} else {
-		// cw <-> ccw  :: bit만 바꿔줘..
-		Key_Wait_Key_Released();
-		printf("here2: %d\n", motor_state);
+	else 
 		motor_state = motor_state == CW ? CCW : CW;
-		change_motor_state();
-	}
+	TIM5_Set_Duty_Key(70, motor_state);
 }
 
 

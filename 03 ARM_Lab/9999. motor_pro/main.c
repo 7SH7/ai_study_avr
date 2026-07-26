@@ -1,6 +1,7 @@
 #include "device_driver.h"
 #include "uart.h"
 #include "key.h"
+#include "timer.h"
 #include "motor.h"
 #include <stdio.h>
 
@@ -22,13 +23,6 @@ motor_state_t motor_state = STOP;
 // 스위치: PC13									>> INPUT
 // PA0, PA1 :: PA0: 1A / PA1: 2A			   >> OUTPUT >> 모터 움직이는거..  
 
-void init_out_gpio(void)
-{
-	// Macro_Set_Bit(RCC->AHB1ENR, 0);  // led_init()에서 이미 함.
-	GPIOA->MODER |= (0x0 << 3) | (0x1 << 2) | (0x0 << 1) | (0x1 << 0);
-	GPIOA->OTYPER |= (0x0 << 1) | (0x0 << 0);
-}
-
 void init_in_gpio(void)
 {
 	Macro_Set_Bit(RCC->AHB1ENR, 2);
@@ -42,9 +36,9 @@ void Main(void)
 	Sys_Init(115200);
 	printf("start\n");
 
-	init_out_gpio();	// key init (PA0, PA1): 버튼 클릭으로 처리 >> 차후 pwm으로 변경 필요
+	// init_out_gpio();	// key init (PA0, PA1): 버튼 클릭으로 처리 >> 차후 pwm으로 변경 필요
+	TIM5_Out_Init();	//  pwm으로 변경
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
-	TIM2_Stopwatch_Start();
 
 	for(;;)
 	{
@@ -55,7 +49,6 @@ void Main(void)
 		} else if(!uart2_flag && Key_Get_Pressed()) {
 			// 버튼으로 처리하는 경우
 			do_key_work();
-			Key_Wait_Key_Released();
 		}
 	}
 }

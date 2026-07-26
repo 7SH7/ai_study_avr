@@ -1,4 +1,5 @@
 #include "device_driver.h"
+#include "timer.h"
 
 #define TIM2_TICK         	(20) 				// usec
 #define TIM2_FREQ 	  		(1000000/TIM2_TICK)	// Hz
@@ -269,10 +270,6 @@ TIMx->ARR = (TIMx_PLS_OF_1ms * time - 1); // 새로 만든 타이머의 한 주�
 */
 #pragma endregion 공부 구역
 
-#define F_PWM			(20000)		// 초당 몇 개 분주비 만들 수 있나 => 20KHz
-#define TIM5_ARR		(unsigned int) ((TIMXCLK / F_PWM + 0.5) - 1)	// 분주비
-#define TIM5_MAX		(0xffffffffu)
-
 // PWM에서는 주파수가 3개임. (TICK: 분주비, CK_CNT: 분주한 타이머가 CNT+1되는동안 보드 진동수 얼마나 커지나
 //							, F_PWM: 파형이 초당 몇 번 반복되나)
 
@@ -307,19 +304,5 @@ void TIM5_Out_Init(void)
 	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 4);
 	// TIM 5 Enable해주면 시작~
 	Macro_Set_Bit(TIM5->CR1, 0);
-}
-
-// 기본 set은 duty가 50..
-void TIM5_Set_Duty_Key(int duty, int motor_state)
-{
-	// CCR 설정으로 방향 설정해주기 
-}
-
-void TIM5_Set_Duty_USART(int duty, int direction, int speed)
-{
-	// PSC, ARR, CCR 설정 해주기
-
-	// TIM 변경값 적용
-	Macro_Set_Bit(TIM5->EGR, 0);
 }
 

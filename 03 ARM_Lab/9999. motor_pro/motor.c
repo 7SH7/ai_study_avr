@@ -9,7 +9,6 @@ void init_motor(void)
 
 void stop_motor(void)
 {
-	// Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
 	TIM5->CCR1 = 0;
 	TIM5->CCR2 = 0;
 }
@@ -35,9 +34,4 @@ void TIM5_Set_Duty_USART(int duty, int direction, int speed)
 
 	// TIM 변경값 적용
 	Macro_Set_Bit(TIM5->EGR, 0);
-}
-
-void change_motor_state()
-{
-	Macro_Invert_Area(GPIOA->ODR, 0x3, 0);
 }

@@ -11,6 +11,80 @@ ARR: 몇 카운트마다 리셋할것인가?
 // 분주비를 정하자. > 기준 분주비 정하기가 핵심!
 extern volatile int TIM2_Expired;
 
+// timer2의 경우,, 내부 버튼 통해서
+// 인터럽트 발생시키는 함수 1개 (여기에 init도 하는 것)
+// handler 1개
+
+int TIM2_Interrupt_Enable(int en, int time)
+{
+	if(en)
+	{
+		// timer 사용 enable 해주고
+		Macro_Set_Bit(RCC->APB1ENR, 0);
+
+		// timer 설정 (CR1, PSC, ARR)
+		TIM2->CR1 = (1<<4)|(1<<3);
+		TIM2->PSC = (unsigned int)(TIMXCLK/TIM2_FREQ + 0.5)-1;
+		TIM2->ARR = TIME2_PLS_OF_1ms * time;
+
+		// EGR로 PSC, ARR 적용
+		Macro_Set_Bit(TIM2->EGR,0);
+
+		// 초기화
+		Macro_Clear_Bit(TIM2->SR, 0);
+		NVIC_ClearPendingIRQ(28);
+
+		// Enable 설정
+		Macro_Set_Bit(TIM2->DIER, 0);
+		NVIC_EnableIRQ(28);
+
+		// timer 구동 >> 제일 마지막!
+		Macro_Set_Bit(TIM2->CR1, 0);
+
+	} else {
+		NVIC_DisableIRQ(28);
+		Macro_Clear_Bit(TIM2->CR1, 0);
+		Macro_Clear_Bit(TIM2->DIER, 0);
+	}
+}
+
+// PWM에서는 주파수가 3개임. (TICK: 분주비, CK_CNT: 분주한 타이머가 CNT+1되는동안 보드 진동수 얼마나 커지나
+//							, F_PWM: 파형이 초당 몇 번 반복되나)
+
+// duty = crr / arr >> arr이 커야, ccr로 duty 영역 지정 범위가 넓어짐! > arr이 커야 duty 해상도 ↑
+
+// PA0, PA1 둘 다 사용됨.
+void TIM5_Out_Init(void)
+{
+	// PA0, PA1을 PWM으로 사용
+	Macro_Set_Bit(RCC->AHB1ENR, 0);
+	// 일단 TIM5에 대해서 설정
+	Macro_Set_Bit(RCC->APB1ENR, 3);	
+	// GPIO 설정
+	Macro_Write_Block(GPIOA->MODER, 0xf, 0xa, 0);
+	Macro_Write_Block(GPIOA->AFR[0], 0xff, 0x22, 0);
+	// 타이머 설정 해주기
+	TIM5->CR1 = (0x0 << 7) | (0x1 << 4) | (0x0 << 3);
+	// PSC, ARR 설정 해주기
+	// TIM5->PSC = (unsigned int)(TIMXCLK / TIM5_FREQ + 0.5) - 1;
+	TIM5->PSC = 0;
+	TIM5->ARR = TIM5_ARR;
+	// 채널별로 ccr 값은 맞춰줘야함.
+	TIM5->CCR1 = 0;
+	TIM5->CCR2 = 0;
+	// TIM 변경값 적용
+	Macro_Set_Bit(TIM5->EGR, 0);
+	
+	// 몇 번 채널 사용할 것인지 지정 >> PA0, PA1 >> 2개
+	Macro_Write_Block(TIM5->CCMR1, 0xffff, 0x6060, 0);	// 1번, 2번 채널 담당
+	// PWM 활성화 포트
+	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 0);
+	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 4);
+	// TIM 5 Enable해주면 시작~
+	Macro_Set_Bit(TIM5->CR1, 0);
+}
+
+
 #pragma region TIM2함수(미사용)
 void TIM2_Stopwatch_Start(void)
 {
@@ -69,50 +143,7 @@ void TIM2_Delay(int time)
 }
 #pragma endregion TIM2함수(미사용)
 
-// timer2의 경우,, 내부 버튼 통해서
-// 인터럽트 발생시키는 함수 1개 (여기에 init도 하는 것)
-// handler 1개
-
-int TIM2_Interrupt_Enable(int en, int time)
-{
-	if(en)
-	{
-		// timer 사용 enable 해주고
-		Macro_Set_Bit(RCC->APB1ENR, 0);
-
-		// timer 설정 (CR1, PSC, ARR)
-		TIM2->CR1 = (1<<4)|(1<<3);
-		TIM2->PSC = (unsigned int)(TIMXCLK/TIM2_FREQ + 0.5)-1;
-		TIM2->ARR = TIME2_PLS_OF_1ms * time;
-
-		// EGR로 PSC, ARR 적용
-		Macro_Set_Bit(TIM2->EGR,0);
-
-		// 초기화
-		Macro_Clear_Bit(TIM2->SR, 0);
-		NVIC_ClearPendingIRQ(28);
-
-		// Enable 설정
-		Macro_Set_Bit(TIM2->DIER, 0);
-		NVIC_EnableIRQ(28);
-
-		// timer 구동 >> 제일 마지막!
-		Macro_Set_Bit(TIM2->CR1, 0);
-
-		if(TIM2_Expired)
-		{
-			motor_state = STOP;
-			stop_motor();
-		} 
-
-
-	} else {
-		NVIC_DisableIRQ(28);
-		Macro_Clear_Bit(TIM2->CR1, 0);
-		Macro_Clear_Bit(TIM2->DIER, 0);
-	}
-}
-
+#pragma region TIM4 함수(미사용)
 void TIM4_Repeat(int time)
 {
 	Macro_Set_Bit(RCC->APB1ENR, 2);
@@ -182,6 +213,9 @@ void TIM4_Repeat_Interrupt_Enable(int en, int time)
 		Macro_Clear_Bit(TIM4->DIER, 0);
 	}
 }
+#pragma endregion TIM4 함수(미사용)
+
+#pragma region TIM3 함수(미사용)
 
 #define TIM3_FREQ 	  			(8000000) 	      	// Hz
 #define TIM3_TICK	  			(1000000/TIM3_FREQ)	// usec
@@ -213,6 +247,8 @@ void TIM3_Out_Stop(void)
 {
 	Macro_Clear_Bit(TIM3->CR1, 0);
 }
+
+#pragma endregion TIM3 함수(미사용)
 
 #pragma region 공부 구역
 /*
@@ -279,40 +315,3 @@ TIMx->ARR = (TIMx_PLS_OF_1ms * time - 1); // 새로 만든 타이머의 한 주�
 
 */
 #pragma endregion 공부 구역
-
-// PWM에서는 주파수가 3개임. (TICK: 분주비, CK_CNT: 분주한 타이머가 CNT+1되는동안 보드 진동수 얼마나 커지나
-//							, F_PWM: 파형이 초당 몇 번 반복되나)
-
-// duty = crr / arr >> arr이 커야, ccr로 duty 영역 지정 범위가 넓어짐! > arr이 커야 duty 해상도 ↑
-
-// PA0, PA1 둘 다 사용됨.
-void TIM5_Out_Init(void)
-{
-	// PA0, PA1을 PWM으로 사용
-	Macro_Set_Bit(RCC->AHB1ENR, 0);
-	// 일단 TIM5에 대해서 설정
-	Macro_Set_Bit(RCC->APB1ENR, 3);	
-	// GPIO 설정
-	Macro_Write_Block(GPIOA->MODER, 0xf, 0xa, 0);
-	Macro_Write_Block(GPIOA->AFR[0], 0xff, 0x22, 0);
-	// 타이머 설정 해주기
-	TIM5->CR1 = (0x0 << 7) | (0x1 << 4) | (0x0 << 3);
-	// PSC, ARR 설정 해주기
-	// TIM5->PSC = (unsigned int)(TIMXCLK / TIM5_FREQ + 0.5) - 1;
-	TIM5->PSC = 0;
-	TIM5->ARR = TIM5_ARR;
-	// 채널별로 ccr 값은 맞춰줘야함.
-	TIM5->CCR1 = 0;
-	TIM5->CCR2 = 0;
-	// TIM 변경값 적용
-	Macro_Set_Bit(TIM5->EGR, 0);
-	
-	// 몇 번 채널 사용할 것인지 지정 >> PA0, PA1 >> 2개
-	Macro_Write_Block(TIM5->CCMR1, 0xffff, 0x6060, 0);	// 1번, 2번 채널 담당
-	// PWM 활성화 포트
-	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 0);
-	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 4);
-	// TIM 5 Enable해주면 시작~
-	Macro_Set_Bit(TIM5->CR1, 0);
-}
-

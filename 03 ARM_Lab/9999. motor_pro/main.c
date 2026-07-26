@@ -37,8 +37,9 @@ void Main(void)
 	printf("start\n");
 
 	// init_out_gpio();	// key init (PA0, PA1): 버튼 클릭으로 처리 >> 차후 pwm으로 변경 필요
-	TIM5_Out_Init();	//  pwm으로 변경
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
+	TIM5_Out_Init();	//  pwm으로 변경
+	
 
 	for(;;)
 	{
@@ -47,55 +48,16 @@ void Main(void)
 			// uart2에서 값이 들어온 경우
 			// do_usart_work();
 		} else if(!uart2_flag && Key_Get_Pressed()) {
-			// 버튼으로 처리하는 경우
-			do_key_work();
-		}
-	}
-}
-
-#if 0	
-	int flag = 0;
-
-	init_out_gpio();
-	init_in_gpio();
-	init_motor();
-
-	int check_time;
-	for(;;)
-	{
-		if(!Macro_Check_Bit_Set(GPIOC->IDR, 13))
-		{
-			TIM2_Stopwatch_Start();
-			check_time = 0;
-
-			while(!Macro_Check_Bit_Set(GPIOC->IDR, 13))
+			TIM2_Stopwatch_Start();	// TIM2 시작: 3sec 측정
+			TIM2_Delay(3000);
+			do_key_work();	// 버튼으로 처리하는 경우
+			if(Macro_Check_Bit_Set(TIM2->SR, 0))
 			{
-				int pls = TIM2_TICK * (TIM2_MAX - TIM2->CNT);
-				if(pls >= 3000000)
-				{
-					check_time = 1;
-					break;
-				}
-			}
-			TIM2_Stopwatch_Stop();
-			if(check_time)
-			{
+				motor_state = STOP;
 				stop_motor();
+			} else {
+				TIM2_Stopwatch_Stop();
 			}
-			else{
-				if(flag == 0)
-				{
-					turn_left_motor();
-					flag = 1;
-				} else if(flag == 1)
-				{
-					turn_right_motor();
-					flag = 0;
-				}
-
-			}
-			while(!Macro_Check_Bit_Set(GPIOC->IDR, 13));
 		}
 	}
 }
-#endif

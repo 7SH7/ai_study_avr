@@ -9,7 +9,9 @@ void init_motor(void)
 
 void stop_motor(void)
 {
-	Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
+	// Macro_Write_Block(GPIOA->ODR, 0x3, 0x0, 0);
+	TIM5->CCR1 = 0;
+	TIM5->CCR2 = 0;
 }
 
 void turn_motor_ccw()

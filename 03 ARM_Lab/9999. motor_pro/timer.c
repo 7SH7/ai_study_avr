@@ -1,16 +1,6 @@
 #include "device_driver.h"
 #include "timer.h"
 
-#define TIM2_TICK         	(20) 				// usec
-#define TIM2_FREQ 	  		(1000000/TIM2_TICK)	// Hz
-#define TIME2_PLS_OF_1ms  	(1000/TIM2_TICK)
-#define TIM2_MAX	  		(0xffffffffu)
-
-#define TIM4_TICK	  		(20) 				// usec
-#define TIM4_FREQ 	  		(1000000/TIM4_TICK) // Hz
-#define TIME4_PLS_OF_1ms  	(1000/TIM4_TICK)
-#define TIM4_MAX	  		(0xffffu)
-
 /* PWM 공부: 값을 전환시켜서 특정 기점(CCR) 이후로 값을 전환해주는..
 분주비 N : N개의 CLK마다 CNT를 +1 GOWNRPtEK.
 CK_CNT: 분주 후 카운터 주사푸(초당 몇 CNT)
@@ -19,22 +9,20 @@ ARR: 몇 카운트마다 리셋할것인가?
 
 // 분주비를 정하자. > 기준 분주비 정하기가 핵심!
 
-// 분주비를 
-void TIM5_PWM(void)
-{
-
-}
-
 
 void TIM2_Stopwatch_Start(void)
 {
+	// timer 사용 enable 해주고
 	Macro_Set_Bit(RCC->APB1ENR, 0);
 
+	// timer 설정 (CR1, PSC, ARR)
 	TIM2->CR1 = (1<<4)|(1<<3);
 	TIM2->PSC = (unsigned int)(TIMXCLK/50000.0 + 0.5)-1;
 	TIM2->ARR = TIM2_MAX;
 
+	// EGR로 PSC, ARR 적용
 	Macro_Set_Bit(TIM2->EGR,0);
+	// timer 구동
 	Macro_Set_Bit(TIM2->CR1, 0);
 }
 
@@ -47,29 +35,6 @@ unsigned int TIM2_Stopwatch_Stop(void)
 	return time;
 }
 
-/* Delay Time Max = 65536 * 20use = 1.3sec */
-
-#if 0
-
-void TIM2_Delay(int time)
-{
-	Macro_Set_Bit(RCC->APB1ENR, 0);
-
-	TIM2->CR1 = (1<<4)|(1<<3);
-	TIM2->PSC = (unsigned int)(TIMXCLK/(double)TIM2_FREQ + 0.5)-1;
-	TIM2->ARR = TIME2_PLS_OF_1ms * time;
-
-	Macro_Set_Bit(TIM2->EGR,0);
-	Macro_Clear_Bit(TIM2->SR, 0);
-	Macro_Set_Bit(TIM2->CR1, 0);
-
-	while(Macro_Check_Bit_Clear(TIM2->SR, 0));
-
-	Macro_Clear_Bit(TIM2->CR1, 0);
-}
-
-#else
-
 /* Delay Time Extended */
 
 void TIM2_Delay(int time)
@@ -81,10 +46,10 @@ void TIM2_Delay(int time)
 
 	TIM2->PSC = (unsigned int)(TIMXCLK/(double)TIM2_FREQ + 0.5)-1;
 	TIM2->CR1 = (1<<4)|(1<<3);
-	TIM2->ARR = 0xffff;
+	TIM2->ARR = 0xffffffff;
 	Macro_Set_Bit(TIM2->EGR,0);
 
-	for(i=0; i<(t/0xffffu); i++)
+	for(i=0; i<(t/0xffffffffu); i++)
 	{
 		Macro_Set_Bit(TIM2->EGR,0);
 		Macro_Clear_Bit(TIM2->SR, 0);
@@ -92,16 +57,14 @@ void TIM2_Delay(int time)
 		while(Macro_Check_Bit_Clear(TIM2->SR, 0));
 	}
 
-	TIM2->ARR = t % 0xffffu;
+	TIM2->ARR = t % 0xffffffffu;
 	Macro_Set_Bit(TIM2->EGR,0);
 	Macro_Clear_Bit(TIM2->SR, 0);
 	Macro_Set_Bit(TIM2->CR1, 0);
-	while (Macro_Check_Bit_Clear(TIM2->SR, 0));
 
-	Macro_Clear_Bit(TIM2->CR1, 0);
+	// while (Macro_Check_Bit_Clear(TIM2->SR, 0));
+	// Macro_Clear_Bit(TIM2->CR1, 0);
 }
-
-#endif
 
 void TIM4_Repeat(int time)
 {

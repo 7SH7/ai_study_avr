@@ -11,7 +11,7 @@ void do_key_work(void)
 		motor_state = CW;
 	else 
 		motor_state = motor_state == CW ? CCW : CW;
-	TIM5_Set_Duty_Key(70, motor_state);
+	TIM5_Set_Duty_Key(50, motor_state);
 }
 
 

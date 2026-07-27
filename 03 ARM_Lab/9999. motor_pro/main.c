@@ -63,17 +63,6 @@ void Main(void)
 			long_press = 1;
 		}
 
-		#if 0
-		// 버튼을 released했을때, 실행이 되도록!
-		if(Key_Pressed) {
-			// TIM4_Interrupt_Enable(1, 1000);
-			Key_Pressed = 0;
-			if(long_press) long_press = 0;
-			else do_key_work();
-		}
-
-		#else
-
 		if(Key_Pressed)
 		{
 			Key_Pressed = 0;
@@ -90,9 +79,6 @@ void Main(void)
 			TIM4_Expired = 0;
 			TIM4_Interrupt_Enable(0, 500);
 			do_key_work();
-		}
-
-		#endif
-		
+		}		
 	}
 }

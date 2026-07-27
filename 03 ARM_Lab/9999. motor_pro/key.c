@@ -18,6 +18,9 @@ void do_usart_work(void)
 	} else if(Uart_Data == 'R' || Uart_Data == 'r')
 	{
 		motor_state = CCW;
+	} else if(Uart_Data == 'S' || Uart_Data == 's')
+	{
+		motor_state = STOP;
 	} else if('0' <= Uart_Data && Uart_Data <= '9')
 	{
 		speed = 50 + 5 * (Uart_Data - '0');

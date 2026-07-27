@@ -25,6 +25,10 @@ void TIM5_Set_Duty_Key(int duty, int motor_state)
 	{
 		TIM5->CCR1 = TIM5_ARR * (duty / 100.); 
 		TIM5->CCR2 = 0;
+	} else if(motor_state == STOP)
+	{
+		TIM5->CCR1 = 0; 
+		TIM5->CCR2 = 0;
 	}
 }
 

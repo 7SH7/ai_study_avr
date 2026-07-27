@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-volatile int uart2_flag = 0;
-
 void Uart2_Init(int baud)
 {
   double div;

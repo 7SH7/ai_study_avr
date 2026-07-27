@@ -1,9 +1,30 @@
 #include "device_driver.h"
 #include "motor.h"
 #include "timer.h"
+#include "uart.h"
 #include <stdio.h>
 
 extern volatile int TIM4_Expired;
+extern volatile int Uart_Data_In;
+extern volatile unsigned char Uart_Data;
+extern volatile int speed;
+
+void do_usart_work(void)
+{
+	// pwm으로 돌아야하지..
+	if(Uart_Data == 'F' || Uart_Data == 'f')
+	{
+		motor_state = CW;
+	} else if(Uart_Data == 'R' || Uart_Data == 'r')
+	{
+		motor_state = CCW;
+	} else if('0' <= Uart_Data && Uart_Data <= '9')
+	{
+		speed = 50 + 5 * (Uart_Data - '0');
+	}
+
+	TIM5_Set_Duty_Key(speed, motor_state);
+}
 
 void do_key_work(void)
 {
@@ -15,7 +36,7 @@ void do_key_work(void)
 	else 
 		motor_state = motor_state == CW ? CCW : CW;
 
-	TIM5_Set_Duty_Key(80, motor_state);
+	TIM5_Set_Duty_Key(speed, motor_state);
 }
 
 int Key_Get_Pressed(void)

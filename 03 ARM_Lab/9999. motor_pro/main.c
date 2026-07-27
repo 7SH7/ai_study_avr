@@ -20,6 +20,8 @@ volatile unsigned char Uart_Data = 0;
 volatile int TIM4_Expired = 0;
 volatile int TIM2_Expired = 0;
 volatile int long_press = 0;
+volatile int speed = 50;
+
 motor_state_t motor_state = STOP;
 
 // 스위치: PC13									>> INPUT
@@ -42,16 +44,18 @@ void Main(void)
 	init_in_gpio();		// PC13: 내부 버튼 사용을 위함.
 	TIM5_Out_Init();	//  pwm으로 변경
 	Key_ISR_Enable(1);
-	
+	Uart2_RX_Interrupt_Enable(1);	// data 받는 거
+
 	// TODO
 	// 1. USART 적용하기
 
 	for(;;)
 	{
-		if(uart2_flag)
+		if(Uart_Data_In)
 		{
 			// uart2에서 값이 들어온 경우
-			// do_usart_work();
+			Uart_Data_In = 0;
+			do_usart_work();
 		} 
 
 		if(TIM2_Expired)

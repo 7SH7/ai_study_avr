@@ -63,12 +63,36 @@ void Main(void)
 			long_press = 1;
 		}
 
+		#if 0
 		// 버튼을 released했을때, 실행이 되도록!
 		if(Key_Pressed) {
+			// TIM4_Interrupt_Enable(1, 1000);
 			Key_Pressed = 0;
 			if(long_press) long_press = 0;
-			else do_key_work();	
+			else do_key_work();
 		}
+
+		#else
+
+		if(Key_Pressed)
+		{
+			Key_Pressed = 0;
+			if(long_press) long_press = 0;
+			else {
+				stop_motor();
+				// 여기선 time4 걸어두고, 이후 방향 타도록 하자
+				TIM4_Interrupt_Enable(1, 500);
+			}
+		}
+
+		if(TIM4_Expired)
+		{
+			TIM4_Expired = 0;
+			TIM4_Interrupt_Enable(0, 500);
+			do_key_work();
+		}
+
+		#endif
 		
 	}
 }

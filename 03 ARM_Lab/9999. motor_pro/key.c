@@ -1,19 +1,21 @@
 #include "device_driver.h"
 #include "motor.h"
+#include "timer.h"
 #include <stdio.h>
+
+extern volatile int TIM4_Expired;
 
 void do_key_work(void)
 {
 	// pwm 기반으로 돌아야해.
-
 	printf("here: %d\n", motor_state);
-	
+
 	if(motor_state == STOP)
 		motor_state = CW;
 	else 
 		motor_state = motor_state == CW ? CCW : CW;
-	// 여기에 TIM3 써서 시간 500ms 동안 모터 멈추도록 하는 거 넣으면 될 거고
-	TIM5_Set_Duty_Key(60, motor_state);
+
+	TIM5_Set_Duty_Key(80, motor_state);
 }
 
 int Key_Get_Pressed(void)

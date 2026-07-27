@@ -48,6 +48,65 @@ int TIM2_Interrupt_Enable(int en, int time)
 	}
 }
 
+// 버튼 클릭 >  500ms 멈추게 하기
+// TIMXCLK = 96000 Hz / ms
+// 48분주..
+// 기준 분주 설정하는 법 
+// 1. 기준 분주 >= 목표시간 * TIMXCLK / ARR_MAX
+// 기준 분주 >= 500ms * 96000000 / 65536  
+// 결) 732 <=  <= 65536
+// 2. TIMXCLK의 약수로 설정하는 것이 좋다.
+// 9600분주로 해도 ㄱㅊ
+
+// 여기 타임이 500이겠구나
+int TIM4_Interrupt_Enable(int en, int time)
+{
+	if(en)
+	{
+		Macro_Set_Bit(RCC->APB1ENR, 2);
+		TIM4->CR1 = (0x1 << 4);
+
+		// PSC, ARR 설정
+		TIM4->PSC = TIM4_TICK - 1;
+		TIM4->ARR = TIM4_PLS_OF_1ms * time - 1;	// 500ms
+
+		// PSC, ARR 적용
+		Macro_Set_Bit(TIM4->EGR, 0);
+
+		// ISR 설정
+		// 초기화
+		Macro_Clear_Bit(TIM4->SR, 0);
+		NVIC_ClearPendingIRQ(30);
+
+		// Enable 설정
+		Macro_Set_Bit(TIM4->DIER, 0);
+		NVIC_EnableIRQ(30);
+
+
+		Macro_Set_Bit(TIM4->CR1, 0);
+
+	} else {
+		NVIC_DisableIRQ(30);
+		Macro_Clear_Bit(TIM4->CR1, 0);
+		Macro_Clear_Bit(TIM4->DIER, 0);	
+	}
+}
+
+void TIM4_Init(void)
+{
+	Macro_Set_Bit(RCC->APB1ENR, 2);
+	TIM4->CR1 = (0x1 << 4);
+
+	// PSC, ARR 설정
+	TIM4->PSC = TIM4_TICK - 1;
+	TIM4->ARR = TIM4_PLS_OF_1ms * 500 - 1;	// 500ms
+
+	// PSC, ARR 적용
+	Macro_Set_Bit(TIM4->EGR, 0);
+
+	Macro_Set_Bit(TIM4->CR1, 0);
+}
+
 // PWM에서는 주파수가 3개임. (TICK: 분주비, CK_CNT: 분주한 타이머가 CNT+1되는동안 보드 진동수 얼마나 커지나
 //							, F_PWM: 파형이 초당 몇 번 반복되나)
 
@@ -83,172 +142,6 @@ void TIM5_Out_Init(void)
 	// TIM 5 Enable해주면 시작~
 	Macro_Set_Bit(TIM5->CR1, 0);
 }
-
-
-#pragma region TIM2함수(미사용)
-void TIM2_Stopwatch_Start(void)
-{
-	// timer 사용 enable 해주고
-	Macro_Set_Bit(RCC->APB1ENR, 0);
-
-	// timer 설정 (CR1, PSC, ARR)
-	TIM2->CR1 = (1<<4)|(1<<3);
-	TIM2->PSC = (unsigned int)(TIMXCLK/50000.0 + 0.5)-1;
-	TIM2->ARR = TIM2_MAX;
-
-	// EGR로 PSC, ARR 적용
-	Macro_Set_Bit(TIM2->EGR,0);
-	// timer 구동
-	Macro_Set_Bit(TIM2->CR1, 0);
-}
-
-unsigned int TIM2_Stopwatch_Stop(void)
-{
-	unsigned int time;
-
-	Macro_Clear_Bit(TIM2->CR1, 0);
-	time = (TIM2_MAX - TIM2->CNT) * TIM2_TICK;
-	return time;
-}
-
-/* Delay Time Extended */
-
-void TIM2_Delay(int time)
-{
-	int i;
-	unsigned int t = TIME2_PLS_OF_1ms * time;
-
-	Macro_Set_Bit(RCC->APB1ENR, 0);
-
-	TIM2->PSC = (unsigned int)(TIMXCLK/(double)TIM2_FREQ + 0.5)-1;
-	TIM2->CR1 = (1<<4)|(1<<3);
-	TIM2->ARR = 0xffffffff;
-	Macro_Set_Bit(TIM2->EGR,0);
-
-	for(i=0; i<(t/0xffffffffu); i++)
-	{
-		Macro_Set_Bit(TIM2->EGR,0);
-		Macro_Clear_Bit(TIM2->SR, 0);
-		Macro_Set_Bit(TIM2->CR1, 0);
-		while(Macro_Check_Bit_Clear(TIM2->SR, 0));
-	}
-
-	TIM2->ARR = t % 0xffffffffu;
-	Macro_Set_Bit(TIM2->EGR,0);
-	Macro_Clear_Bit(TIM2->SR, 0);
-	Macro_Set_Bit(TIM2->CR1, 0);
-
-	// while (Macro_Check_Bit_Clear(TIM2->SR, 0));
-	// Macro_Clear_Bit(TIM2->CR1, 0);
-}
-#pragma endregion TIM2함수(미사용)
-
-#pragma region TIM4 함수(미사용)
-void TIM4_Repeat(int time)
-{
-	Macro_Set_Bit(RCC->APB1ENR, 2);
-
-	TIM4->CR1 = (1<<4)|(0<<3);
-	TIM4->PSC = (unsigned int)(TIMXCLK/(double)TIM4_FREQ + 0.5)-1;
-	TIM4->ARR = TIME4_PLS_OF_1ms * time - 1;
-
-	Macro_Set_Bit(TIM4->EGR,0);
-	Macro_Clear_Bit(TIM4->SR, 0);
-	Macro_Set_Bit(TIM4->CR1, 0);
-}
-
-int TIM4_Check_Timeout(void)
-{
-	if(Macro_Check_Bit_Set(TIM4->SR, 0))
-	{
-		Macro_Clear_Bit(TIM4->SR, 0);
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-void TIM4_Stop(void)
-{
-	Macro_Clear_Bit(TIM4->CR1, 0);
-}
-
-void TIM4_Change_Value(int time)
-{
-	TIM4->ARR = TIME4_PLS_OF_1ms * time;
-}
-
-void TIM4_Repeat_Interrupt_Enable(int en, int time)
-{
-	if(en)
-	{
-		// TIM4 Clock On
-
-		TIM4->CR1 = (1<<4)|(0<<3);
-		TIM4->PSC = (unsigned int)(TIMXCLK/(double)TIM4_FREQ + 0.5)-1;
-		TIM4->ARR = TIME4_PLS_OF_1ms * time;
-		Macro_Set_Bit(TIM4->EGR,0);
-
-		// TIM4 Pending Clear
-		Macro_Clear_Bit(TIM4->SR, 0);
-		// NVIC Pending Clear
-		NVIC_ClearPendingIRQ(30);
-
-		// TIM4 Interrupt Enable
-		Macro_Set_Bit(TIM4->DIER, 0);
-		// NVIC Interrupt Enable
-		NVIC_EnableIRQ(30);
-
-		// TIM4 Start
-		Macro_Set_Bit(TIM4->CR1, 0);
-
-	}
-
-	else
-	{
-		NVIC_DisableIRQ(30);
-		Macro_Clear_Bit(TIM4->CR1, 0);
-		Macro_Clear_Bit(TIM4->DIER, 0);
-	}
-}
-#pragma endregion TIM4 함수(미사용)
-
-#pragma region TIM3 함수(미사용)
-
-#define TIM3_FREQ 	  			(8000000) 	      	// Hz
-#define TIM3_TICK	  			(1000000/TIM3_FREQ)	// usec
-#define TIME3_PLS_OF_1ms  		(1000/TIM3_TICK)
-
-void TIM3_Out_Init(void)
-{
-	Macro_Set_Bit(RCC->AHB1ENR, 1);
-	Macro_Set_Bit(RCC->APB1ENR, 1);
-
-	Macro_Write_Block(GPIOB->MODER, 0x3, 0x2, 0);  	// PB0 => ALT
-	Macro_Write_Block(GPIOB->AFR[0], 0xf, 0x2, 0); 	// PB0 => AF02
-
-	Macro_Write_Block(TIM3->CCMR2,0xff, 0x60, 0);
-	TIM3->CCER = (0<<9)|(1<<8);
-}
-
-void TIM3_Out_Freq_Generation(unsigned short freq)
-{
-	TIM3->PSC = (unsigned int)(TIMXCLK/(double)TIM3_FREQ + 0.5)-1;
-	TIM3->ARR = (double)TIM3_FREQ/freq-1;
-	TIM3->CCR3 = TIM3->ARR/2;
-
-	Macro_Set_Bit(TIM3->EGR,0);
-	TIM3->CR1 = (1<<4)|(0<<3)|(0<<1)|(1<<0);
-}
-
-void TIM3_Out_Stop(void)
-{
-	Macro_Clear_Bit(TIM3->CR1, 0);
-}
-
-#pragma endregion TIM3 함수(미사용)
 
 #pragma region 공부 구역
 /*

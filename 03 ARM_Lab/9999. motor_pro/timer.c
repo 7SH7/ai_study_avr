@@ -122,8 +122,8 @@ void TIM5_Out_Init(void)
 	// GPIO 설정
 	Macro_Write_Block(GPIOA->MODER, 0xf, 0xa, 0);
 	Macro_Write_Block(GPIOA->AFR[0], 0xff, 0x22, 0);
-	// 타이머 설정 해주기
-	TIM5->CR1 = (0x0 << 7) | (0x1 << 4) | (0x0 << 3);
+	// 타이머 설정 해주기 (ARPE=1: ARR도 preload → 주기 경계에서 반영)
+	TIM5->CR1 = (0x1 << 7) | (0x1 << 4) | (0x0 << 3);
 	// PSC, ARR 설정 해주기
 	// TIM5->PSC = (unsigned int)(TIMXCLK / TIM5_FREQ + 0.5) - 1;
 	TIM5->PSC = 0;
@@ -135,7 +135,10 @@ void TIM5_Out_Init(void)
 	Macro_Set_Bit(TIM5->EGR, 0);
 	
 	// 몇 번 채널 사용할 것인지 지정 >> PA0, PA1 >> 2개
-	Macro_Write_Block(TIM5->CCMR1, 0xffff, 0x6060, 0);	// 1번, 2번 채널 담당
+	// 0x68 = OCxM(110, PWM mode 1) + OCxPE(bit3, preload enable)
+	// OCxPE=1 : CCR 쓰기가 섀도우에 대기 → 다음 UEV(주기 경계)에 반영
+	//           → 주기 중간 변경으로 생기는 기형 펄스 방지 + CCR1/CCR2 원자적 갱신
+	Macro_Write_Block(TIM5->CCMR1, 0xffff, 0x6868, 0);	// 1번, 2번 채널 담당
 	// PWM 활성화 포트
 	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 0);
 	Macro_Write_Block(TIM5->CCER, 0x3, 0x1, 4);

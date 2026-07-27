@@ -44,8 +44,7 @@ void Main(void)
 	Key_ISR_Enable(1);
 	
 	// TODO
-	// 1. TIM3으로 방향 바뀔때 500ms 멈추도록 하기
-	// 2. USART 적용하기
+	// 1. USART 적용하기
 
 	for(;;)
 	{

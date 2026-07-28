@@ -1,5 +1,7 @@
 # Tool information
 TOOL_DIR		= C:\arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi
+CUBE_DIR		= C:\Program Files\STMicroelectronics\STM32Cube\STM32CubeProgrammer\bin
+GIT_DIR			= C:\Program Files\Git\usr\bin
 VERSION			= 15.2.1
 TARGET			= arm-none-eabi
 
@@ -26,6 +28,7 @@ CC				= "$(TOOL_DIR)/bin/$(TARGET)-gcc"
 LD 				= "$(TOOL_DIR)/bin/$(TARGET)-ld"
 OBJCOPY			= "$(TOOL_DIR)/bin/$(TARGET)-objcopy"
 OBJDUMP			= "$(TOOL_DIR)/bin/$(TARGET)-objdump"
+RM				= "$(GIT_DIR)/rm.exe" -f
 
 # Source & Header File 
 CSRC 			= $(wildcard *.c)
@@ -54,11 +57,11 @@ $(OBJS): $(ASRC) $(CSRC) $(HEADER)
 	$(CC) $(ASRC) $(CSRC) $(INCLUDE) $(CFLAGS) 
 
 clean :
-	rm -f $(OUT_BIN_FILE)
-	rm -f $(OUT_ELF_FILE)
-	rm -f $(OUT_MAP_FILE)
-	rm -f $(OBJS)
-	rm -f $(DUMP)
+	$(RM) $(OUT_BIN_FILE)
+	$(RM) $(OUT_ELF_FILE)
+	$(RM) $(OUT_MAP_FILE)
+	$(RM) $(OBJS)
+	$(RM) $(DUMP)
 
 run: # for STM32CubeProgrammer
-	STM32_Programmer_CLI.exe -c port=SWD -w ./rom_0x08000000.elf -v -rst -q	
+	"$(CUBE_DIR)/STM32_Programmer_CLI.exe" -c port=SWD -w ./rom_0x08000000.elf -v -rst -q

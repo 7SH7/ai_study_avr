@@ -56,9 +56,9 @@ void TIM3_IRQHandler(void)
 		// 넣고
 		TIM3->CCR2 = lookup_table[lookup_table_idx++];
 	} else {
-		// 끝
+		// 끝  
 		lookup_table_idx = 0;
-		check_flag++;			// [진단용] 프레임 완료 카운트
+		check_flag = 1;
 	}
 }
 

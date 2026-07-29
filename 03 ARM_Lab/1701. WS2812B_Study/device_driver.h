@@ -59,5 +59,5 @@ extern void TIM3_Out_Stop(void);
 // ---------
 #define LED_COUNT (4)
 #define BIT_COUNT (24 * LED_COUNT)
-#define RES_PERIOD (50)					// 1.25 * 50 = 62.5 >= 50 --> ㄱㅊ
+#define RES_PERIOD (240)				// 1.25us * 240 = 300us >= 280us (WS2812B-V5 요구치. 구형 50us도 당연히 만족)
 #define LOOKUP_TABLE_SIZE (BIT_COUNT + RES_PERIOD)		// 전체 TABLE 크기

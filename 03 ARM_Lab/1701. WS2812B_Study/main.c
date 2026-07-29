@@ -17,105 +17,8 @@ volatile unsigned char Uart_Data = 0;
 volatile int TIM4_Expired = 0;
 volatile int TIM3_Expired = 0;
 
-// PB0, AF02 (TIM3_CH3)
 
-#define TIM3_FRAG 	(800000.0)
-#define TIM3_TICK	(unsigned int)((TIMXCLK) / TIM3_FRAG + 0.5)
-#define TIM3_PLS_OF_1ms (TIM3_TICK / 1000.) 
-
-unsigned int lookup_table[LOOKUP_TABLE_SIZE];
-volatile unsigned int lookup_table_idx = 0;
-volatile int check_flag = 0;
-
-void make_lookup_table(void)
-{
-    // 다운카운트 + CC3P=1: 실제 HIGH시간 = ARR - CCR
-    // 그러므로 CCR = ARR * (1 - 목표duty)
-    unsigned int T0H = (unsigned int)(TIM3_TICK * (1.0 - 0.32)); // = TICK*0.68
-    unsigned int T1H = (unsigned int)(TIM3_TICK * (1.0 - 0.68)); // = TICK*0.32
-    int idx = 0;
-
-    for (int led = 0; led < 4; led++)
-    {
-        for (int bit = 0; bit < 24; bit++)
-        {
-            lookup_table[idx++] = T1H;  // 전부 "1"(흰색) 의도
-        }
-    }
-
-    for (int i = 0; i < RES_PERIOD; i++)
-    {
-        // RES: LOW 유지 → CCR을 최대(ARR)에 가깝게
-        lookup_table[idx++] = TIM3_TICK - 1;
-    }
-
-    for (int i = 0; i < LOOKUP_TABLE_SIZE; i++)
-    {
-        printf("%u\r\n", lookup_table[i]);
-    }
-}
-
-void init_button(void)
-{
-	Macro_Set_Bit(RCC->AHB1ENR, 1);            // GPIOBEN (PA=0 → PB=1)
-	Macro_Write_Block(GPIOB->MODER, 0x3, 0x1, 0);  // pin0, Output
-	Macro_Write_Block(GPIOB->ODR, 0x1, 0x0, 0);    // pin0 Low
-}
-
-void TIM3_PWM_Generator(int en, double duty)	
-{
-	if(en)
-	{
-		Macro_Set_Bit(RCC->APB1ENR, 1);   // TIM3EN (동일)
-		Macro_Set_Bit(RCC->AHB1ENR, 1);   // GPIOBEN (PA=0 → PB=1)
-		
-		Macro_Write_Block(GPIOB->MODER, 0x3, 0x2, 0);  // pin0, AF모드
-		Macro_Write_Block(GPIOB->AFR[0], 0xf, 0x2, 0); // pin0 → AFRL, position 0, AF02
-		
-		TIM3->CR1 = (0x0 << 7) | (0x1 << 4) | (0x0 << 3) | (0x0 << 0); // DIR=1(다운카운트) 유지
-		
-		TIM3->ARR =	TIM3_TICK - 1;	// 120분주	
-		TIM3->PSC = 0;
-		
-		// CH3용 레지스터: CCMR1(CH1/2) 대신 CCMR2(CH3/4) 사용
-		// OC3M(bit6:4)=110, OC3PE(bit3)=1, OC3FE(bit2)=0, CC3S(bit1:0)=00
-		TIM3->CCMR2 = (0x6 << 4) | (0x1 << 3) | (0x0 << 2) | (0x0 << 0);
-		
-		// CC3E(bit8)=1, CC3P(bit9)=1 (반전, 기존 CC2P=1과 동일 의미)
-		TIM3->CCER  = (0x1 << 9) | (0x1 << 8);
-
-		lookup_table_idx = 0;
-		TIM3->CCR3 = lookup_table[lookup_table_idx++]; // table[0] → preload, shadow로 강제 로드
-		Macro_Set_Bit(TIM3->EGR, 0);                    // UG: 강제 update
-
-		TIM3->CCR3 = lookup_table[lookup_table_idx++]; // table[1] 미리 preload (경합 방지)
-
-		Macro_Clear_Bit(TIM3->SR, 0);
-		NVIC_ClearPendingIRQ(29);
-
-		Macro_Set_Bit(TIM3->DIER, 0);
-		NVIC_EnableIRQ(29);
-
-		Macro_Set_Bit(TIM3->CR1, 0);
-	} else {
-		init_button();
-
-		NVIC_DisableIRQ(29);
-		Macro_Clear_Bit(TIM3->CR1, 0);
-		Macro_Clear_Bit(TIM3->DIER, 0);
-	}
-}
-
-void Main(void)
-{
-	init_button();
-	make_lookup_table();
-	TIM3_PWM_Generator(1, 0);
-
-	while(1);
-}
-
-#if 0
+#if 1
 // PA7, AF02 (TIM3_CH2)
 
 #define TIM3_FRAG 	(800000.0)
@@ -173,32 +76,47 @@ volatile int check_flag = 0;	// check.. > 차후 사용..
 //     }
 // }
 
+// 다운카운트 + CC2P=1 이므로 실제 HIGH 시간(틱) = ARR - CCR
+// => CCR = ARR - 원하는 HIGH 틱수
+//
+// 구형 WS2812B와 WS2812B-V5의 스펙 교집합을 노린 값:
+//   T0H : 구형 250~550ns / V5 220~380ns  => 교집합 250~380ns  -> 32틱 = 333ns
+//   T1H : 구형 650~950ns / V5 580~1000ns => 교집합 650~950ns  -> 77틱 = 802ns
+#define T0H_TICKS	(32)						// 32 / 96MHz = 333ns
+#define T1H_TICKS	(77)						// 77 / 96MHz = 802ns
+
+#define T0H_CCR		(TIM3_TICK - 1 - T0H_TICKS)	// 119 - 32 = 87
+#define T1H_CCR		(TIM3_TICK - 1 - T1H_TICKS)	// 119 - 77 = 42
+#define RES_CCR		(TIM3_TICK - 1)				// 119 -> HIGH 0틱 (LOW 유지)
+
+// WS2812B 프로토콜: G → R → B 순서, 각 바이트 MSB first
+static void set_led_color(int led, unsigned char r, unsigned char g, unsigned char b)
+{
+	unsigned int grb  = ((unsigned int)g << 16) | ((unsigned int)r << 8) | (unsigned int)b;
+	unsigned int base = led * 24;
+
+	for(int bit = 0 ; bit < 24 ; bit++)
+	{
+		// bit0 = grb의 MSB(bit23)부터 전송
+		lookup_table[base + bit] = (grb & (0x800000u >> bit)) ? T1H_CCR : T0H_CCR;
+	}
+}
+
 void make_lookup_table(void)
 {
-    // 다운카운트 + CC2P=1: 실제 HIGH시간 = ARR - CCR
-    // 그러므로 CCR = ARR * (1 - 목표duty)
-    unsigned int T0H = (unsigned int)(TIM3_TICK * (1.0 - 0.32)); // = TICK*0.68
-    unsigned int T1H = (unsigned int)(TIM3_TICK * (1.0 - 0.68)); // = TICK*0.32
-    int idx = 0;
+	// [진단용] 빨강만, 아주 어둡게.
+	//   - 흰색 풀밝기(0xFF,0xFF,0xFF)는 LED당 약 60mA → 4개면 240mA라 USB 전원이 못 버틴다.
+	//   - 3.3V 구동 시 파랑(Vf 약 3.0~3.2V)은 거의 안 켜지지만 빨강(Vf 약 2.0V)은 켜진다.
+	//   => 전원/레벨 문제를 배제하기에 가장 유리한 조합.
+	for(int led = 0 ; led < LED_COUNT ; led++)
+	{
+		set_led_color(led, 0x20, 0x00, 0x00);
+	}
 
-    for (int led = 0; led < 4; led++)
-    {
-        for (int bit = 0; bit < 24; bit++)
-        {
-            lookup_table[idx++] = T1H;  // 전부 "1"(흰색) 의도 → 반전된 T1H 사용
-        }
-    }
-
-    for (int i = 0; i < RES_PERIOD; i++)
-    {
-        // RES: LOW를 유지해야 하므로 CCR을 최대(ARR)에 가깝게
-        lookup_table[idx++] = TIM3_TICK - 1;
-    }
-
-    for (int i = 0; i < LOOKUP_TABLE_SIZE; i++)
-    {
-        printf("%u\r\n", lookup_table[i]);
-    }
+	for(int i = 0 ; i < RES_PERIOD ; i++)
+	{
+		lookup_table[BIT_COUNT + i] = RES_CCR;
+	}
 }
 
 
@@ -219,7 +137,8 @@ void TIM3_PWM_Generator(int en, double duty)
 		
 		Macro_Write_Block(GPIOA->MODER, 0x3, 0x2, 14);
 		Macro_Write_Block(GPIOA->AFR[0], 0xf, 0x2, 28);
-		
+		Macro_Write_Block(GPIOA->OSPEEDR, 0x3, 0x3, 14);	// PA7 High speed: T0H 400ns 에지 확보 (리셋값 00 = Low는 너무 느림)
+
 		TIM3->CR1 = (0x0 << 7) | (0x1 << 4) | (0x0 << 3) | (0x0 << 0);
 		
 		#pragma region 설명
@@ -241,12 +160,15 @@ void TIM3_PWM_Generator(int en, double duty)
 		TIM3->CCMR1 = (0x0 << 15) | (0x6 << 12) | (0x1 << 11) | (0x0 << 10) | (0x0 << 8);
         TIM3->CCER  = (0x1 << 5) | (0x1 << 4);
 
-		// check 필요
-		lookup_table_idx = 1; 
-		TIM3->CCR2 = lookup_table[0];
-		
-		// 적용
+		// OC2PE=1이라 CCR2 쓰기는 preload로 들어가고, UEV 때 shadow로 넘어간다.
+		// 그래서 시작 전에 2개를 채워둬야 첫 비트가 중복 출력되지 않는다.
+		lookup_table_idx = 0;
+		TIM3->CCR2 = lookup_table[lookup_table_idx++];	// table[0] → preload
+
+		// 적용: UG로 preload(table[0])를 shadow에 강제 로드
 		Macro_Set_Bit(TIM3->EGR, 0);
+
+		TIM3->CCR2 = lookup_table[lookup_table_idx++];	// table[1] → preload (첫 UEV 때 shadow로)
 
 		// TIM3 Pending Clear
 		Macro_Clear_Bit(TIM3->SR, 0);
@@ -271,14 +193,28 @@ void TIM3_PWM_Generator(int en, double duty)
 
 void Main(void)
 {
+	Sys_Init(115200);
+	printf("\nWS2812B Start\n");
+
 	init_button();
 	make_lookup_table();
 	TIM3_PWM_Generator(1, 0);
 
-	// TIM3_PWM_Generator(0.68);
-	// TIM3_PWM_Generator(0.85);
+	// [진단용] 1초마다 완료된 프레임 수를 출력한다.
+	// 정상이면 약 2374 (= 96MHz / (337주기 x 120틱)).
+	//   0         → TIM3 인터럽트가 아예 안 걸림 (CCR2가 얼어붙어 데이터가 안 나감)
+	//   2374 근처 → 파형은 완벽. 문제는 MCU 바깥(레벨/배선/LED).
+	for(;;)
+	{
+		unsigned int f;
 
-	while(1);
+		LED_On();	TIM2_Delay(500);
+		LED_Off();	TIM2_Delay(500);
+
+		f = (unsigned int)check_flag;
+		check_flag = 0;
+		printf("frames/sec = %u\n", f);
+	}
 }
 
 #endif

@@ -83,13 +83,17 @@ ISR(INT4_vect){                       // 왼쪽 센서 에코
 
 ### 4.2 회피 판단 + 방향 유지(hold)
 ```c
-if (hold_count > 0) { hold_count--; return; }              // 회전/후진을 일정 시간 유지
-if      (dist_c < 15) { car_direction = CAR_BACK;  hold_count = 60; }
-else if (dist_l < 16) { car_direction = CAR_RIGHT; hold_count = 30; }
-else if (dist_r < 14) { car_direction = CAR_LEFT;  hold_count = 30; }
-else                    car_direction = CAR_FORWARD;
+#define HOLD_CYCLES_BACK  60
+#define HOLD_CYCLES_TURN  30
+
+if (hold_count > 0) { hold_count--; return; }                          // 이전 방향 유지
+if      (ultrasonic_distance_c < 15) { car_direction = CAR_BACK;  hold_count = HOLD_CYCLES_BACK; }
+else if (ultrasonic_distance_l < 16) { car_direction = CAR_RIGHT; hold_count = HOLD_CYCLES_TURN; }
+else if (ultrasonic_distance_r < 14) { car_direction = CAR_LEFT;  hold_count = HOLD_CYCLES_TURN; }
+else                                   car_direction = CAR_FORWARD;
 ```
 → 센서값이 순간적으로 튀어도 방향이 떨리지 않도록 **최소 유지 사이클**을 둔 것이 포인트.
+후진(60)을 회전(30)보다 길게 준 것은, 정면 충돌 위험 시에는 충분히 빠져나온 뒤 재판단해야 하기 때문이다.
 
 ### 4.3 Timer1 고속 PWM 모터 제어
 - Fast PWM 모드 14, `ICR1 = 0x3FF`(TOP), 분주 64 → 주기 약 4 ms
@@ -106,8 +110,38 @@ else                    car_direction = CAR_FORWARD;
 
 > 세 건 모두 "되냐"가 아니라 **제한 자원에서 원인을 구조적으로 분석하고 대안을 택한** 사례.
 
-## 6. 요소 기술
-Polling vs Interrupt 역할 분리 · Bluetooth FHSS(625µs 채널 호핑) · PWM vs PAM 채택 근거.
+## 6. 설계 판단 근거
+
+> 갖다 쓴 모듈이라도 **원리를 설명할 수 있어야 한다**는 기준으로 정리한 항목들.
+
+### 6.1 Polling과 Interrupt의 역할 분리
+
+| 대상 | 방식 | 이유 |
+|---|---|---|
+| 초음파 에코 | **인터럽트** (INT4/5/6) | 에코 펄스는 **언제 올지 모르고 폭 자체가 데이터**다. 폴링으로 기다리면 그동안 주행 제어가 멈춘다 |
+| 버튼 입력 | **폴링** | 사람의 입력은 ms 단위로 늦어도 무방하다. 인터럽트를 쓸 이유가 없다 |
+| PWM 출력 | **하드웨어 타이머** | CPU 개입 없이 파형이 유지되어야 한다 |
+
+→ "인터럽트가 항상 좋다"가 아니라 **응답 지연이 문제가 되는 곳에만** 쓴다는 기준을 세웠다.
+
+### 6.2 PWM으로 속도를 제어한 이유 (vs 전압 가변)
+
+DC 모터 속도는 평균 전압으로 결정된다. 이를 만드는 방법은 두 가지다.
+
+| 방식 | 원리 | 채택 여부 |
+|---|---|---|
+| 아날로그 전압 가변 | 저항/DAC로 실제 전압을 낮춤 | ❌ MCU에 DAC가 없고, 강하시킨 전압만큼 **열로 소모**되어 효율이 나쁘다 |
+| **PWM** | 스위치를 빠르게 on/off해 **평균 전압**을 만듦 | ✅ 타이머 하드웨어로 생성 가능, H-브릿지는 완전 on/off만 하므로 **스위칭 손실이 작다** |
+
+Timer1 Fast PWM(모드 14), `ICR1 = 0x3FF`, 64분주 → 약 244 Hz(주기 4.1 ms).
+모터의 기계적 시정수보다 충분히 빠르므로 회전이 끊기지 않고 평균 토크로 동작한다.
+
+### 6.3 Bluetooth 모듈(HC-06)의 원리
+
+MCU 입장에서는 **UART 시리얼 그대로**다. 모듈이 2.4 GHz 무선 구간을 담당하고, 펌웨어는 `uart0`으로 문자를 주고받을 뿐이다.
+Bluetooth Classic은 **주파수 호핑 확산 대역(FHSS)** 으로 2.4 GHz 대역을 잘게 나눠 옮겨 다니며 통신해, Wi-Fi 등과의 간섭을 회피한다.
+
+> ⚠️ FHSS는 **모듈 내부 동작**이며 본 펌웨어가 구현한 것이 아니다. 모듈 선정·동작 이해 차원의 정리다.
 
 ## 7. 결과물
 - 🎥 시연 영상: Manual / Auto / FND (`3조_*.mp4`)
@@ -127,16 +161,6 @@ Polling vs Interrupt 역할 분리 · Bluetooth FHSS(625µs 채널 호핑) · PW
 - 데이터시트(핀맵·타이머·인터럽트 벡터) 근거로 레지스터 직접 설정
 - 자료형 overflow·핀 자원 충돌 등 **하드웨어 제약을 코드로 방어**
 
-## 10. 면접 예상 질문 & 답변 포인트 (코드 근거)
+---
 
-> 제어쟁이가 강조한 "면접관은 설계 이유·디버깅을 묻는다"에 맞춰, 실제 코드 근거로 정리.
-
-| 질문 | 답변 포인트 (근거) |
-|------|-------------------|
-| 초음파를 왜 인터럽트로 처리했나? polling과 차이는? | `_delay`로 에코를 기다리면 그동안 주행 루프가 멈춘다. INT4/5/6 외부인터럽트 + Timer3로 에코 펄스폭만 측정 → **논블로킹**. ISR은 "에지 시각 기록 / 거리 환산"만(짧게 유지). |
-| 초음파 3개가 서로 간섭하지 않게 한 방법은? | 동시에 쏘면 에코가 섞인다 → `distance_check` 상태머신으로 **순차 트리거**, 이전 센서 완료 flag 확인 후 다음 트리거. |
-| 직진↔후진이 주기적으로 반복된 버그, 원인과 해결은? | 시간 측정 변수를 `int`로 선언 → µs 누적값이 자료형 범위를 넘어 **overflow로 음수화** → 직진 조건에서도 후진. `uint32_t`로 변경해 해결. (자료형 범위) |
-| UART1 대신 UART0를 쓴 이유는? | UART1 핀(PD2/PD3)이 FND 제어 핀과 **하드웨어 충돌**(데이터시트 핀맵 확인) → UART0로 전환, 업로드/동작 결선 절차 분리. |
-| 모드 전환을 왜 함수 포인터 배열로? | `if/else` 나열 대신 `fp_mode[func_state]()` → 모드 추가가 배열 확장으로 끝나는 **확장 구조**. |
-| 회피 방향이 흔들리지 않게 한 방법은? | 센서값이 순간적으로 튀어도 `hold_count` **최소 유지 사이클**로 회전/후진을 일정 시간 유지. |
-| PWM으로 방향·속도를 어떻게 제어했나? | Timer1 Fast PWM(모드14, ICR1=0x3FF), `OC1A/OC1B` 듀티=속도, `PORTF0~3`(H-브릿지 IN1~4)=방향, 좌우 듀티차로 회전. |
+> 📝 면접 대비 예상 질문과 답변은 [`INTERVIEW_NOTES.md`](INTERVIEW_NOTES.md)로 분리했다.

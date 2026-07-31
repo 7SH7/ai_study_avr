@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32 Debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "device": "STM32F411RE", // 본인 칩 모델명에 맞게 수정
+            "executable": "build/你的프로젝트이름.elf", // 빌드된 elf 파일 경로
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            "runToMain": true
+        }
+    ]
+}

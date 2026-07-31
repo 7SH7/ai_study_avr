@@ -56,8 +56,16 @@ extern void TIM3_Out_Init(void);
 extern void TIM3_Out_Freq_Generation(unsigned short freq);
 extern void TIM3_Out_Stop(void);
 
+// WS2812B (TIM3_CH2 PWM + DMA1 Stream2/Channel5)
+// WS2812B 전송 시작/정지 함수와 DMA 결과 확인용 플래그
+extern void WS2812_DMA_Start(void);
+extern void WS2812_DMA_Stop(void);
+extern volatile int WS2812_DMA_Done;
+extern volatile int WS2812_DMA_Error;
+
 // ---------
 #define LED_COUNT (4)
 #define BIT_COUNT (24 * LED_COUNT)
-#define RES_PERIOD (240)				// 1.25us * 240 = 300us >= 280us (WS2812B-V5 요구치. 구형 50us도 당연히 만족)
-#define LOOKUP_TABLE_SIZE (BIT_COUNT + RES_PERIOD)		// 전체 TABLE 크기
+#define RES_PERIOD (242)                // 240 complete LOW slots (300us) + 2 DMA pipeline guard slots
+                                        // 실제 LOW 240주기와 CCR preload/DMA 완료 시점 보정용 2주기
+#define LOOKUP_TABLE_SIZE (BIT_COUNT + RES_PERIOD)

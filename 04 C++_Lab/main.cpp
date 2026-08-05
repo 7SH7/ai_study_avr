@@ -440,6 +440,11 @@ int f3(myT x, int y)
 	return x + y;
 }
 
+template<typename T1, typename T2>
+auto f4(T1 x, T2 y){
+	return x*y;
+}
+
 int main()
 {
 	cout << f1(10, 20) << endl;
@@ -450,6 +455,8 @@ int main()
 
 	cout << f3<int>(10, 20) << endl;
 	cout << f3<double>(3.14, 30) << endl;
+
+	cout << f4<double, int>(3.14, 30) << endl;
 
 	return 0;
 }
@@ -857,7 +864,8 @@ void mart_calc::buy(int price)
 void mart_calc::change_tax(double tax)
 {
 	// class의 private 변수 tax를 전달 받은 값으로 변경
-
+	// mart_calc::tax = tax;
+	this->tax = tax;
 }
 
 int main(void)
@@ -1045,6 +1053,10 @@ public:
 };
 
 // member function buy 설계
+void mart_calc::buy(int price, double tax){
+	this->total += price * (1 + tax);
+	
+}
 
 int main(void)
 {
@@ -1144,7 +1156,7 @@ public:
 int main(void)
 {
 	buf x;
-	buf y();
+	// buf y();		// 이렇게 하면 문제
 	buf z(10);
 
 	x.wr_buf(3, 100);
@@ -1183,7 +1195,7 @@ public:
 
 int main(void)
 {
-	buf x();
+	buf x;
 	buf y;
 	buf z(10);
 
@@ -1295,6 +1307,11 @@ int main(void)
 	cout << (*z).p[3] << endl;
 
 	delete z;
+
+	cout << x.p[3] << endl;
+	cout << y[1].p[3] << endl;
+	cout << z->p[2] << endl;
+	cout << (*z).p[3] << endl;
 
 	return 0;
 }
@@ -1515,10 +1532,8 @@ public:
 	const int age;
 	const char * name;
 
-	student(int a, const char * n)
+	student(int a, const char * n): age(a), name(n)
 	{
-		age = a;
-		name = n;
 	}
 };
 
@@ -1587,7 +1602,7 @@ public:
 
 	student(int a) : age(a) {}
 
-	int func()
+	int func()	// 여기에 const를 붙이면 문법적으로 가능하도록 허용
 	{
 		cout << age << endl;
 		return age;
@@ -1645,11 +1660,12 @@ int main(void)
 // [2-23] Class에서 Type Template 사용
 /***********************************************************/
 
-#if 0
+#if 00
 #include <iostream>
 using namespace std;
 
-template <typename T> class mart_calc
+template <typename T> 
+class mart_calc
 {
 public:
 	double total = 0;
@@ -1912,21 +1928,21 @@ public:
 int main()
 {
 	B x;
-	cout << x.a << endl;
-	cout << x.b << endl;
-	cout << x.c << endl;
+	cout << x.a << endl;	// public
+	cout << x.b << endl;	// protected
+	cout << x.c << endl;	// private
 	x.f();
 
 	C y;
-	cout << y.a << endl;
-	cout << y.b << endl;
-	cout << y.c << endl;
+	cout << y.a << endl;	// protected
+	cout << y.b << endl;	// protected
+	cout << y.c << endl;	// private
 	y.f();
 
 	D z;
-	cout << z.a << endl;
-	cout << z.b << endl;
-	cout << z.c << endl;
+	cout << z.a << endl;	// private
+	cout << z.b << endl;	// private
+	cout << z.c << endl;	// private
 	z.f();
 
 	return 0;
@@ -1939,7 +1955,7 @@ int main()
 
 #if 0
 #include <iostream>
-using namespace std;
+using namespace std;	
 
 class A
 {
@@ -1962,7 +1978,7 @@ class B
 public:
 
 	void g()
-	{
+	{	
 		A x;
 		x.a = 40;
 		x.f();
@@ -2511,7 +2527,7 @@ int main()
 	x.B1::b = 20;
 	x.B2::b = 30;
 	
-	x.a = -10;
+	// x.a = -10;	// x.{B1 / B2}::a 로 호출해야함. >> 현재는 B1의 a인지 B2의 a인지 불명확해서 에러
 
 	x.B1::a = 40;
 	x.B2::a = 50;

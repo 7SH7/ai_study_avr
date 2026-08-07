@@ -97,6 +97,9 @@ QGroupBox::title {
      <property name="text">
       <string>C</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">buttonGroup</string>
+     </attribute>
     </widget>
     <widget class="QCheckBox" name="chkCpp">
      <property name="geometry">
@@ -110,6 +113,9 @@ QGroupBox::title {
      <property name="text">
       <string>C++</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">buttonGroup</string>
+     </attribute>
     </widget>
     <widget class="QCheckBox" name="chkJava">
      <property name="geometry">
@@ -123,6 +129,9 @@ QGroupBox::title {
      <property name="text">
       <string>Java</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">buttonGroup</string>
+     </attribute>
     </widget>
     <widget class="QCheckBox" name="chkPython">
      <property name="geometry">
@@ -136,6 +145,9 @@ QGroupBox::title {
      <property name="text">
       <string>Python</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">buttonGroup</string>
+     </attribute>
     </widget>
     <widget class="QLabel" name="lblMsg">
      <property name="geometry">
@@ -158,7 +170,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -166,4 +178,11 @@ QGroupBox::title {
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
+ </buttongroups>
 </ui>

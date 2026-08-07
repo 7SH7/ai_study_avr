@@ -39,3 +39,19 @@ void MainWindow::ChangeState()
     ui->lblState->setText(name[isState]);
 
 }
+
+#if 0 // 강사님 코드
+
+void MainWindow::on_btnPush_clicked()
+{
+    static int cnt = 0;
+    static QStringList color = {"green", "blue", "red"};
+    // arg(값, 전체자릿수, 진법, 채울문자)
+    // QString s2 = QString("HEX: 0x%1").arg(10, 2, 16, QChar('0'));    // 예제
+    QString s = QString("background-color: %1").arg(color[cnt%3]);
+    ui->lblColor->setStyleSheet(s);
+    cnt++;
+}
+
+
+#endif

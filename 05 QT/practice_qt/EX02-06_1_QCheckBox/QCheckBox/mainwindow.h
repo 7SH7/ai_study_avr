@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QDebug>
+#include <QCheckBox>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,13 +17,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void process_stateChanged(void);
+    void process_stateChanged(int checked, QCheckBox *chk);
 
 private slots:
     void on_chkTri_stateChanged(int arg1);
 
     void on_chkTri_toggled(bool checked);
 
+    void Use_Lang(QAbstractButton *chk, bool checked);
+
+#if 0   // false set for third ver
     void on_chkC_stateChanged(int arg1);
 
     void on_chkCpp_stateChanged(int arg1);
@@ -29,7 +34,7 @@ private slots:
     void on_chkJava_stateChanged(int arg1);
 
     void on_chkPython_stateChanged(int arg1);
-
+#endif
 private:
     Ui::MainWindow *ui;
 };

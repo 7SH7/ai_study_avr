@@ -6,6 +6,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->chkC, &QCheckBox::clicked, this, &MainWindow::process_stateChanged);
+    connect(ui->chkCpp, &QCheckBox::clicked, this, &MainWindow::process_stateChanged);
+    connect(ui->chkJava, &QCheckBox::toggled, this, this->MainWindow::process_stateChanged);
+    connect(ui->chkPython, &QCheckBox::stateChanged, this, this->MainWindow::process_stateChanged);
 }
 
 MainWindow::~MainWindow()
@@ -53,26 +58,26 @@ void MainWindow::process_stateChanged(void)
     ui->lblMsg->setText(msg);
 }
 
-void MainWindow::on_chkC_stateChanged(int arg1)
-{
-    process_stateChanged();
-}
+// void MainWindow::on_chkC_stateChanged(int arg1)
+// {
+//     process_stateChanged();
+// }
 
 
-void MainWindow::on_chkCpp_stateChanged(int arg1)
-{
-    process_stateChanged();
-}
+// void MainWindow::on_chkCpp_stateChanged(int arg1)
+// {
+//     process_stateChanged();
+// }
 
 
-void MainWindow::on_chkJava_stateChanged(int arg1)
-{
-    process_stateChanged();
-}
+// void MainWindow::on_chkJava_stateChanged(int arg1)
+// {
+//     process_stateChanged();
+// }
 
 
-void MainWindow::on_chkPython_stateChanged(int arg1)
-{
-    process_stateChanged();
-}
+// void MainWindow::on_chkPython_stateChanged(int arg1)
+// {
+//     process_stateChanged();
+// }
 

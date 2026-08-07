@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    connect(ui->buttonGroup, QButtonGroup::buttonClicked, this, this->MainWindow::addValToList);
+
     Eval eval;
     QString expr = "12+34";
     double res = eval.Evaluate(expr.toStdString());
@@ -22,113 +24,121 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::addValToList()
+{
+    QStringList lst;
+
+}
 
 void MainWindow::on_btnEqual_clicked()
 {
 
 }
 
+#pragma region 사용안함 {
 
-void MainWindow::on_btn0_clicked()
-{
+// void MainWindow::on_btn0_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btn1_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btn2_clicked()
-{
+// void MainWindow::on_btn1_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btn3_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btn4_clicked()
-{
+// void MainWindow::on_btn2_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btn5_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btn6_clicked()
-{
+// void MainWindow::on_btn3_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btn7_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btn8_clicked()
-{
+// void MainWindow::on_btn4_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btn9_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btnOpen_clicked()
-{
+// void MainWindow::on_btn5_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btnClose_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btnDiv_clicked()
-{
+// void MainWindow::on_btn6_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btnMul_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btnPlus_clicked()
-{
+// void MainWindow::on_btn7_clicked()
+// {
 
-}
-
-
-void MainWindow::on_btnMinus_clicked()
-{
-
-}
+// }
 
 
-void MainWindow::on_btnPoint_clicked()
-{
+// void MainWindow::on_btn8_clicked()
+// {
 
-}
+// }
+
+
+// void MainWindow::on_btn9_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnOpen_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnClose_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnDiv_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnMul_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnPlus_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnMinus_clicked()
+// {
+
+// }
+
+
+// void MainWindow::on_btnPoint_clicked()
+// {
+
+// }
+
+#pragma endregion 사용안함 }
 
 
 void MainWindow::on_btnBackspace_clicked()

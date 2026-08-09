@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QToolBox" name="tbGradeGender">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>131</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="page_1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>131</width>
+       <height>85</height>
+      </rect>
+     </property>
+     <attribute name="label">
+      <string>Grade</string>
+     </attribute>
+     <widget class="QRadioButton" name="tbRadioFirst">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>First</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="tbRedioSecond">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Second</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="tbRadioThird">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Third</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>131</width>
+       <height>85</height>
+      </rect>
+     </property>
+     <attribute name="label">
+      <string>Gender</string>
+     </attribute>
+     <widget class="QRadioButton" name="tbRadioMale">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Male</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="tbRadioFemale">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Female</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>10</y>
+      <width>191</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Grade</string>
+     </attribute>
+     <widget class="QRadioButton" name="twRadioFirst">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>First</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="twRadioSecond">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>35</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Second</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="twRadioThird">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Third</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Gender</string>
+     </attribute>
+     <widget class="QRadioButton" name="twRadioMale">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Male</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="twRadioFemale">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Female</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="lblMsg">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>351</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Message</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>19</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

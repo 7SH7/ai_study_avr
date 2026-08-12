@@ -33,6 +33,8 @@ private slots:
 
     void on_cboEditableTrue_editTextChanged(const QString &arg1);
 
+    void on_btnAct_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

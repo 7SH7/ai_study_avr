@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTime>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +17,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void applyBtn1();
+    void applyBtn2();
+    void check_btn();
+
 private:
     Ui::MainWindow *ui;
+    bool btn1_clicked = true;
+    bool btn2_clicked = false;
 };
 #endif // MAINWINDOW_H

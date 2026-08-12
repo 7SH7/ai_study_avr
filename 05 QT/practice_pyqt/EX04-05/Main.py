@@ -2,6 +2,7 @@ import sys ,subprocess
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
+# GUI 안정화 시, 삭제 가능
 GUI_FILE_NAME = 'gui'
 subprocess.run([
     sys.executable,          
@@ -23,3 +24,4 @@ if __name__ == '__main__':
     w = Form()
     w.show()
     sys.exit(app.exec_())
+3

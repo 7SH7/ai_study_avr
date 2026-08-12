@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -25,27 +26,28 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QLabel *lblResult;
+    QGridLayout *gridLayout;
     QPushButton *btnEqual;
-    QPushButton *btnMinus;
-    QPushButton *btnPoint;
-    QPushButton *btn0;
-    QPushButton *btnPlus;
-    QPushButton *btn2;
-    QPushButton *btn3;
-    QPushButton *btn1;
-    QPushButton *btnMul;
-    QPushButton *btn5;
-    QPushButton *btn4;
-    QPushButton *btn6;
-    QPushButton *btn9;
-    QPushButton *btnDiv;
-    QPushButton *btn8;
-    QPushButton *btn7;
     QPushButton *btnBackspace;
     QPushButton *btnOpen;
-    QPushButton *btnClose;
+    QPushButton *btn5;
     QPushButton *btnCancel;
+    QPushButton *btnClose;
+    QPushButton *btnDiv;
+    QPushButton *btn1;
+    QPushButton *btnMinus;
+    QPushButton *btnPoint;
+    QPushButton *btn8;
+    QPushButton *btnPlus;
+    QPushButton *btn0;
+    QPushButton *btn9;
+    QPushButton *btn3;
+    QPushButton *btn4;
+    QPushButton *btn6;
+    QPushButton *btn2;
+    QPushButton *btn7;
+    QPushButton *btnMul;
+    QLabel *lblResult;
     QMenuBar *menubar;
     QStatusBar *statusbar;
     QButtonGroup *buttonGroup;
@@ -57,14 +59,10 @@ public:
         MainWindow->resize(504, 271);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        lblResult = new QLabel(centralwidget);
-        lblResult->setObjectName(QString::fromUtf8("lblResult"));
-        lblResult->setGeometry(QRect(9, 9, 16, 19));
-        lblResult->setStyleSheet(QString::fromUtf8("font: 12pt \"Sans Serif\";"));
-        lblResult->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
+        gridLayout = new QGridLayout(centralwidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         btnEqual = new QPushButton(centralwidget);
         btnEqual->setObjectName(QString::fromUtf8("btnEqual"));
-        btnEqual->setGeometry(QRect(358, 57, 80, 22));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -73,90 +71,138 @@ public:
         btnEqual->setMinimumSize(QSize(0, 0));
         btnEqual->setMaximumSize(QSize(1000, 1000));
         btnEqual->setStyleSheet(QString::fromUtf8(""));
-        btnMinus = new QPushButton(centralwidget);
+
+        gridLayout->addWidget(btnEqual, 1, 4, 5, 1);
+
+        btnBackspace = new QPushButton(centralwidget);
+        btnBackspace->setObjectName(QString::fromUtf8("btnBackspace"));
+        btnBackspace->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnBackspace, 1, 0, 1, 1);
+
+        btnOpen = new QPushButton(centralwidget);
         buttonGroup = new QButtonGroup(MainWindow);
         buttonGroup->setObjectName(QString::fromUtf8("buttonGroup"));
-        buttonGroup->addButton(btnMinus);
-        btnMinus->setObjectName(QString::fromUtf8("btnMinus"));
-        btnMinus->setGeometry(QRect(184, 179, 80, 22));
-        btnMinus->setStyleSheet(QString::fromUtf8(""));
-        btnPoint = new QPushButton(centralwidget);
-        buttonGroup->addButton(btnPoint);
-        btnPoint->setObjectName(QString::fromUtf8("btnPoint"));
-        btnPoint->setGeometry(QRect(98, 179, 80, 22));
-        btn0 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn0);
-        btn0->setObjectName(QString::fromUtf8("btn0"));
-        btn0->setGeometry(QRect(12, 179, 80, 22));
-        btnPlus = new QPushButton(centralwidget);
-        buttonGroup->addButton(btnPlus);
-        btnPlus->setObjectName(QString::fromUtf8("btnPlus"));
-        btnPlus->setGeometry(QRect(270, 149, 80, 22));
-        btnPlus->setStyleSheet(QString::fromUtf8(""));
-        btn2 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn2);
-        btn2->setObjectName(QString::fromUtf8("btn2"));
-        btn2->setGeometry(QRect(98, 149, 80, 22));
-        btn3 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn3);
-        btn3->setObjectName(QString::fromUtf8("btn3"));
-        btn3->setGeometry(QRect(184, 149, 80, 22));
-        btn1 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn1);
-        btn1->setObjectName(QString::fromUtf8("btn1"));
-        btn1->setGeometry(QRect(12, 149, 80, 22));
-        btnMul = new QPushButton(centralwidget);
-        buttonGroup->addButton(btnMul);
-        btnMul->setObjectName(QString::fromUtf8("btnMul"));
-        btnMul->setGeometry(QRect(270, 119, 80, 22));
-        btnMul->setStyleSheet(QString::fromUtf8(""));
+        buttonGroup->addButton(btnOpen);
+        btnOpen->setObjectName(QString::fromUtf8("btnOpen"));
+        btnOpen->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnOpen, 1, 2, 1, 1);
+
         btn5 = new QPushButton(centralwidget);
         buttonGroup->addButton(btn5);
         btn5->setObjectName(QString::fromUtf8("btn5"));
-        btn5->setGeometry(QRect(98, 119, 80, 22));
-        btn4 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn4);
-        btn4->setObjectName(QString::fromUtf8("btn4"));
-        btn4->setGeometry(QRect(12, 119, 80, 22));
-        btn6 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn6);
-        btn6->setObjectName(QString::fromUtf8("btn6"));
-        btn6->setGeometry(QRect(184, 119, 80, 22));
-        btn9 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn9);
-        btn9->setObjectName(QString::fromUtf8("btn9"));
-        btn9->setGeometry(QRect(184, 89, 80, 22));
-        btnDiv = new QPushButton(centralwidget);
-        buttonGroup->addButton(btnDiv);
-        btnDiv->setObjectName(QString::fromUtf8("btnDiv"));
-        btnDiv->setGeometry(QRect(270, 89, 80, 22));
-        btnDiv->setStyleSheet(QString::fromUtf8(""));
-        btn8 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn8);
-        btn8->setObjectName(QString::fromUtf8("btn8"));
-        btn8->setGeometry(QRect(98, 89, 80, 22));
-        btn7 = new QPushButton(centralwidget);
-        buttonGroup->addButton(btn7);
-        btn7->setObjectName(QString::fromUtf8("btn7"));
-        btn7->setGeometry(QRect(12, 89, 80, 22));
-        btnBackspace = new QPushButton(centralwidget);
-        btnBackspace->setObjectName(QString::fromUtf8("btnBackspace"));
-        btnBackspace->setGeometry(QRect(12, 59, 80, 22));
-        btnBackspace->setStyleSheet(QString::fromUtf8(""));
-        btnOpen = new QPushButton(centralwidget);
-        buttonGroup->addButton(btnOpen);
-        btnOpen->setObjectName(QString::fromUtf8("btnOpen"));
-        btnOpen->setGeometry(QRect(184, 59, 80, 22));
-        btnOpen->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btn5, 3, 1, 1, 1);
+
+        btnCancel = new QPushButton(centralwidget);
+        btnCancel->setObjectName(QString::fromUtf8("btnCancel"));
+        btnCancel->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnCancel, 1, 1, 1, 1);
+
         btnClose = new QPushButton(centralwidget);
         buttonGroup->addButton(btnClose);
         btnClose->setObjectName(QString::fromUtf8("btnClose"));
-        btnClose->setGeometry(QRect(270, 59, 80, 22));
         btnClose->setStyleSheet(QString::fromUtf8(""));
-        btnCancel = new QPushButton(centralwidget);
-        btnCancel->setObjectName(QString::fromUtf8("btnCancel"));
-        btnCancel->setGeometry(QRect(98, 59, 80, 22));
-        btnCancel->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnClose, 1, 3, 1, 1);
+
+        btnDiv = new QPushButton(centralwidget);
+        buttonGroup->addButton(btnDiv);
+        btnDiv->setObjectName(QString::fromUtf8("btnDiv"));
+        btnDiv->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnDiv, 2, 3, 1, 1);
+
+        btn1 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn1);
+        btn1->setObjectName(QString::fromUtf8("btn1"));
+
+        gridLayout->addWidget(btn1, 4, 0, 1, 1);
+
+        btnMinus = new QPushButton(centralwidget);
+        buttonGroup->addButton(btnMinus);
+        btnMinus->setObjectName(QString::fromUtf8("btnMinus"));
+        btnMinus->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnMinus, 5, 3, 1, 1);
+
+        btnPoint = new QPushButton(centralwidget);
+        buttonGroup->addButton(btnPoint);
+        btnPoint->setObjectName(QString::fromUtf8("btnPoint"));
+
+        gridLayout->addWidget(btnPoint, 5, 2, 1, 1);
+
+        btn8 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn8);
+        btn8->setObjectName(QString::fromUtf8("btn8"));
+
+        gridLayout->addWidget(btn8, 2, 1, 1, 1);
+
+        btnPlus = new QPushButton(centralwidget);
+        buttonGroup->addButton(btnPlus);
+        btnPlus->setObjectName(QString::fromUtf8("btnPlus"));
+        btnPlus->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnPlus, 4, 3, 1, 1);
+
+        btn0 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn0);
+        btn0->setObjectName(QString::fromUtf8("btn0"));
+
+        gridLayout->addWidget(btn0, 5, 0, 1, 2);
+
+        btn9 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn9);
+        btn9->setObjectName(QString::fromUtf8("btn9"));
+
+        gridLayout->addWidget(btn9, 2, 2, 1, 1);
+
+        btn3 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn3);
+        btn3->setObjectName(QString::fromUtf8("btn3"));
+
+        gridLayout->addWidget(btn3, 4, 2, 1, 1);
+
+        btn4 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn4);
+        btn4->setObjectName(QString::fromUtf8("btn4"));
+
+        gridLayout->addWidget(btn4, 3, 0, 1, 1);
+
+        btn6 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn6);
+        btn6->setObjectName(QString::fromUtf8("btn6"));
+
+        gridLayout->addWidget(btn6, 3, 2, 1, 1);
+
+        btn2 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn2);
+        btn2->setObjectName(QString::fromUtf8("btn2"));
+
+        gridLayout->addWidget(btn2, 4, 1, 1, 1);
+
+        btn7 = new QPushButton(centralwidget);
+        buttonGroup->addButton(btn7);
+        btn7->setObjectName(QString::fromUtf8("btn7"));
+
+        gridLayout->addWidget(btn7, 2, 0, 1, 1);
+
+        btnMul = new QPushButton(centralwidget);
+        buttonGroup->addButton(btnMul);
+        btnMul->setObjectName(QString::fromUtf8("btnMul"));
+        btnMul->setStyleSheet(QString::fromUtf8(""));
+
+        gridLayout->addWidget(btnMul, 3, 3, 1, 1);
+
+        lblResult = new QLabel(centralwidget);
+        lblResult->setObjectName(QString::fromUtf8("lblResult"));
+        lblResult->setStyleSheet(QString::fromUtf8("font: 12pt \"Sans Serif\";"));
+        lblResult->setAlignment(Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter);
+
+        gridLayout->addWidget(lblResult, 0, 4, 1, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -174,27 +220,27 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        lblResult->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         btnEqual->setText(QCoreApplication::translate("MainWindow", "=", nullptr));
-        btnMinus->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
-        btnPoint->setText(QCoreApplication::translate("MainWindow", ".", nullptr));
-        btn0->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        btnPlus->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
-        btn2->setText(QCoreApplication::translate("MainWindow", "2", nullptr));
-        btn3->setText(QCoreApplication::translate("MainWindow", "3", nullptr));
-        btn1->setText(QCoreApplication::translate("MainWindow", "1", nullptr));
-        btnMul->setText(QCoreApplication::translate("MainWindow", "*", nullptr));
-        btn5->setText(QCoreApplication::translate("MainWindow", "5", nullptr));
-        btn4->setText(QCoreApplication::translate("MainWindow", "4", nullptr));
-        btn6->setText(QCoreApplication::translate("MainWindow", "6", nullptr));
-        btn9->setText(QCoreApplication::translate("MainWindow", "9", nullptr));
-        btnDiv->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
-        btn8->setText(QCoreApplication::translate("MainWindow", "8", nullptr));
-        btn7->setText(QCoreApplication::translate("MainWindow", "7", nullptr));
         btnBackspace->setText(QCoreApplication::translate("MainWindow", "<-", nullptr));
         btnOpen->setText(QCoreApplication::translate("MainWindow", "(", nullptr));
-        btnClose->setText(QCoreApplication::translate("MainWindow", ")", nullptr));
+        btn5->setText(QCoreApplication::translate("MainWindow", "5", nullptr));
         btnCancel->setText(QCoreApplication::translate("MainWindow", "C", nullptr));
+        btnClose->setText(QCoreApplication::translate("MainWindow", ")", nullptr));
+        btnDiv->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
+        btn1->setText(QCoreApplication::translate("MainWindow", "1", nullptr));
+        btnMinus->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
+        btnPoint->setText(QCoreApplication::translate("MainWindow", ".", nullptr));
+        btn8->setText(QCoreApplication::translate("MainWindow", "8", nullptr));
+        btnPlus->setText(QCoreApplication::translate("MainWindow", "+", nullptr));
+        btn0->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        btn9->setText(QCoreApplication::translate("MainWindow", "9", nullptr));
+        btn3->setText(QCoreApplication::translate("MainWindow", "3", nullptr));
+        btn4->setText(QCoreApplication::translate("MainWindow", "4", nullptr));
+        btn6->setText(QCoreApplication::translate("MainWindow", "6", nullptr));
+        btn2->setText(QCoreApplication::translate("MainWindow", "2", nullptr));
+        btn7->setText(QCoreApplication::translate("MainWindow", "7", nullptr));
+        btnMul->setText(QCoreApplication::translate("MainWindow", "*", nullptr));
+        lblResult->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
     } // retranslateUi
 
 };

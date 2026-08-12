@@ -16,8 +16,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnGetOpenFile_clicked()
 {
+    // 디렉토리 선택
+
+    // 1안) 풀더 딴만
+    // QString dir = QFileDialog::getExistingDirectory(this, "캡션", "C:/Users/kccistc/Desktop/ai_study_avr");
+    // qDebug() << dir;
+
+    // 2안) 파일 딴만
     QString filename = QFileDialog::getOpenFileName(
-                this, "Open File", "/home/willtek", "all (*.*);; text (*.txt)");
+        this, "Open File", "C:/Users/kccistc/Desktop/ai_study_avr", "all (*.*);; text (*.txt)");
     if(filename.isNull()) return;
     ui->lblOpenFileName->setText(filename);
 }
@@ -26,7 +33,7 @@ void MainWindow::on_btnGetOpenFile_clicked()
 void MainWindow::on_btnGetSaveFile_clicked()
 {
     QString filename = QFileDialog::getSaveFileName(
-                this, "Save File", "/home/willtek", "all (*.*);; text (*.txt)");
+                this, "Save File", "/home/", "all (*.*);; text (*.txt)");
     if(filename.isNull()) return;
     ui->lblSaveFileName->setText(filename);
 }

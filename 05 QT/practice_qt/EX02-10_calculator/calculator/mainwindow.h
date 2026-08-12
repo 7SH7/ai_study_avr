@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAbstractButton>
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE
@@ -19,7 +20,7 @@ public:
 private slots:
     void on_btnEqual_clicked();
 
-    void addValToList();
+    void make_String(QAbstractButton *btn);
 
 #pragma region 사용안함{
     // void on_btn0_clicked();
@@ -63,5 +64,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString expr;
 };
 #endif // MAINWINDOW_H

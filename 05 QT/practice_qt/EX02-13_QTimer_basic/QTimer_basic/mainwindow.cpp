@@ -6,9 +6,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QString str = QTime::currentTime().toString("HH:mm:ss");
+    ui->lblDigitClock->setText(str);
+    ui->lblRedLED->setStyleSheet("background-color: black");
+    ui->lblGreenLED->setStyleSheet("background-color: green");
+
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(timeTick()));
+//    connect(timer, SIGNAL(timeout()), this, SLOT(timeTick()));
+    connect(timer, &QTimer::timeout, this, &MainWindow::timeTick);
     timer->start(1000);
+
 }
 
 MainWindow::~MainWindow()

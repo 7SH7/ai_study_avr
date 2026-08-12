@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDebug>
+#include "mythread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,9 +15,15 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    void handle_command(int cmd);
     ~MainWindow();
+
+private slots:
+    void on_btnStart_clicked();
+    void on_btnStop_clicked();
 
 private:
     Ui::MainWindow *ui;
+    MyThread* myThread;
 };
 #endif // MAINWINDOW_H

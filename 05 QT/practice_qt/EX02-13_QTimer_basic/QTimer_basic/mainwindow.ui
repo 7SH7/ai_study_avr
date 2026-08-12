@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>11</x>
@@ -39,16 +39,16 @@
         </font>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Box</enum>
+        <enum>QFrame::Shape::Box</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -63,10 +63,10 @@
           </sizepolicy>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Panel</enum>
+          <enum>QFrame::Shape::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <property name="text">
           <string/>
@@ -82,10 +82,10 @@
           </sizepolicy>
          </property>
          <property name="frameShape">
-          <enum>QFrame::Panel</enum>
+          <enum>QFrame::Shape::Panel</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <property name="text">
           <string/>
@@ -103,7 +103,7 @@
      <x>0</x>
      <y>0</y>
      <width>346</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

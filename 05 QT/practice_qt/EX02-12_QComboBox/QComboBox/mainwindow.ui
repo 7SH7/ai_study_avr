@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>166</height>
+    <width>434</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -153,14 +153,37 @@
      </item>
     </layout>
    </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>230</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnAct">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>230</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>동작</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>260</width>
-     <height>19</height>
+     <width>434</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

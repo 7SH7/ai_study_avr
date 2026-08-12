@@ -2,21 +2,18 @@
 #include "ui_mainwindow.h"
 #include "Eval.h"
 
+// QAbstractButton의 short cut 쓰면 키보드 클릭 시, 작동 되도록 변경 가능.
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    connect(ui->buttonGroup, QButtonGroup::buttonClicked, this, this->MainWindow::addValToList);
+    connect(ui->buttonGroup,
+            QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+            this,
+            &MainWindow::make_String);
 
-    Eval eval;
-    QString expr = "12+34";
-    double res = eval.Evaluate(expr.toStdString());
-    QString qstr = QString("%1").arg(res);
-    expr.append("=");
-    expr.append(qstr);
-    qDebug() << expr;
 }
 
 MainWindow::~MainWindow()
@@ -24,15 +21,40 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::addValToList()
+void MainWindow::make_String(QAbstractButton *btn)
 {
-    QStringList lst;
+    expr.append(btn->text());
+    qDebug() << expr;
 
+    ui->lblResult->setText(expr);
 }
 
 void MainWindow::on_btnEqual_clicked()
 {
+    Eval eval;
+    expr.append('=');
 
+    double res = eval.Evaluate(expr.toStdString());
+    expr.append(QString::number(res));
+
+    qDebug() <<  res;
+
+    ui->lblResult->setText(expr);
+
+    expr = "";
+}
+
+void MainWindow::on_btnBackspace_clicked()
+{
+    expr.chop(1);
+    ui->lblResult->setText(expr);
+}
+
+
+void MainWindow::on_btnCancel_clicked()
+{
+    expr = "";
+    ui->lblResult->setText("0");
 }
 
 #pragma region 사용안함 {
@@ -139,16 +161,4 @@ void MainWindow::on_btnEqual_clicked()
 // }
 
 #pragma endregion 사용안함 }
-
-
-void MainWindow::on_btnBackspace_clicked()
-{
-
-}
-
-
-void MainWindow::on_btnCancel_clicked()
-{
-
-}
 

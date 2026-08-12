@@ -1,0 +1,140 @@
+[11:58:18] === qt-lab5 / PyQt5 setup started ===
+[11:58:18] script folder  : C:\Users\kccistc\Desktop\ai_study_avr\05 QT\practice_pyqt
+[11:58:18] project folder : C:\Users\kccistc\qt-lab5
+[11:58:18] windows        : Microsoft Windows NT 10.0.26200.0
+[11:58:18] powershell     : 5.1.26100.8875
+[11:58:18] python         : py -3   v3.13.14
+[11:58:18] python path    : C:\Users\kccistc\AppData\Local\Programs\Python\Python313\python.exe
+[11:58:18] project folder already exists, reusing it
+[11:58:18] wrote sample project files (main.py, check_env.py, run.bat, designer.bat)
+[11:58:18] reusing existing .venv
+[11:58:18] venv python    : C:\Users\kccistc\qt-lab5\.venv\Scripts\python.exe
+[11:58:18] --> upgrading pip / setuptools / wheel
+    Requirement already satisfied: pip in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (26.2.1)
+    Requirement already satisfied: setuptools in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (84.0.0)
+    Requirement already satisfied: wheel in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (0.48.0)
+    Requirement already satisfied: packaging>=24.0 in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (from wheel) (26.3)
+[11:58:19] --> installing PyQt5
+    Requirement already satisfied: PyQt5<6,>=5.15 in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (5.15.11)
+    Requirement already satisfied: PyQt5-sip<13,>=12.15 in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (from PyQt5<6,>=5.15) (12.19.0)
+    Requirement already satisfied: PyQt5-Qt5<5.16.0,>=5.15.2 in C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages (from PyQt5<6,>=5.15) (5.15.2)
+[11:58:20] --> installing pyqt5-tools  (Qt Designer app)
+    Collecting pyqt5-tools
+      Using cached pyqt5_tools-5.15.9.3.3-py3-none-any.whl.metadata (8.3 kB)
+    Collecting click (from pyqt5-tools)
+      Using cached click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+    Collecting pyqt5==5.15.9 (from pyqt5-tools)
+      Using cached PyQt5-5.15.9-cp37-abi3-win_amd64.whl.metadata (2.2 kB)
+    INFO: pip is looking at multiple versions of pyqt5-tools to determine which version is compatible with other requirements. This could take a while.
+    Collecting pyqt5-tools
+      Using cached pyqt5_tools-5.15.4.3.2-py3-none-any.whl.metadata (8.3 kB)
+    Collecting pyqt5==5.15.4 (from pyqt5-tools)
+      Using cached PyQt5-5.15.4.tar.gz (3.3 MB)
+      Installing build dependencies: started
+      Installing build dependencies: finished with status 'done'
+      Getting requirements to build wheel: started
+      Getting requirements to build wheel: finished with status 'done'
+      Preparing metadata (pyproject.toml): started
+      Preparing metadata (pyproject.toml): finished with status 'error'
+      error: subprocess-exited-with-error
+      
+      Preparing metadata (pyproject.toml) did not run successfully.
+      exit code: 1
+      
+      [76 lines of output]
+      pyproject.toml: line 7: using '[tool.sip.metadata]' to specify the project metadata is deprecated and will be removed in SIP v7.0.0, use '[project]' instead
+      Querying qmake about your Qt installation...
+      Traceback (most recent call last):
+        File "C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py", line 389, in <module>
+          main()
+          ~~~~^^
+        File "C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\qt-lab5\.venv\Lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py", line 178, in prepare_metadata_for_build_wheel
+          whl_basename = backend.build_wheel(metadata_directory, config_settings)
+        File "C:\Users\kccistc\AppData\Local\Temp\pip-build-env-dnz_1abd\overlay\Lib\site-packages\sipbuild\api.py", line 28, in build_wheel
+          project = AbstractProject.bootstrap('wheel',
+                  arguments=_convert_config_settings(config_settings))
+        File "C:\Users\kccistc\AppData\Local\Temp\pip-build-env-dnz_1abd\overlay\Lib\site-packages\sipbuild\abstract_project.py", line 74, in bootstrap
+          project.setup(pyproject, tool, tool_description)
+          ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Temp\pip-build-env-dnz_1abd\overlay\Lib\site-packages\sipbuild\project.py", line 694, in setup
+          self.update(tool)
+          ~~~~~~~~~~~^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Temp\pip-install-b76891sm\pyqt5_bfad3f927738485bb174c0b1be393dce\project.py", line 160, in update
+          raise UserException(
+                  "Qt v5 is required, not v{0}".format(
+                          self.builder.qt_version_str))
+      sipbuild.exceptions.UserException
+      Traceback (most recent call last):
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 631, in _rmtree_unsafe
+          os.rmdir(path)
+          ~~~~~~~~^^^^^^
+      PermissionError: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\kccistc\\AppData\\Local\\Temp\\tmp4bif26h3'
+      
+      During handling of the above exception, another exception occurred:
+      
+      Traceback (most recent call last):
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\tempfile.py", line 910, in onexc
+          _os.unlink(path)
+          ~~~~~~~~~~^^^^^^
+      PermissionError: [WinError 5] 액세스가 거부되었습니다: 'C:\\Users\\kccistc\\AppData\\Local\\Temp\\tmp4bif26h3'
+      
+      During handling of the above exception, another exception occurred:
+      
+      Traceback (most recent call last):
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\weakref.py", line 666, in _exitfunc
+          f()
+          ~^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\weakref.py", line 590, in __call__
+          return info.func(*info.args, **(info.kwargs or {}))
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\tempfile.py", line 940, in _cleanup
+          cls._rmtree(name, ignore_errors=ignore_errors)
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\tempfile.py", line 935, in _rmtree
+          _shutil.rmtree(name, onexc=onexc)
+          ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 790, in rmtree
+          return _rmtree_unsafe(path, onexc)
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 635, in _rmtree_unsafe
+          onexc(os.rmdir, path, err)
+          ~~~~~^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\tempfile.py", line 925, in onexc
+          cls._rmtree(path, ignore_errors=ignore_errors,
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      repeated=(path == name))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\tempfile.py", line 935, in _rmtree
+          _shutil.rmtree(name, onexc=onexc)
+          ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 790, in rmtree
+          return _rmtree_unsafe(path, onexc)
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 635, in _rmtree_unsafe
+          onexc(os.rmdir, path, err)
+          ~~~~~^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\kccistc\AppData\Local\Programs\Python\Python313\Lib\shutil.py", line 631, in _rmtree_unsafe
+          os.rmdir(path)
+          ~~~~~~~~^^^^^^
+      PermissionError: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'C:\\Users\\kccistc\\AppData\\Local\\Temp\\tmp4bif26h3'
+      [end of output]
+      
+      note: This error originates from a subprocess, and is likely not a problem with pip.
+    error: metadata-generation-failed
+    System.Management.Automation.RemoteException
+    Encountered error while generating package metadata.
+    System.Management.Automation.RemoteException
+    pyqt5
+    System.Management.Automation.RemoteException
+    note: This is an issue with the package mentioned above, not pip.
+    hint: See above for details.
+[11:58:28] WARN: pyqt5-tools failed. PyQt5 itself is fine; only Qt Designer is unavailable.
+[11:58:28] --> verifying the environment
+    Python  : 3.13.14
+    PyQt5   : 5.15.11
+    Qt      : 5.15.2
+    OK
+[11:58:28] --> writing requirements-lock.txt
+[11:58:29] qt designer    : NOT INSTALLED
+[11:58:29] RESULT: OK_NO_DESIGNER

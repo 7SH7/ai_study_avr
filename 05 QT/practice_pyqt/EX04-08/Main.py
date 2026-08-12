@@ -11,12 +11,12 @@ subprocess.run([
 ])
 from gui import Ui_MainWindow
 
-
 class Form(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
+        pixmap = QPixmap(":/images/setting.png")
+        self.label.setPixmap(pixmap)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

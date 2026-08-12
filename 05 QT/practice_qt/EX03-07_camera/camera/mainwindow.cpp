@@ -13,8 +13,16 @@ MainWindow::MainWindow(QWidget *parent)
     camera_thread = new CameraThread(this);
     
     // 2. 스레드(영상 송신)와 메인 UI(영상 수신)를 시그널-슬롯으로 연결
-    connect(camera_thread, SIGNAL(send_image(const QImage&)),
-            this, SLOT(handle_data(const QImage&)));
+    connect(camera_thread,
+            SIGNAL(send_image(const QImage&)),
+            this,
+            SLOT(handle_data(const QImage&)));
+
+    // 3. MainWindow 내부 signal → MainWindow 내부 slot
+    connect(this,
+            &MainWindow::send_capture_signal,
+            this,
+            &MainWindow::capture_image);
 
     // 3. 카메라 스레드 실행 (CameraThread::run() 함수가 호출됨)
     camera_thread->start();
@@ -31,6 +39,8 @@ MainWindow::~MainWindow() {
 // 실시간 이미지 출력 슬롯 함수 (CameraThread에서 시그널을 보낼 때마다 실행)
 // ============================================================================
 void MainWindow::handle_data(const QImage &image) {
+    current_image = image;
+
     // 1. 스레드로부터 받은 QImage를 화면 출력용 클래스인 QPixmap으로 변환
     QPixmap pixmap = QPixmap::fromImage(image);
 
@@ -40,6 +50,36 @@ void MainWindow::handle_data(const QImage &image) {
     }
 }
 
+void MainWindow::capture_image(bool isCapture)
+{
+    if (!isCapture) {
+        return;
+    }
+
+    if (current_image.isNull()) {
+        return;
+    }
+
+    // 현재 프레임을 QPixmap으로 변환
+    QPixmap pixmap = QPixmap::fromImage(current_image);
+
+    // 캡처 이미지를 lblpic에 표시
+    if (ui->lblpic) {
+        ui->lblpic->setPixmap(pixmap);
+    }
+
+    // 저장할 파일 선택
+    QString filepath = QFileDialog::getSaveFileName(
+        this,
+        "이미지 저장",
+        "/Users/kccistc/Desktop/ai_study_avr/05 QT/practice_qt/EX03-07_camera/camera/img",
+        "PNG Image (*.png);;JPEG Image (*.jpg)"
+        );
+
+    if (!filepath.isEmpty()) {
+        pixmap.save(filepath);
+    }
+}
 // ============================================================================
 // 윈도우 창 닫기 이벤트 핸들러 (X 버튼을 누르거나 프로그램을 종료할 때 실행)
 // ============================================================================
@@ -52,4 +92,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     
     // 창 닫기 이벤트를 수락하여 프로그램을 최종적으로 종료시킴
     event->accept();
+}
+
+void MainWindow::on_btnCapture_clicked()
+{
+    emit send_capture_signal(true);
 }

@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QCloseEvent>
+#include <QFileDialog>
+
 #include "camerathread.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,8 +25,16 @@ protected:
 private slots:
     void handle_data(const QImage &image);
 
+    void on_btnCapture_clicked();
+
+    void capture_image(bool isCapture);
+
+signals:
+    void send_capture_signal(bool isCapture);
+
 private:
     Ui::MainWindow *ui;
     CameraThread *camera_thread;
+    QImage current_image;
 };
 #endif // MAINWINDOW_H

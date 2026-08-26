@@ -29,14 +29,17 @@ class Form(QMainWindow, Ui_MainWindow):
 
     def show_dialog(self):
         # todo : dlgForm 객체를 생성하여 이름을 넘겨주어 객체 생성
-        dlg = dlgForm() # Todo : 생성자 수정
+        dlg = dlgForm(self, name=self.editName.text()) # Todo : 생성자 수정
 
         dlg.accepted.connect(lambda: self.print_info(dlg.getInfo()))
         dlg.open()
 
     def print_info(self, tinfo):
         # Todo : 다이얼로그에서 넘겨 받은 tinfo를 main window에 표시
-        pass
+        nick, hobby, gender = tinfo
+        self.lblNick.setText(f'닉네임 : {nick if nick else "없음"}')
+        self.lblGender.setText(f'성별 : {gender if gender else "미공개"}')
+        self.lblHobby.setText(f'취미: {','.join(hobby)}')
 
 
 class dlgForm(QDialog, Ui_Dialog):
@@ -45,24 +48,52 @@ class dlgForm(QDialog, Ui_Dialog):
         super().__init__(parent, flag)
         self.setupUi(self)
         # Todo :  넘어온 name를 line edit에 표시
+        self.editNick.setText(name);
 
     def getNick(self):
         # Todo : 닉네임 리턴
-        nick_name = ''
+        nick_name = self.editNick.text()
+
+        print(nick_name)
+        
         return nick_name
 
     def getHobby(self):
         # Todo : 선택된 취미를 list로 만들어 리턴
         lst_hobby = []
+
+        hobby1_chk, hobby2_chk, hobby3_chk = self.buttonGroup.buttons()
+        if hobby1_chk.isChecked() == True:
+            lst_hobby.append(self.chkHobby1.text())
+        if hobby2_chk.isChecked() == True:
+            lst_hobby.append(self.chkHobby2.text()) 
+        if hobby3_chk.isChecked() == True:
+            lst_hobby.append(self.chkHobby3.text())
+
+        # for chk in self.buttonGroup.buttons():
+        #   if(chk.isChecked()):
+        #       lst_hobby.append(chk.text())
+
+        print(lst_hobby)
+        print("buttonGroup.buttons : " , self.buttonGroup.buttons()[0])
+        print("checked : " , self.chkHobby1.isChecked)     # isChecked 요소가 check되어있나 확인하는 것: isChecked()
+        
         return lst_hobby
 
     def getGender(self):
         # Todo : 선택된 성별을 문자열로 리턴
-        gender = ''
+        if(self.rdoFemale.isChecked()):
+            gender = "여성"
+        else:
+            gender = "남성"
+
+        print(gender)
+
         return gender
 
     def getInfo(self):
         r = self.getNick(), self.getHobby(), self.getGender()
+        print(r)
         return r
 
 

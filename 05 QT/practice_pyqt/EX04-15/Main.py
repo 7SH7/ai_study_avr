@@ -27,17 +27,18 @@ class Form(QMainWindow, Ui_MainWindow):
     
     def information(self):
         QMessageBox.information(self, 'information', 'infomation message',
-                                                             QMessageBox.Ok | QMessageBox.Cancel)
+                                QMessageBox.Ok | QMessageBox.Cancel)
     def question(self):
-        r = QMessageBox.question(self, 'question', 'question message', QMessageBox.Yes | QMessageBox.No)
+        r = QMessageBox.question(self, 'question', 'question message',
+                                QMessageBox.Yes | QMessageBox.No)
         print(r)
         if r == QMessageBox.Yes:
             print('YES')
         else:
             print('NO')
     def warning(self):
-         QMessageBox.warning(self, 'warning', 'warning message',
-                                                            QMessageBox.Retry | QMessageBox.Ignore)
+        QMessageBox.warning(self, 'warning', 'warning message',
+                            QMessageBox.Retry | QMessageBox.Ignore)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = Form()

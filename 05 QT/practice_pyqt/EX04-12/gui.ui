@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>227</width>
-    <height>171</height>
+    <width>484</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,16 +24,16 @@
     <item>
      <widget class="QLCDNumber" name="lcdNumber">
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
+       <enum>QFrame::Shadow::Sunken</enum>
       </property>
       <property name="digitCount">
        <number>8</number>
       </property>
       <property name="segmentStyle">
-       <enum>QLCDNumber::Flat</enum>
+       <enum>QLCDNumber::SegmentStyle::Flat</enum>
       </property>
       <property name="intValue" stdset="0">
        <number>99199199</number>
@@ -51,10 +51,10 @@
          </sizepolicy>
         </property>
         <property name="frameShape">
-         <enum>QFrame::Panel</enum>
+         <enum>QFrame::Shape::Panel</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <property name="text">
          <string/>
@@ -70,10 +70,10 @@
          </sizepolicy>
         </property>
         <property name="frameShape">
-         <enum>QFrame::Panel</enum>
+         <enum>QFrame::Shape::Panel</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <property name="text">
          <string/>
@@ -89,8 +89,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>227</width>
-     <height>20</height>
+     <width>484</width>
+     <height>33</height>
     </rect>
    </property>
   </widget>

@@ -15,6 +15,7 @@ from dlg import Ui_MyDialog
 
 class Form(QMainWindow, Ui_MainWindow):
     # Todo : Form 사용자 시그널 생성 Main->Dialog
+    form_sig = pyqtSignal()
     
     def __init__(self):
         super().__init__()
@@ -23,16 +24,21 @@ class Form(QMainWindow, Ui_MainWindow):
         self.btnEdit.clicked.connect(self.openDlg)
         # Todo : 사용자 시그널 연결
         # Form에서 발생시그널 -> Dialog 슬롯
+        self.form_sig.connect(Dlg.receive_name)
         # Dialog 시그널 -> Form 슬롯
+        self.dlg.sig.connect(Form.openDlg)
         
     def receive_hobby(self, hobby):
         self.lblHobby.setText(f'Hobby: {hobby}')
     def openDlg(self):
         # Todo : Form 사용자 시그널 방출
+        self.form_sig.emit()
         self.dlg.open()
 
 class Dlg(QDialog, Ui_MyDialog):
     # Todo : Dialog 사용자 시그널 생성 Dialog->Main
+    sig = pyqtSignal(tuple)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
